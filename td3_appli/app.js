@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var organisationsRouter = require('./routes/organisations');
+var fichesPosteRouter = require('./routes/fichesPoste');
 
 var app = express();
 
@@ -23,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/organisations', organisationsRouter);
-
+app.use('/fichesposte', fichesPosteRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
