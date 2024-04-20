@@ -9,7 +9,6 @@
                 <th>Lastname</th>
                 <th>Email</th>
                 <th>Tel</th>
-
             </tr>
         </thead>
         <tbody>
@@ -31,4 +30,35 @@
             <% }) %>
         </tbody>
     </table>
+
+    <!-- Formulaire pour ajouter un nouvel utilisateur -->
+    <form action="/users/adduser" method="post">
+        <div>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required>
+        </div>
+        <div>
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" required>
+        </div>
+        <div>
+            <label for="mail">E-mail :</label>
+            <input type="email" id="mail" name="mail" required>
+        </div>
+        <div>
+            <label for="tel">Téléphone :</label>
+            <input type="tel" id="tel" name="tel" required>
+        </div>
+        <div>
+            <label for="mdp">Mot de passe  :</label>
+            <input type="mdp" id="mdp" name="mdp" required>
+        </div>
+        <div>
+            <label for="date">Date de naissance  :</label>
+            <input  id="date" name="date" required pattern="\d{4}-\d{2}-\d{2}">
+        </div>
+        <div>
+            <button type="submit" id="add">Ajouter</button>
+        </div>
+    </form>
 </body>
