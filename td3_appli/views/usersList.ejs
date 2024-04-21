@@ -9,6 +9,7 @@
                 <th>Lastname</th>
                 <th>Email</th>
                 <th>Tel</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,11 @@
                     <td>
                         <%= user.tel %>
                     </td>
+                    <td>
+                        <%= user.dateCreation %>
+                    </td>
+                </tr>
+                </tr>
                 </tr>
             <% }) %>
         </tbody>
@@ -52,10 +58,6 @@
         <div>
             <label for="mdp">Mot de passe  :</label>
             <input type="mdp" id="mdp" name="mdp" required>
-        </div>
-        <div>
-            <label for="date">Date de naissance  :</label>
-            <input  id="date" name="date" required pattern="\d{4}-\d{2}-\d{2}">
         </div>
         <div>
             <button type="submit" id="add">Ajouter</button>

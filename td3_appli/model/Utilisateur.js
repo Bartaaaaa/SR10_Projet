@@ -26,23 +26,28 @@ module.exports = {
     },
 
     // Fonction pour vérifier si un couple mail/mot de passe est valide.
-    areValid: function (mail, mdp, callback) {
-        // Définition de la requête SQL pour obtenir le mot de passe d'un utilisateur donné.
-        let sql = "SELECT mdp FROM Utilisateur WHERE mail = ?";
+    areValid: function (mail, callback) {
+        // Définition de la requête SQL pour obtenir le mail et le mot de passe d'un utilisateur donné.
+        let sql = "SELECT mail FROM Utilisateur WHERE mail = ?";
         // Exécution de la requête SQL.
         db.query(sql, mail, function (err, results) {
             // Gestion des erreurs lors de l'exécution de la requête.
-            if (err) throw err;
-            // Vérification si un utilisateur correspondant a été trouvé et si le mot de passe est correct.
-            if (results.length == 1 && results[0].mdp === mdp) {
-                // Si les informations sont correctes, retour de true.
-                callback(true);
-            } else {
-                // Si les informations sont incorrectes, retour de false.
+            if (err) {
+                console.error("Erreur lors de l'exécution de la requête SQL :", err);
+                callback(true); // Indiquer une erreur à la fonction de rappel
+                return; // Arrêter l'exécution de la fonction
+            }
+            // Vérification si un utilisateur correspondant a été trouvé 
+            if (results.length === 1) {
+                // L'utilisateur existe, on renvoie false
                 callback(false);
+            } else {
+                // Aucun utilisateur correspondant trouvé, on renvoie true
+                callback(true);
             }
         });
     },
+    
 
     // Fonction pour créer un nouvel utilisateur.
     creat: function (mail, nom, prenom, mdp, tel, dateCreation, statut, callback) {
@@ -52,7 +57,9 @@ module.exports = {
         db.query(sql, [mail, nom, prenom, mdp, tel, dateCreation, statut], function (err, results) {
             // Gestion des erreurs lors de l'exécution de la requête.
             if (err) {
-                throw err;
+                console.error("Erreur lors de l'exécution de la requête SQL :", err);
+                callback(true); // Indiquer une erreur à la fonction de rappel
+                return; // Arrêter l'exécution de la fonction
             } else {
                 // Si l'insertion réussit, exécuter la fonction de callback avec true.
                 callback(true);
