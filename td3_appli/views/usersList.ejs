@@ -1,4 +1,6 @@
 <body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+
     <h1>
         <%= title %>
     </h1>
@@ -13,6 +15,7 @@
             </tr>
         </thead>
         <tbody>
+
             <% users.forEach((user) => { %>
                 <tr>
                     <td>

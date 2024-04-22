@@ -1,0 +1,22 @@
+   /* Styles de la barre de navigation */
+.navbar {
+    background-color: black; /* Couleur de fond de la barre de navigation */
+    overflow: hidden; /* Assure que le contenu de la barre ne déborde pas */
+}
+
+/* Styles des liens de la barre de navigation */
+.navbar a {
+    float: left; /* Positionnement des liens à gauche */
+    display: block; /* Affichage en bloc */
+    color: white; /* Couleur du texte */
+    text-align: center; /* Alignement du texte au centre */
+    padding: 14px 20px; /* Espacement autour du texte */
+    text-decoration: none; /* Pas de soulignement pour les liens */
+    font-size: 17px; /* Taille de la police */
+}
+
+/* Changement de la couleur de fond du lien au survol */
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
