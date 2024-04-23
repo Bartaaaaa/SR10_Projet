@@ -20,18 +20,18 @@ module.exports = {
         db.query(sql_verif, [nom], function (err, results) {
             // Gestion des erreurs lors de l'exécution de la requête.
             if (err) {
-                callback(err);
+                console.log("erreur");
                 return;
             }
             if (results.length > 0) {
                 // Si le métier existe déjà, retour de false.
-                callback(null, false);
+                console.log("erreur");
             } else {
                 let sql = "INSERT INTO TypeOrga (nom) VALUES (?)";
                 // Exécution de la requête SQL.
                 db.query(sql, [nom], function (err, results) {
                     if (err) {
-                        callback(err);
+                        console.log("erreur");
                     } else {
                         // Si l'insertion réussit, exécuter la fonction de callback avec true.
                         callback(null, true);
