@@ -42,24 +42,37 @@ router.post('/addorganisation', function (req, res, next) {
   const nom = req.body.nom;
   const siren = req.body.siren;
   const adresse = req.body.adrSiegeSocial;
-  const type = req.body.type;
-  
+   type = req.body.type;
+
   // Appel à la fonction create de userModel avec les données du formulaire
   organisationModel.readall(function(result){
     // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
     transformtype(result, function(result) {
       // Rendu de la vue avec les organisations mises à jour
+
+
       res.render('organisationsList', { title: 'Liste des organisations', organisations: result});
     });
   });
 
+  const typeMapNomtoId = new Map();
+  typeOrgamodel.readall(function(resultOrga){
+    // Créer une carte des types pour faciliter la correspondance
+    for (const orga of resultOrga) {
+      typeMapNomtoId.set(orga.nom, orga.id);
+    }
+  console.log(typeMapNomtoId);
+  type = typeMapNomtoId.get(type) || type;
+
+console.log("Voici le type",type);
 
       organisationModel.creat(siren, nom, adresse, type, function(success) {
       if (success) {
-          console.log("User inserted successfully!");
+          console.log("Organisation inserted successfully!");
       } else {
 typeOrgamodel.create(type); 
 organisationModel.creat(siren, nom, adresse, type);     }
+});
   });       
 });
 

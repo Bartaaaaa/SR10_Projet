@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Garde</title>
+    <link rel="stylesheet" href="../fichiers.css/pagegarde.css">
+
+</head>
+<body>
+  <div id="navbar">
+
+  </div>
+  <div class="login-container">
+    <header>
+        <h1>BIENVENUE</h1>
+    </header>
+    <form class="login-form" action="http://localhost:3000" method="GET">
+        <label for="email">Mail</label>
+        <input type="email" id="email" name="email" required placeholder="Entrez votre mail">
+
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password" required placeholder="Entrez votre mot de passe">
+
+        <button type="submit">Se connecter</button>
+        <p>Pas encore de compte ? <a href="#">Inscrivez-vous</a></p>
+    </form>
+    <p>Pas encore de compte ? <a href="#">Inscrivez-vous</a></p>
+
+</div>
+
+
+ <style>
+
+
+
+
+.login-container {
+    background-color: white;
+    width: 350px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    display: center;
+    top :50%;
+    left : 50%;
+    position: absolute;  /* Positionnement absolu par rapport au premier parent positionné ou au document */
+    transform: translate(-50%, -50%);  /* Décaler de -50% de sa propre largeur et hauteur pour un centrage parfait */
+
+}
+
+header h1 {
+    text-align: center;
+    color: #333;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form label {
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.login-form input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-form button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.login-form button:hover {
+    background-color: #003580;
+}
+
+.login-form p {
+    text-align: center;
+}
+
+.login-form a {
+    color: #0056b3;
+}
+
+ </style>
+</body>
+</html>

@@ -9,6 +9,11 @@ var usersRouter = require('./routes/users');
 var organisationsRouter = require('./routes/organisations');
 var fichesPosteRouter = require('./routes/fichesPoste');
 
+
+var connexionRouter = require('./routes/connexion');
+var inscriptionRouter = require('./routes/inscription');
+
+
 var app = express();
 
 // view engine setup
@@ -25,6 +30,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/organisations', organisationsRouter);
 app.use('/fichesposte', fichesPosteRouter);
+app.use('/connexion', connexionRouter);
+app.use('/inscription',inscriptionRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

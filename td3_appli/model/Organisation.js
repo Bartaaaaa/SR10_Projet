@@ -3,14 +3,16 @@ var db = require('./db.js');
 module.exports = {
     read: function (siren, callback) {
         db.query("SELECT * FROM Organisation WHERE siren = ?", siren, function (err, results) {
-            if (err) throw err;
+            if (err)                 console.log("erreur");
+
             callback(results);
         });
     },
 
     readall: function (callback) {
         db.query("SELECT * FROM Organisation", function (err, results) {
-            if (err) throw err;
+            if (err)                 console.log("erreur");
+
             callback(results);
         });
     },

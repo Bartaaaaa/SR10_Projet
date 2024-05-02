@@ -6,7 +6,9 @@ module.exports = {
 
     readall: function (callback) {
         db.query("SELECT * FROM TypeOrga", function (err, results) {
-            if (err) throw err;
+            if (err)           
+                  console.log("erreur");
+
             callback(results);
         });
     },
