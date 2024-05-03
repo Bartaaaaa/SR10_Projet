@@ -48,7 +48,28 @@ module.exports = {
         });
     },
     
-
+    isValidUser: function (mail,mdp, callback) {
+        // Définition de la requête SQL pour obtenir le mail et le mot de passe d'un utilisateur donné.
+        let sql = "SELECT mdp FROM Utilisateur WHERE mail = ?";
+        // Exécution de la requête SQL.
+        db.query(sql, mail, function (err, results) {
+            // Gestion des erreurs lors de l'exécution de la requête.
+            if (err) {
+                console.error("Erreur lors de l'exécution de la requête SQL :", err);
+                callback(true); // Indiquer une erreur à la fonction de rappel
+                return; // Arrêter l'exécution de la fonction
+            }
+            // Vérification si un utilisateur correspondant a été trouvé 
+            if (results.length === 1 && results ===mdp) {
+                // L'utilisateur existe, on renvoie false
+                callback(false);
+            } else {
+                // Aucun utilisateur correspondant trouvé, on renvoie true
+                callback(true);
+            }
+        });
+    },
+    
     // Fonction pour créer un nouvel utilisateur.
     creat: function (mail, nom, prenom, mdp, tel, dateCreation, statut, callback) {
         // Définition de la requête SQL pour insérer un nouvel utilisateur.

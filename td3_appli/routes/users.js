@@ -8,6 +8,38 @@ router.get('/', function(req, res, next) {
 });
 
 
+router.post('/verifuser', function(req, res, next) {
+  userModel.readall(function(result) {
+      let userFound = false;
+      for (let i = 0; i < result.length; i++) {
+          const user = result[i];
+          if (req.body.mail === user.mail && req.body.mdp === user.mdp) {
+              console.log("User connected successfully!");
+              userFound = true;
+              break; // Sortir de la boucle une fois qu'un utilisateur est trouvé
+          }
+      }
+      if (userFound) {
+          res.json({ success : true ,message: "User connected successfully" });
+      } else {
+          console.log("Failed to connect user.");
+          res.status(500).json({ error: "Failed to connect user" });
+      }
+  });
+});
+
+
+    //  const email = req.body.mail;
+  //  const mdp = req.body.mdp;
+//
+  //  userModel.isValidUser(email, mdp, function(connexionOk){
+  //    if (success) {
+  //      console.log("User connected successfully!");
+  //      res.json({ message: "User  connected successfully" });
+  //  } else {
+  //      console.log("Failed to connect user.");
+  //      res.status(500).json({ error: "Failed to connectuser" });
+  //};
 router.get('/userslist', function (req, res, next) {
   result=userModel.readall(function(result){
 
