@@ -53,3 +53,13 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 
+//code pour garder la session d'un utilisateur : 
+
+const session = require('express-session');
+
+app.use(session({
+  secret: 'votre_secret_ici', // Une chaîne secrète pour signer le cookie de session
+  resave: false, // Ne pas sauvegarder la session si elle n'a pas été modifiée
+  saveUninitialized: false, // Ne pas créer de session jusqu'à ce que quelque chose y soit stocké
+  cookie: { secure: true } // Les cookies ne seront envoyés que sur HTTPS
+}));
