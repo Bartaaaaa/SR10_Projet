@@ -7,7 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-
+/*
 app.post('/connexion', function(req, res) {
     const { email, password } = req.body;
     // Ici, vous vérifieriez l'authenticité de l'utilisateur
@@ -18,6 +18,6 @@ app.post('/connexion', function(req, res) {
       res.redirect('/connexion');
     }
   });
-  
+  */
 module.exports = router;
 
