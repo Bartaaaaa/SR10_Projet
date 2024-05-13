@@ -36,45 +36,57 @@ router.get('/organisationslist', function (req, res, next) {
     });
   });
 
-
-
-router.post('/addorganisation', function (req, res, next) {
-  const nom = req.body.nom;
-  const siren = req.body.siren;
-  const adresse = req.body.adrSiegeSocial;
-   type = req.body.type;
-
-  // Appel à la fonction create de userModel avec les données du formulaire
-  organisationModel.readall(function(result){
-    // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
-    transformtype(result, function(result) {
-      // Rendu de la vue avec les organisations mises à jour
-
-
-      res.render('organisationsList', { title: 'Liste des organisations', organisations: result});
-    });
-  });
-
-  const typeMapNomtoId = new Map();
-  typeOrgamodel.readall(function(resultOrga){
-    // Créer une carte des types pour faciliter la correspondance
-    for (const orga of resultOrga) {
-      typeMapNomtoId.set(orga.nom, orga.id);
+  router.post('/addorganisation', async function (req, res, next) {
+    try {
+      const { nom, siren, adrSiegeSocial: adresse, type: nomType } = req.body;
+  
+      // Lecture de tous les types d'organisation et création d'une map nom/id
+      const types = await new Promise((resolve, reject) => {
+        typeOrgamodel.readall(function(resultOrga) {
+          if (resultOrga) {
+            const typeMapNomtoId = new Map();
+            for (const orga of resultOrga) {
+              typeMapNomtoId.set(orga.nom, orga.id);
+            }
+            resolve(typeMapNomtoId);
+          } else {
+            reject("Failed to load types");
+          }
+        });
+      });
+  
+      let typeId = types.get(nomType);
+      if (!typeId) {
+        // Si le type n'existe pas, créez-le et utilisez le nouvel ID
+        typeId = await new Promise((resolve, reject) => {
+          typeOrgamodel.create(nomType, function(success, newId) {  // Assurez-vous que la fonction create retourne un nouvel ID
+            if (success) {
+              resolve(newId);
+            } else {
+              reject("Failed to create new type");
+            }
+          });
+        });
+      }
+  
+      // Création de l'organisation avec le typeId résolu
+      const insertResult = await new Promise((resolve, reject) => {
+        organisationModel.creat(siren, nom, adresse, typeId, function(success) {
+          if (success) {
+            resolve({ message: "Organisation inserted successfully" });
+          } else {
+            reject({ error: "Failed to insert organisation" });
+          }
+        });
+      });
+  
+      res.json(insertResult);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: "Server error" });
     }
-  console.log(typeMapNomtoId);
-  type = typeMapNomtoId.get(type) || type;
-
-console.log("Voici le type",type);
-
-      organisationModel.creat(siren, nom, adresse, type, function(success) {
-      if (success) {
-          console.log("Organisation inserted successfully!");
-      } else {
-typeOrgamodel.create(type); 
-organisationModel.creat(siren, nom, adresse, type);     }
-});
-  });       
-});
+  });
+  
 
 // faut que lorsqu'un utilsateur ajoute une organisation de type "test", le code doit vérifier si ce type existe déjà , si oui il creat l'organisation avec la valeur 
 //integer type associé, sinon il créer d'abord le type d'organisation correspondant, puis ajoute l'organisation

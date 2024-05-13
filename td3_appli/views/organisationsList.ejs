@@ -34,10 +34,10 @@
             <% }) %>
         </tbody>
     </table>
-    <form action="/organisations/addorganisation" method="post">
+    <form action="/organisations/addorganisation" method="post" id="organisationForm">
         <div>
             <label for="siren">Siren :</label>
-            <input type="text" id="nom" name ="siren"required>
+            <input type="text" id="siren" name ="siren"required>
         </div>
         <div>
             <label for="nom">Nom : </label>
@@ -48,11 +48,43 @@
             <input type="text" id="adrSiegeSocial" name="adrSiegeSocial"required>
         </div>
         <div>
-            <label for ="Type">Type  :</label>
-            <input type="text" id="Type" name = "type" required>
+            <label for ="type">Type  :</label>
+            <input type="text" id="type" name = "type" required>
         </div>
         <div>
             <button type="submit" id="add">Ajouter</button>
         </div>
     </form>
+    <script>
+        document.getElementById('organisationForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Empêcher la soumission normale du formulaire
+        
+            // Récupérer les valeurs du formulaire
+            var formData = {
+                siren : document.getElementById('siren').value,
+                nom: document.getElementById('nom').value,
+                adrSiegeSocial: document.getElementById('adrSiegeSocial').value,
+                type: document.getElementById('type').value,
+            };
+            console.log(formData)        
+            // Envoi des données du formulaire en utilisant fetch API
+            fetch('/organisations/addorganisation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Organisation enregistré avec succès!');
+               window.location.href = 'http://localhost:3000/organisations/organisationsList';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+
+            });
+        });
+        </script>
 </body>
