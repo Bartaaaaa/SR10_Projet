@@ -18,7 +18,7 @@ module.exports = {
     },
 
 
-    creat: function (siren, nom, adrSiegeSocial, type, callback) {
+    create: function (siren, nom, adrSiegeSocial, type, callback) {
         let sql = "INSERT INTO Organisation (siren, nom, adrSiegeSocial, type) VALUES (?, ?, ?, ?)";
         db.query(sql, [siren, nom, adrSiegeSocial, type], function (err, results) {
             if (err) {

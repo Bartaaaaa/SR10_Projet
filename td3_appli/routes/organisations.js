@@ -36,42 +36,42 @@ router.get('/organisationslist', function (req, res, next) {
     });
   });
 
-  router.post('/addorganisation', async function (req, res, next) {
-    try {
-      const { nom, siren, adrSiegeSocial: adresse, type: nomType } = req.body;
+
+  router.post('/addtype', function (req, res, next) {
+    const { nomType } = req.body;
   
-      // Lecture de tous les types d'organisation et création d'une map nom/id
-      const types = await new Promise((resolve, reject) => {
-        typeOrgamodel.readall(function(resultOrga) {
-          if (resultOrga) {
-            const typeMapNomtoId = new Map();
-            for (const orga of resultOrga) {
-              typeMapNomtoId.set(orga.nom, orga.id);
-            }
-            resolve(typeMapNomtoId);
-          } else {
-            reject("Failed to load types");
-          }
-        });
-      });
+    // Vérifiez si le type d'organisation existe déjà
+    typeOrgamodel.readall(function(resultOrga) {
   
-      let typeId = types.get(nomType);
-      if (!typeId) {
-        // Si le type n'existe pas, créez-le et utilisez le nouvel ID
-        typeId = await new Promise((resolve, reject) => {
-          typeOrgamodel.create(nomType, function(success, newId) {  // Assurez-vous que la fonction create retourne un nouvel ID
-            if (success) {
-              resolve(newId);
-            } else {
-              reject("Failed to create new type");
-            }
-          });
-        });
+      // Cherchez le type dans les résultats
+      let type = resultOrga.find(orga => orga.nom === nomType);
+      let typeId = type ? type.id : null;
+  
+      if (typeId) {
+        // Si le type existe déjà, retournez l'ID
+        return res.json({ typeId });
       }
   
-      // Création de l'organisation avec le typeId résolu
+      // Si le type n'existe pas, créez-le et utilisez le nouvel ID
+      typeOrgamodel.create(nomType, function(success, newId) {
+        if (success) {
+          res.json({ message: "Type inserted successfully" });
+        } else {
+          console.log("Failed to insert user.");
+          res.status(500).json({ error: "Failed to insert user" });
+        }
+      });
+      res.json({ message: "Type inserted successfully" });
+
+    });
+  });
+  router.post('/addorganisation', async function (req, res, next) {
+    try {
+      const { nom, siren, adrSiegeSocial: adresse, typeId } = req.body;
+  
+      // Création de l'organisation avec le typeId fourni
       const insertResult = await new Promise((resolve, reject) => {
-        organisationModel.creat(siren, nom, adresse, typeId, function(success) {
+        organisationModel.create(siren, nom, adresse, typeId, function(success) {
           if (success) {
             resolve({ message: "Organisation inserted successfully" });
           } else {
@@ -86,6 +86,7 @@ router.get('/organisationslist', function (req, res, next) {
       res.status(500).json({ error: "Server error" });
     }
   });
+  
   
 
 // faut que lorsqu'un utilsateur ajoute une organisation de type "test", le code doit vérifier si ce type existe déjà , si oui il creat l'organisation avec la valeur 
