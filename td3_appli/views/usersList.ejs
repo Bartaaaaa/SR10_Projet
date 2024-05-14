@@ -15,30 +15,35 @@
             </tr>
         </thead>
         <tbody>
-
-            <% users.forEach((user) => { %>
-                <tr>
-                    <td>
-                        <%= user.prenom %>
-                    </td>
-                    <td>
-                        <%= user.nom %>
-                    </td>
-                    <td>
-                        <%= user.mail %>
-                    </td>
-                    <td>
-                        <%= user.tel %>
-                    </td>
-                    <td>
-                        <%= user.dateCreation %>
-                    </td>
-                </tr>
-                </tr>
-                </tr>
-            <% }) %>
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Prénom</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Date de Création</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <% users.forEach((user) => { %>
+                            <tr class="hover">
+                                <td><%= user.prenom %></td>
+                                <td><%= user.nom %></td>
+                                <td><%= user.mail %></td>
+                                <td><%= user.tel %></td>
+                                <td><%= user.dateCreation %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+          
+        
         </tbody>
     </table>
+
 
     <!-- Formulaire pour ajouter un nouvel utilisateur -->
     <form action="/users/adduser" method="post" id="userForm">
@@ -66,6 +71,7 @@
             <button type="submit" id="add">Ajouter</button>
         </div>
     </form>
+    
     <script>
         document.getElementById('userForm').addEventListener('submit', function(event) {
             event.preventDefault();  // Empêcher la soumission normale du formulaire

@@ -20,8 +20,10 @@
             </tr>
         </thead>
         <tbody>
+            <div class="overflow-x-auto">
+                <table class="table">
             <% fichesPoste.forEach((fiche) => { %>
-                <tr>
+                <tr class="hover">
                     <td>
                         <%= fiche.id %>
                     </td>
@@ -55,5 +57,7 @@
                 </tr>
             <% }) %>
         </tbody>
+        
     </table>
+</div>
 </body>

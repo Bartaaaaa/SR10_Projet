@@ -40,12 +40,20 @@ router.post('/verifuser', function(req, res, next) {
   //      console.log("Failed to connect user.");
   //      res.status(500).json({ error: "Failed to connectuser" });
   //};
-router.get('/userslist', function (req, res, next) {
-  result=userModel.readall(function(result){
+  router.get('/userslist', function (req, res, next) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
 
-  res.render('usersList', { title: 'Liste des utilisateurs', users: result });
-  });
+    userModel.readall({ page, limit }, function(result, totalCount){
+        res.render('usersList', { 
+            title: 'Liste des utilisateurs', 
+            users: result, 
+            currentPage: page, 
+            totalPages: Math.ceil(totalCount / limit) 
+        });
+    });
 });
+
 
 //Ajouter un utilisateur 
 //Ajouter un utilisateur 
