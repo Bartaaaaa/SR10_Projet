@@ -41,19 +41,10 @@ router.post('/verifuser', function(req, res, next) {
   //      res.status(500).json({ error: "Failed to connectuser" });
   //};
   router.get('/userslist', function (req, res, next) {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
-
-    userModel.readall({ page, limit }, function(result, totalCount){
-        res.render('usersList', { 
-            title: 'Liste des utilisateurs', 
-            users: result, 
-            currentPage: page, 
-            totalPages: Math.ceil(totalCount / limit) 
-        });
+    result=userModel.readall(function(result){
+        res.render('usersList', { title: 'Liste des utilisateurs', users: result });
     });
 });
-
 
 //Ajouter un utilisateur 
 //Ajouter un utilisateur 

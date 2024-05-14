@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var organisationsRouter = require('./routes/organisations');
 var fichesPosteRouter = require('./routes/fichesPoste');
 
+var pagepersoRouter = require('./routes/pageperso');
 
 var connexionRouter = require('./routes/connexion');
 var inscriptionRouter = require('./routes/inscription');
@@ -32,6 +33,7 @@ app.use('/organisations', organisationsRouter);
 app.use('/fichesposte', fichesPosteRouter);
 app.use('/connexion', connexionRouter);
 app.use('/inscription',inscriptionRouter);
+app.use('/pageperso',pagepersoRouter);
 
 
 // catch 404 and forward to error handler

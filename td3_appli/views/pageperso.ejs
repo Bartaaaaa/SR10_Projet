@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page de Garde</title>
+    <link rel="stylesheet" href="../fichiers.css/pagegarde.css">
+
+</head>
+<body>
+  <div id="navbar">
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+
+  </div>
+  <div class="drawer lg:drawer-open">
+    <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+   
+    <div class="drawer-side">
+      <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label> 
+      <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+        <!-- Avatar element here -->
+
+        <li class="avatar placeholder mb-4">
+          <div class="bg-neutral text-neutral-content rounded-full w-24">
+            <span class="text-3xl">D</span>
+          </div>
+        </li>
+
+
+        <!-- Sidebar content here -->
+        <li><a>Nom</a></li>
+        <li><a>Prenom</a></li>
+        <li><a>Telephone</a></li>
+        <li><a>Mail</a></li>
+        <li><a>Statut</a></li>
+
+      </ul>
+    </div>
+  </div>
+  
+</body>
+
+
+
+</html>
