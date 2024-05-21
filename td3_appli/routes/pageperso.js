@@ -25,3 +25,14 @@ router.get('/', function(req, res, next) {
         res.redirect('/connexion');
     }
 });
+
+router.get('/deconnexion', function(req, res, next) {
+    req.session.destroy(function(err) {
+        if (err) {
+            console.log(err);
+            res.status(500).send('Unable to log out');
+        } else {
+            res.redirect('/'); // Rediriger vers la page d'accueil ou la page de connexion
+        }
+    });
+});
