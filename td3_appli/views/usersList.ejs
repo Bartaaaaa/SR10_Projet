@@ -4,48 +4,201 @@
     <h1>
         <%= title %>
     </h1>
-    <table border>
-        <thead>
-            <tr>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Email</th>
-                <th>Tel</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <div class="overflow-x-auto">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Prénom</th>
-                            <th>Nom</th>
-                            <th>Email</th>
-                            <th>Téléphone</th>
-                            <th>Date de Création</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                        <% users.forEach((user) => { %>
-                            <tr class="hover">
-                                <td><%= user.prenom %></td>
-                                <td><%= user.nom %></td>
-                                <td><%= user.mail %></td>
-                                <td><%= user.tel %></td>
-                                <td><%= user.dateCreation %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-          
-        
-        </tbody>
-    </table>
+    <div class="overflow-x-auto">
+        <table class="table" id="usersTable">
+            <thead>
+                <tr>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Date de Création</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <% users.forEach((user) => { %>
+                    <tr class="hover">
+                        <td><%= user.prenom %></td>
+                        <td><%= user.nom %></td>
+                        <td><%= user.mail %></td>
+                        <td><%= user.tel %></td>
+                        <td><%= user.dateCreation %></td>
+                        <td><button class="btn btn-error" data-mail="<%= user.mail %>">Supprimer</button></td> 
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagination" class="pagination-container"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const users = <%- JSON.stringify(users) %>; // Passer les utilisateurs à partir de EJS
+            const usersTableBody = document.getElementById("usersTableBody");
+            const pagination = document.getElementById("pagination");
+            const rowsPerPage = 7;
+            let currentPage = 1;
+
+            function displayUsers(users, page) {
+                usersTableBody.innerHTML = "";
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                const paginatedUsers = users.slice(start, end);
+
+                paginatedUsers.forEach(user => {
+                    const row = document.createElement("tr");
+                    row.classList.add("hover");
+                    row.innerHTML = `
+                        <td>${user.prenom}</td>
+                        <td>${user.nom}</td>
+                        <td>${user.mail}</td>
+                        <td>${user.tel}</td>
+                        <td>${user.dateCreation}</td>
+                        <td><button class="btn btn-error" data-mail="${user.mail}">Supprimer</button></td> 
+                    `;
+                    usersTableBody.appendChild(row);
+                });
+
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.btn-error').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const email = this.getAttribute('data-mail');
+                        deleteUser(email, this.closest('tr'));
+                    });
+                });
+            }
+
+            function deleteUser(email, row) {
+                fetch('/users/deleteuser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        row.remove();
+                        users = users.filter(user => user.mail !== email);
+
+                        alert('L utilisateur a bien été supprimé');
+
+                        // Optionally, you can refresh the pagination and the user list
+                        setupPagination(users, pagination, rowsPerPage);
+                    } else {
+                        alert('Erreur lors de la suppression de l\'utilisateur.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            function setupPagination(users, wrapper, rowsPerPage) {
+                wrapper.innerHTML = "";
+                const pageCount = Math.ceil(users.length / rowsPerPage);
+
+                const prevButton = document.createElement("button");
+                prevButton.innerText = "<<";
+                prevButton.classList.add("page-link");
+                prevButton.addEventListener("click", function() {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updatePagination();
+                    }
+                });
+                wrapper.appendChild(prevButton);
+
+                const pageIndicator = document.createElement("span");
+                pageIndicator.id = "pageIndicator";
+                pageIndicator.innerText = `Page ${currentPage}`;
+                pageIndicator.classList.add("page-indicator");
+                wrapper.appendChild(pageIndicator);
+
+                const nextButton = document.createElement("button");
+                nextButton.innerText = ">>";
+                nextButton.classList.add("page-link");
+                nextButton.addEventListener("click", function() {
+                    if (currentPage < pageCount) {
+                        currentPage++;
+                        updatePagination();
+                    }
+                });
+                wrapper.appendChild(nextButton);
+
+                function updatePagination() {
+                    displayUsers(users, currentPage);
+                    pageIndicator.innerText = `Page ${currentPage}`;
+                }
+
+                updatePagination();
+            }
+
+            setupPagination(users, pagination, rowsPerPage);
+        });
+    </script>
+    <style>
+        .pagination-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px;
+        }
+    
+        .page-link {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+    
+        .page-link:hover {
+            background-color: #0056b3;
+        }
+    
+        .page-link:disabled {
+            background-color: #d6d6d6;
+            cursor: not-allowed;
+        }
+    
+        .page-indicator {
+            margin: 0 10px;
+            font-weight: bold;
+        }
+    
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    
+        .table th, .table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+    
+        .table th {
+            background-color: #f2f2f2;
+        }
+    
+        .hover:hover {
+            background-color: #f5f5f5;
+        }
+    
+        .overflow-x-auto {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+    
+</body>
 
 
-    <!-- Formulaire pour ajouter un nouvel utilisateur -->
+    <!-- Formulaire pour ajouter un nouvel utilisateur 
     <form action="/users/adduser" method="post" id="userForm">
         <div>
             <label for="nom">Nom :</label>
@@ -106,4 +259,4 @@
             });
         });
         </script>
-</body>
+    -->
