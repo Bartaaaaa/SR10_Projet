@@ -4,6 +4,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var app = express();
+
+const session = require('express-session');
+app.use(session({
+  secret: 'votre_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60000 } // Example for setting cookie options
+}));
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var organisationsRouter = require('./routes/organisations');
@@ -15,7 +25,6 @@ var connexionRouter = require('./routes/connexion');
 var inscriptionRouter = require('./routes/inscription');
 
 
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +50,9 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+
+
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -57,11 +69,28 @@ module.exports = app;
 
 //code pour garder la session d'un utilisateur : 
 
-const session = require('express-session');
 
-app.use(session({
-  secret: 'votre_secret_ici', // Une chaîne secrète pour signer le cookie de session
-  resave: false, // Ne pas sauvegarder la session si elle n'a pas été modifiée
-  saveUninitialized: false, // Ne pas créer de session jusqu'à ce que quelque chose y soit stocké
-  cookie: { secure: true } // Les cookies ne seront envoyés que sur HTTPS
-}));
+
+//Ce code va nous permettre plus tard de gérer quel page est accessible à queltype d'utilisateur
+var sessionJS=require('./session');
+// check user before app.use (path, router)
+app.all("*", function (req, res, next) {
+  const nonSecurePaths = ["/connexion", "/inscription"];
+  const adminPaths = []; //list des urls admin
+  if (nonSecurePaths.includes(req.path)) return next();
+  //authenticate user
+  if (adminPaths.includes(req.path)) {
+  if (sessionJS.isConnected(req.session, "admin")) return next();
+  else
+  res
+  .status(403)
+  .render("error", { message: " Unauthorized access", error: {} });
+  } else {
+    if (sessionJS.isConnected(req.session)) return next();
+  // not authenticated
+    else res.redirect("/inscription");
+  }
+  });
+  app.use('/', indexRouter);
+  app.use('/users', usersRouter);
+  
