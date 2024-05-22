@@ -1,3 +1,10 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/listes.css">
+</head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
 
@@ -5,70 +12,69 @@
         <%= title %>
     </h1>
     <div class="overflow-x-auto">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Siren</th>
-                <th>Nom</th>
-                <th>Adresse</th>
-                <th>Type</th>
-
-            </tr>
-        </thead>
-        <tbody>
-
-            <% organisations.forEach((organisation) => { %>
-                <tr class="hover">
-                    <td>
-                        <%= organisation.siren %>
-                    </td>
-                    <td>
-                        <%= organisation.nom %>
-                    </td>
-                    <td>
-                        <%= organisation.adrSiegeSocial %>
-                    </td>
-                    <td>
-                        <%= organisation.type%>
-                    </td>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Siren</th>
+                    <th>Nom</th>
+                    <th>Adresse</th>
+                    <th>Type</th>
                 </tr>
-            <% }) %>
+            </thead>
+            <tbody id="organisationsTableBody">
+                <% organisations.forEach((organisation) => { %>
+                    <tr class="hover">
+                        <td><%= organisation.siren %></td>
+                        <td><%= organisation.nom %></td>
+                        <td><%= organisation.adrSiegeSocial %></td>
+                        <td><%= organisation.type %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagination" class="pagination-container"></div>
+    <form action="/organisations/addtype" method="post" id="typeForm">
+        <div>
+            <label for="type">Type :</label>
+            <input type="text" id="type" name="type" required>
         </div>
-        </tbody>
-    </table>
-    <body>
-        <form action="/organisations/addtype" method="post" id="typeForm">
-            <div>
-                <label for="type">Type :</label>
-                <input type="text" id="type" name="type" required>
-            </div>
-            <div>
-                <button type="submit" id="addType">Ajouter Type</button>
-            </div>
-        </form>
-        <form id="organisationForm" action="/organisations/addorganisation" method="post">
-            <div>
-                <label for="siren">Siren :</label>
-                <input type="text" id="siren" name="siren" required>
-            </div>
-            <div>
-                <label for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" required>
-            </div>
-            <div>
-                <label for="adrSiegeSocial">Adresse Siege Social :</label>
-                <input type="text" id="adrSiegeSocial" name="adrSiegeSocial" required>
-            </div>
-            <div>
-                <label for="typeId">Type ID :</label>
-                <input type="text" id="typeId" name="typeId" required>
-            </div>
-            <div>
-                <button type="submit" id="addOrganisation">Ajouter Organisation</button>
-            </div>
-        </form>
-    
-        <script>
+        <div>
+            <button type="submit" id="addType">Ajouter Type</button>
+        </div>
+    </form>
+    <form id="organisationForm" action="/organisations/addorganisation" method="post">
+        <div>
+            <label for="siren">Siren :</label>
+            <input type="text" id="siren" name="siren" required>
+        </div>
+        <div>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required>
+        </div>
+        <div>
+            <label for="adrSiegeSocial">Adresse Siege Social :</label>
+            <input type="text" id="adrSiegeSocial" name="adrSiegeSocial" required>
+        </div>
+        <div>
+            <label for="typeId">Type ID :</label>
+            <input type="text" id="typeId" name="typeId" required>
+        </div>
+        <div>
+            <button type="submit" id="addOrganisation">Ajouter Organisation</button>
+        </div>
+    </form>
+    <script src="/javascripts/utilitaires.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const organisations = <%- JSON.stringify(organisations) %>; // Passer les organisations à partir de EJS
+            const pagination = document.getElementById("pagination");
+            const rowsPerPage = 7;
+            const organisationsTableBody = document.getElementById("organisationsTableBody");
+
+            setupPagination(organisations, pagination, rowsPerPage, organisationsTableBody, renderOrganisationRow);
+        });
+
              document.getElementById('typeForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
