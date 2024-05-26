@@ -1,0 +1,155 @@
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+
+    </head>
+    <h1><%= title %></h1>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Etat</th>
+                    <th>Date de validité</th>
+                    <th>Indications</th>
+                    <th>Nombre de pièces</th>
+                    <th>Fiche de poste associée</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% OffresEmploi.forEach((offre) => { %>
+                <tr>
+                    <td><%= offre.id %></td>
+                    <td><%= offre.etatOffre %></td>
+                    <td><%= offre.dateValidite %></td>
+                    <td><%= offre.indication %></td>
+                    <td><%= offre.nbPieces %></td>
+                    <td><%= offre.fichePoste %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <form id="candidatureForm">
+        <label for="candidatureId">Saisissez l'id de l'offre à laquelle vous voulez candidater</label>
+        <input type="text" id="candidatureId">
+        <label for="fileUpload">Ajouter des pièces jointes :</label>
+        <input type="file" id="fileUpload" name="fileUpload" multiple>
+        <button type="submit" class="btn btn-primary">Soumettre</button>
+    </form>
+
+<script> 
+ 
+
+
+
+
+ document.getElementById('candidatureForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const submitButton = event.target.querySelector('button[type="submit"]');
+    submitButton.disabled = true; // Désactiver le bouton de soumission
+
+    const formData = {
+        offreEmploi: document.getElementById('candidatureId').value,
+        date: new Date().toISOString().split('T')[0], // Formate la date en YYYY-MM-DD
+        piecesChemAcces: "temporaire",
+        etat: "attente",
+    };
+
+    try {
+        const orgaResponse = await fetch('/offresemploi/addCandidature', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        }); // Délai de 1 seconde avant de rediriger
+
+        window.location.reload();
+
+        if (orgaResponse.redirected) {
+            // Si la réponse est une redirection, redirige l'utilisateur
+            window.location.href = orgaResponse.url;
+        } else if (orgaResponse.headers.get('content-type').includes('application/json')) {
+            const orgaResult = await orgaResponse.json();
+            if (orgaResult.message) {
+                alert('Candidature enregistrée avec succès!');
+                
+            } else {
+                throw new Error("Failed to insert candidature");
+            }
+        } else {
+            const textResponse = await orgaResponse.text();
+            console.error('Error:', textResponse);
+            alert('Erreur lors de l\'enregistrement de la candidature');
+            submitButton.disabled = false; // Réactiver le bouton de soumission en cas d'erreur
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Erreur lors de l\'enregistrement de la candidature');
+        submitButton.disabled = false; // Réactiver le bouton de soumission en cas d'erreur
+    }
+   
+});
+
+// Actualiser la page après une minute
+
+</script>
+
+    <style>
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        form input[type="text"],
+        form input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</body>
