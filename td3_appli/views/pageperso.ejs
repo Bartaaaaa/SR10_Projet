@@ -8,40 +8,67 @@
 
 </head>
 <body>
-  <div id="navbar">
-    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
-
-  </div>
-  <div class="drawer lg:drawer-open">
-    <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-   
-    <div class="drawer-side">
-      <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label> 
-      <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-        <!-- Avatar element here -->
-
-        <li class="avatar placeholder mb-4">
-          <div class="bg-neutral text-neutral-content rounded-full w-24">
-            <span class="text-3xl">D</span>
-          </div>
-        </li>
-        <!-- Sidebar content here -->
-        <li><a>Nom: <%= user.nom %></a></li>
-        <li><a>Prénom: <%= user.prenom %></a></li>
-        <li><a>Téléphone: <%= user.tel %></a></li>
-        <li><a>Mail: <%= user.mail %></a></li>
-        <li><a>Statut: <%= user.statut %></a></li>
-        <li>
-          <form id="logout-form" action="/pageperso/deconnexion" method="get">
-            <button id="logout" type="submit" class="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg">Se déconnecter</button>
-          </form>
-        </li>
-      </ul>
-
+    <div id="navbar">
+        <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
     </div>
-  </div>
+
+    <button type="submit" class="top-right-button">Visualiser mes candidatures</button>
+
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-side">
+            <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label> 
+            <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+                <!-- Avatar element here -->
+                <li class="avatar placeholder mb-4">
+                    <div class="bg-neutral text-neutral-content rounded-full w-24">
+                        <span class="text-3xl">D</span>
+                    </div>
+                </li>
+                <!-- Sidebar content here -->
+                <li><a>Nom: <%= user.nom %></a></li>
+                <li><a>Prénom: <%= user.prenom %></a></li>
+                <li><a>Téléphone: <%= user.tel %></a></li>
+                <li><a>Mail: <%= user.mail %></a></li>
+                <li><a>Statut: <%= user.statut %></a></li>
+                <li>
+                    <form id="logout-form" action="/pageperso/deconnexion" method="get">
+                        <button id="logout" type="submit" class="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg">Se déconnecter</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
 </body>
+<style>
+  .top-right-button {
+      position: fixed;
+      top: 200px;
+      right: 20px;
+      z-index: 1000;
+      padding: 15px 25px; /* Adjust padding for larger size */
+      font-size: 18px; /* Adjust font size for larger text */
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
 
+  .top-right-button:hover {
+      background-color: #0056b3;
+  }
 
+  body {
+      position: relative;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+  }
 
+  #navbar {
+      position: relative; /* Ensure the navbar has relative position if needed */
+      z-index: 999; /* Ensure the navbar is above other elements */
+  }
+</style>
 </html>

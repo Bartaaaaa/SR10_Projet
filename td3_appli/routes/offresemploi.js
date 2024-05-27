@@ -27,14 +27,15 @@ router.post('/addCandidature', function(req, res, next) {
       const pieces = req.body.piecesChemAcces;
       const etat = req.body.etat;
 
+
       Candidaturemodel.create(offreEmploi, candidat, date, pieces, etat, function(success) {
           if (success) {
-              res.json({ message: "Candidature bien ajoutée" });
+            res.json({ message: "Candidature inserted successfuly" });
           } else {
             
-              res.status(500).json({ error: "Failed to insert candidature" });
+            res.status(500).json({ error: "Erreur lors de l'enregistrement de la candidature" });
           }
-      });
+    });
   } else {
       res.redirect('/connexion'); // Redirige l'utilisateur vers la page de connexion
   }
