@@ -26,6 +26,9 @@ var inscriptionRouter = require('./routes/inscription');
 
 var offresEmploiRouter = require('./routes/offresemploi');
 
+var candidaturesRouter = require('./routes/candidature');
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,6 +48,7 @@ app.use('/connexion', connexionRouter);
 app.use('/inscription',inscriptionRouter);
 app.use('/pageperso',pagepersoRouter);
 app.use('/offresemploi',offresEmploiRouter);
+app.use('/candidature',candidaturesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

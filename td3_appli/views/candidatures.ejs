@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+    <title><%= title %></title>
+</head>
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+    <h1><%= title %></h1>
+    <div class="overflow-x-auto">
+        <table class="table" id="usersTable">
+            <thead>
+                <tr>
+                    <th>Offre emploi Id</th>
+                    <th>Candidat associé à l'offre</th>
+                    <th>Date</th>
+                    <th>Pièces jointes</th>
+                    <th>Etat</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="candidaturesTableBody">
+                <% candidatures.forEach((candidature) => { %>
+                    <tr class="hover">
+                        <td><%= candidature.offreEmploi %></td>
+                        <td><%= candidature.candidat %></td>
+                        <td><%= candidature.date %></td>
+                        <td><%= candidature.piecesChemAcces %></td>
+                        <td><%= candidature.etat %></td>
+                        <td>
+                            <button class="btn btn-error" 
+                                    data-offre-emploi="<%= candidature.offreEmploi %>" 
+                                    data-candidat="<%= candidature.candidat %>">
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagination" class="pagination-container"></div>
+    <script src="/javascripts/utilitaires.js"></script>
+</body>
+</html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const candidatures = <%- JSON.stringify(candidatures) %>; // Passer les utilisateurs à partir de EJS
+    const pagination = document.getElementById("pagination");
+    const rowsPerPage = 7;
+    const candidaturesTableBody = document.getElementById("candidaturesTableBody");
+
+    setupPagination(candidatures, pagination, rowsPerPage, candidaturesTableBody, renderCandidatureRow);
+});</script>

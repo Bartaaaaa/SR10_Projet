@@ -2,7 +2,7 @@ var db = require('./db.js');
 
 module.exports = {
     read: function (candidat, callback) {
-        db.query("SELECT * FROM Candidature WHERE  = ?", candidat, function (err, results) {
+        db.query("SELECT * FROM Candidature WHERE  candidat = ?", candidat, function (err, results) {
             if (err)                 console.log("erreur");
 
             callback(results);
@@ -29,12 +29,12 @@ module.exports = {
             }
         });
     },
-    delete : function(candidat,callback){
-        let sql = "DELETE FROM Candidature WHERE candidat = ?";
-        db.query(sql,candidat,function(err,results){
+    delete : function(offreEmploi,candidat,callback){
+        let sql = "DELETE FROM Candidature WHERE offreEmploi = ? AND candidat =  ?";
+        db.query(sql,[offreEmploi, candidat],function(err,results){
             if (err){
-                throw err;
-            }else{
+console.log(err)           
+ }else{
                 callback(true);
             }
         })
