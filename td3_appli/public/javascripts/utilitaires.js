@@ -15,7 +15,16 @@ function displayItems(items, page, rowsPerPage, tableBody, renderRow) {
     document.querySelectorAll('.btn-error').forEach(button => {
         button.addEventListener('click', function() {
             const email = this.getAttribute('data-mail');
-            deleteUser(email, this.closest('tr'), items, pagination, rowsPerPage);
+            const offreEmploi = this.getAttribute('data-offre-emploi');
+            const candidat = this.getAttribute('data-candidat');
+
+            if (email) {
+                deleteUser(email, this.closest('tr'), items, pagination, rowsPerPage);
+            } else if (offreEmploi && candidat) {
+                deleteCandidature(offreEmploi, candidat, this.closest('tr'), items, pagination, rowsPerPage);
+            } else {
+                console.error('No valid attributes found for deletion');
+            }
         });
     });
 }
@@ -86,6 +95,35 @@ function deleteUser(email, row, items, pagination, rowsPerPage) {
     .catch(error => console.error('Error:', error));
 }
 
+
+function deleteCandidature(offreEmploi, candidat, row, items, pagination, rowsPerPage) {
+    fetch('/candidature/deletecandidature', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ offreEmploi: offreEmploi, candidat: candidat })
+    })
+    .then(response => response.text()) // Changed to text to log the actual response
+    .then(text => {
+        console.log("Response text:", text); // Log the response text
+        const data = JSON.parse(text); // Parse the text to JSON
+        if (data.success) {
+            row.remove();
+            items = items.filter(item => item.offreEmploi !== offreEmploi || item.candidat !== candidat);
+
+            alert('La candidature a bien été supprimée');
+
+            // Optionally, you can refresh the pagination and the item list
+            // setupPagination(items, pagination, rowsPerPage, document.getElementById("usersTableBody"), renderUserRow);
+        } else {
+            alert('Erreur lors de la suppression de la candidature.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
 function renderUserRow(user) {
     return `
         <td>${user.prenom}</td>
@@ -105,3 +143,17 @@ function renderOrganisationRow(organisation) {
         <td>${organisation.type}</td>
     `;
 }
+
+function renderCandidatureRow(candidature) {
+    return `
+        <tr>
+            <td>${candidature.offreEmploi}</td>
+            <td>${candidature.candidat}</td>
+            <td>${candidature.date}</td>
+            <td>${candidature.piecesChemAcces}</td>
+            <td>${candidature.etat}</td>
+            <td><button class="btn btn-error" data-offre-emploi="${candidature.offreEmploi}" data-candidat="${candidature.candidat}">Supprimer</button></td>
+        </tr>
+    `;
+}
+

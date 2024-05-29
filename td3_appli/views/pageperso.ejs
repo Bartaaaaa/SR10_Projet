@@ -12,7 +12,7 @@
         <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
     </div>
 
-    <button type="submit" class="top-right-button">Visualiser mes candidatures</button>
+    <button id = "mescandidatures" type="button" class="top-right-button">Visualiser mes candidatures</button>
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
@@ -39,7 +39,13 @@
             </ul>
         </div>
     </div>
+
 </body>
+<script>  
+  document.getElementById('mescandidatures').addEventListener('click', function(event) {
+    window.location.href = "http://localhost:3000/candidature/mescandidatures";
+})
+</script>
 <style>
   .top-right-button {
       position: fixed;
