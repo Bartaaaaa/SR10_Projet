@@ -87,12 +87,15 @@ function deleteUser(email, row, items, pagination, rowsPerPage) {
             alert('L utilisateur a bien été supprimé');
 
             // Optionally, you can refresh the pagination and the item list
-           // setupPagination(items, pagination, rowsPerPage, document.getElementById("usersTableBody"), renderUserRow);
+            // setupPagination(items, pagination, rowsPerPage, document.getElementById("usersTableBody"), renderUserRow);
         } else {
-            alert('Erreur lors de la suppression de l\'utilisateur.');
+            alert('Erreur lors de la suppression de l\'utilisateur: ' + data.message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Erreur lors de la suppression de l\'utilisateur.');
+    });
 }
 
 
