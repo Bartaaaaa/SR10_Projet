@@ -39,6 +39,7 @@ router.post('/addCandidature', function(req, res, next) {
   } else {
       res.redirect('/connexion'); // Redirige l'utilisateur vers la page de connexion
   }
+  // (Manon: pourquoi pas de res.send ?)
 });
 
 module.exports = router;
