@@ -76,19 +76,19 @@ router.post('/adduser', function (req, res) {
 
 //Supprimer un utilisateur 
 router.post('/deleteuser', function (req, res) {
-    email = req.body.email;
+    const email = req.body.email;
   
-            userModel.delete(email, function(success) {
-                if (success) {
-                    console.log("User deleted successfully!");
-                    res.json({success: true , message: "User deleted  successfully" });
-                } else {
-                    console.log("Failed to delete user.");
-                    res.status(500).json({ error: "Failed to delete user" });
-                }
-            });
- 
-  });
+    userModel.delete(email, function(success) {
+        if (success) {
+            console.log("User deleted successfully!");
+            res.json({success: true, message: "User deleted successfully"});
+        } else {
+            console.log("Failed to delete user.");
+            res.json({success: false, message: "Failed to delete user"});
+        }
+    });
+});
+
 
 
 module.exports = router;

@@ -87,15 +87,17 @@ module.exports = {
             }
         });
     },
-    delete : function(mail,callback){
+    delete: function(mail, callback) {
         let sql = "DELETE FROM Utilisateur WHERE mail = ?";
-        db.query(sql,mail,function(err,results){
-            if (err){
-                throw err;
-            }else{
+        db.query(sql, mail, function(err, results) {
+            if (err) {
+                console.error('Error while deleting user:', err);
+                callback(false);
+            } else {
                 callback(true);
             }
-        })
+        });
     }
+    
 
 }
