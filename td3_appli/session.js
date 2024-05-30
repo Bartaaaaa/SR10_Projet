@@ -10,12 +10,12 @@ module.exports = {
     });
   },
 
-  creatSession: function (session, data, role) {
+  creatSession: function (session, data) {
     session.userid = data.id;
     session.mail = data.mail;
     session.mdp = data.mdp;
     session.name = data.name;
-    session.role = role;
+    session.role = data.role;
     session.firstname = data.firstname;
     session.tel = data.tel; 
     session.creationDate = data.creationDate;

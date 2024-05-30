@@ -79,11 +79,11 @@ module.exports = {
             // Gestion des erreurs lors de l'exécution de la requête.
             if (err) {
                 console.error("Erreur lors de l'exécution de la requête SQL :", err);
-                callback(true); // Indiquer une erreur à la fonction de rappel
+                callback(err, null); // Indiquer une erreur à la fonction de rappel
                 return; // Arrêter l'exécution de la fonction
             } else {
-                // Si l'insertion réussit, exécuter la fonction de callback avec true.
-                callback(true);
+                // Si l'insertion réussit, exécuter la fonction de callback avec l'ID de l'utilisateur.
+                callback(null, results.insertId); //propriété de mysql, renvoie l'id incrémenté de l'utilisateur
             }
         });
     },
