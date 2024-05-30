@@ -33,6 +33,19 @@ module.exports = {
             console.log("Role added successfully", results); // Log the results
             callback(null, results); // Return results to callback
         });
+    },
+    majRole: function (userId, newRole, callback) {
+        console.log("Updating role for user", userId, "to", newRole); // Log the inputs
+        // Execute a SQL query to update the role for a user.
+        db.query("UPDATE RoleUtilisateur SET role = ? WHERE utilisateur = ?", [newRole, userId], function (err, results) {
+            if (err) {
+                console.error("Error executing SQL query:", err);
+                callback(err, null); // Return error to callback
+                return;
+            }
+            console.log("Role updated successfully", results); // Log the results
+            callback(null, results); // Return results to callback
+        });
     }
 
 }

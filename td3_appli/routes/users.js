@@ -100,6 +100,18 @@ router.post('/deleteuser', function (req, res) {
     });
 });
 
+router.post('/updateRole', function (req, res) {
+    const { userId, newRole } = req.body;
 
+    roleModel.majRole(userId, newRole, function (err, result) {
+        if (err) {
+            console.log("Failed to update role:", err);
+            res.status(500).json({ error: "Failed to update role" });
+        } else {
+            console.log("Role updated successfully!");
+            res.json({ message: "Role updated successfully" });
+        }
+    });
+});
 
 module.exports = router;

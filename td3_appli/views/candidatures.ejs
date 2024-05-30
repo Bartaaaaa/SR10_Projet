@@ -27,7 +27,13 @@
                         <td><%= candidature.offreEmploi %></td>
                         <td><%= candidature.candidat %></td>
                         <td><%= candidature.date %></td>
-                        <td><%= candidature.piecesChemAcces %></td>
+                        <td>
+                            <% candidature.piecesChemAcces.forEach((file, index) => { %>
+                                <a href="<%= file.filePath %>" download class="btn btn-download">
+                                    Télécharger Pièce <%= index + 1 %>
+                                </a><br>
+                            <% }) %>
+                        </td>
                         <td><%= candidature.etat %></td>
                         <td>
                             <button class="btn btn-error" 
@@ -52,5 +58,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const rowsPerPage = 7;
     const candidaturesTableBody = document.getElementById("candidaturesTableBody");
 
+    console.log('Candidatures chargées:', candidatures);
+
     setupPagination(candidatures, pagination, rowsPerPage, candidaturesTableBody, renderCandidatureRow);
-});</script>
+});
+</script>

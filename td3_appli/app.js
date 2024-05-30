@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const bodyParser = require('body-parser');
 
 var app = express();
 
@@ -54,9 +55,11 @@ app.use('/candidature',candidaturesRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
-
+app.use('./uploads', express.static(path.join(__dirname, 'uploads')));
 
 // error handler
 app.use(function(err, req, res, next) {

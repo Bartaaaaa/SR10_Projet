@@ -147,13 +147,18 @@ function renderOrganisationRow(organisation) {
     `;
 }
 
+
 function renderCandidatureRow(candidature) {
+    const downloadLinks = candidature.piecesChemAcces.map((file, index) => {
+        return `<a href="${file.filePath}" download class="btn btn-download">Télécharger Pièce ${index + 1}</a><br>`;
+    }).join('');
+
     return `
         <tr>
             <td>${candidature.offreEmploi}</td>
             <td>${candidature.candidat}</td>
             <td>${candidature.date}</td>
-            <td>${candidature.piecesChemAcces}</td>
+            <td>${downloadLinks}</td>
             <td>${candidature.etat}</td>
             <td><button class="btn btn-error" data-offre-emploi="${candidature.offreEmploi}" data-candidat="${candidature.candidat}">Supprimer</button></td>
         </tr>
