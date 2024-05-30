@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var candidatureModel = require('../model/Candidature');
 const path = require('path'); // Import path module
+const fs = require('fs'); // Import fs module
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -45,16 +46,38 @@ router.get('/mescandidatures', function(req, res, next) {
 });
 
 router.post('/deletecandidature', function (req, res) {
-  const offreEmploi = req.body.offreEmploi;  // Ensure the variables are declared correctly
+  const offreEmploi = req.body.offreEmploi;
   const candidat = req.body.candidat;
 
-  candidatureModel.delete(offreEmploi, candidat, function(success) {
-    if (success) {
-      console.log("Candidature deleted successfully!");
-      res.json({ success: true, message: "Candidature deleted successfully" });
+  // Lire la candidature pour obtenir les chemins des fichiers
+  candidatureModel.readOne(offreEmploi, candidat, function(candidature) {
+    if (candidature) {
+      const filesToDelete = candidature.piecesChemAcces.split(',');
+
+      // Supprimer les fichiers
+      filesToDelete.forEach(filePath => {
+        const fullPath = path.join(__dirname, '../uploads', path.basename(filePath));
+        fs.unlink(fullPath, (err) => {
+          if (err) {
+            console.error('Erreur lors de la suppression du fichier:', fullPath, err);
+          } else {
+            console.log('Fichier supprimé:', fullPath);
+          }
+        });
+      });
+
+      // Supprimer la candidature de la base de données
+      candidatureModel.delete(offreEmploi, candidat, function(success) {
+        if (success) {
+          console.log("Candidature supprimée avec succès!");
+          res.json({ success: true, message: "Candidature supprimée avec succès" });
+        } else {
+          console.log("Échec de la suppression de la candidature.");
+          res.status(500).json({ error: "Échec de la suppression de la candidature" });
+        }
+      });
     } else {
-      console.log("Failed to delete Candidature.");
-      res.status(500).json({ error: "Failed to delete Candidature" });
+      res.status(404).json({ error: "Candidature non trouvée" });
     }
   });
 });
