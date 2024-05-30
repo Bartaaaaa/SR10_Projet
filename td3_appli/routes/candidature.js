@@ -1,16 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var candidatureModel = require('../model/Candidature')
+var candidatureModel = require('../model/Candidature');
 const path = require('path'); // Import path module
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
-module.exports = router;
-
-
 
 const Candidaturemodel = require('../model/Candidature');
 
@@ -39,7 +35,8 @@ router.get('/mescandidatures', function(req, res, next) {
       }
       res.render('candidatures', {
         title: 'Liste de mes candidatures',
-        candidatures: result // Ensure this matches the EJS template variable
+        candidatures: result, // Ensure this matches the EJS template variable
+        path: path // Pass the path module to the view
       });
     });
   } else {
@@ -47,22 +44,19 @@ router.get('/mescandidatures', function(req, res, next) {
   }
 });
 
-
-module.exports = router;
-
-
 router.post('/deletecandidature', function (req, res) {
   const offreEmploi = req.body.offreEmploi;  // Ensure the variables are declared correctly
   const candidat = req.body.candidat;
 
   candidatureModel.delete(offreEmploi, candidat, function(success) {
-      if (success) {
-          console.log("Candidature deleted successfully!");
-          res.json({ success: true, message: "Candidature deleted successfully" });
-      } else {
-          console.log("Failed to delete Candidature.");
-          res.status(500).json({ error: "Failed to delete Candidature" });
-      }
+    if (success) {
+      console.log("Candidature deleted successfully!");
+      res.json({ success: true, message: "Candidature deleted successfully" });
+    } else {
+      console.log("Failed to delete Candidature.");
+      res.status(500).json({ error: "Failed to delete Candidature" });
+    }
   });
 });
+
 module.exports = router;

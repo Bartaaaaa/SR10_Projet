@@ -24,26 +24,26 @@
             <tbody id="candidaturesTableBody">
                 <% candidatures.forEach((candidature) => { %>
                     <tr class="hover">
-                        <td><%= candidature.offreEmploi %></td>
-                        <td><%= candidature.candidat %></td>
-                        <td><%= candidature.date %></td>
-                        <td>
-                            <% candidature.piecesChemAcces.forEach((file, index) => { %>
-                                <a href="<%= file.filePath %>" download class="btn btn-download">
-                                    Télécharger Pièce <%= index + 1 %>
-                                </a><br>
-                            <% }) %>
-                        </td>
-                        <td><%= candidature.etat %></td>
-                        <td>
-                            <button class="btn btn-error" 
-                                    data-offre-emploi="<%= candidature.offreEmploi %>" 
-                                    data-candidat="<%= candidature.candidat %>">
-                                Supprimer
-                            </button>
-                        </td>
+                      <td><%= candidature.offreEmploi %></td>
+                      <td><%= candidature.candidat %></td>
+                      <td><%= candidature.date %></td>
+                      <td>
+                        <% candidature.piecesChemAcces.forEach((file, index) => { %>
+                          <a href="/files/download/<%= file.fileName %>" class="btn btn-download">
+                            Télécharger Pièce <%= index + 1 %>
+                          </a><br>
+                        <% }) %>
+                      </td>
+                      <td><%= candidature.etat %></td>
+                      <td>
+                        <button class="btn btn-error" 
+                                data-offre-emploi="<%= candidature.offreEmploi %>" 
+                                data-candidat="<%= candidature.candidat %>">
+                          Supprimer
+                        </button>
+                      </td>
                     </tr>
-                <% }) %>
+                  <% }) %>
             </tbody>
         </table>
     </div>

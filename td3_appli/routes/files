@@ -1,0 +1,21 @@
+const express = require('express');
+const path = require('path');
+const router = express.Router();
+
+router.get('/download/:filename', function (req, res) {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, '../uploads', filename);
+
+  // Ajout de logs pour vérifier le chemin complet du fichier
+  console.log('Demande de téléchargement pour le fichier:', filename);
+  console.log('Chemin complet du fichier:', filePath);
+
+  res.download(filePath, filename, function (err) {
+    if (err) {
+      console.log('Erreur lors du téléchargement du fichier:', err);
+      res.status(500).send('Erreur lors du téléchargement du fichier');
+    }
+  });
+});
+
+module.exports = router;
