@@ -18,17 +18,19 @@ module.exports = {
     },
 
 
-    create: function (offreEmploi,candidat,date,piecesChemAcces,etat) {
-        let sql = "INSERT INTO Candidature (offreEmploi,candidat,date,piecesChemAcces,etat) VALUES (?,?, ?, ?, ?)";
-        db.query(sql, [offreEmploi,candidat,date,piecesChemAcces,etat], function (err, results) {
-            if (err) {
-                console.error("Erreur lors de l'exécution de la requête SQL :", err);
-                alert('Vous avez déjà candidaté à cette offre.')
-               // callback(true); // Indiquer une erreur à la fonction de rappel
-                return; // Arrêter l'exécution de la fonction            } else {
-            }
-        });
-    },
+  create: function (offreEmploi, candidat, date, piecesChemAcces, etat, callback) {
+    let sql = "INSERT INTO Candidature (offreEmploi, candidat, date, piecesChemAcces, etat) VALUES (?, ?, ?, ?, ?)";
+    db.query(sql, [offreEmploi, candidat, date, piecesChemAcces, etat], function (err, results) {
+      if (err) {
+        console.error("Erreur lors de l'exécution de la requête SQL :", err);
+        return callback(false, err);
+      } else {
+        return callback(true);
+      }
+    });
+  },
+
+
     delete : function(offreEmploi,candidat,callback){
         let sql = "DELETE FROM Candidature WHERE offreEmploi = ? AND candidat =  ?";
         db.query(sql,[offreEmploi, candidat],function(err,results){
