@@ -3,6 +3,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
     margin: 0;
+    padding-bottom: 20px; /* Added padding to ensure there's always some space at the bottom */
 }
 
 /* Navigation Bar */
@@ -40,21 +41,36 @@ nav ul li a:hover {
 
 /* Main Content */
 .content {
+    align-items: center; /* Center content horizontally */
     margin: 70px auto; /* Adjust this margin to avoid overlap with the navbar */
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 50%;
 }
 
-/* Header */
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row; /* Change flex-direction to column */
+}
+
+/* Form Column */
+.form-column {
+    margin-right: 20px;
+}
+
+/* Ensure Header spans the entire content div and is centered */
 .header {
+    flex: 1 0 100%;
     text-align: center;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .header h2 {
+    font-weight: bold;
     margin: 0;
     font-size: 1.5em;
 }
@@ -70,26 +86,27 @@ form {
     flex-direction: column;
 }
 
+form .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
 form label {
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-form input[type="text"], form input[type="email"], form input[type="tel"] {
-    margin-bottom: 15px;
+form input, form select {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-form .form-group {
-    margin-bottom: 15px;
-}
-
-/* Buttons */
 .buttons {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
 }
 
 .buttons button {
@@ -108,18 +125,57 @@ form .form-group {
     background-color: #5a6268;
 }
 
-.buttons .btn-primary:hover {
+/* Buttons Column */
+.buttons-column {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    margin-bottom: 60px;
+}
+
+.buttons-column button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px; /* Space between buttons */
+    width: 200px; /* Ensure all buttons have the same width */
+    text-align: center;
+}
+
+.buttons-column .btn-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.buttons-column .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.buttons-column .btn-primary {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.buttons-column .btn-primary:hover {
     background-color: #0056b3;
 }
 
-.buttons .btn-danger:hover {
+.buttons-column .btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.buttons-column .btn-danger:hover {
     background-color: #c82333;
 }
+
 
 /* Return Button */
 .return-button {
     margin-top: 20px;
     text-align: center;
+    padding-bottom: 20px; /* Added padding to create space at the bottom */
 }
 
 .return-button button {
