@@ -54,3 +54,21 @@
     overflow-x: auto;
     margin-bottom: 20px;
 }
+
+.btn-primary {
+    background-color: #6F74E7;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #595db9;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #b02a37;
+}
