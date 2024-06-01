@@ -1,0 +1,55 @@
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+<head>  
+      <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+</head>
+
+    <h1>
+        <%= user.name %> (<%= user.status %>) - <%= user.role %>
+    </h1>
+
+    <form>        
+        <label for="nom">Nom</label>
+        <input type="nom" id="nom" name="nom" required placeholder="Entrez votre Nom">
+       
+        <label for="prenom">Prénom</label>
+        <input type="prenom" id="prenom" name="prenom" required placeholder="Entrez votre Prenom">
+
+        <label for="mail">Mail</label>
+        <input type="email" id="mail" name="mail" required placeholder="Entrez votre mail">
+
+        <label for="tel">Téléphone</label>
+        <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone">
+
+        <label for="mdp">Statut</label>
+        <input type="statut" id="statut" name="statut" required placeholder="Entrez votre Statut">
+
+        <button type="submit">S'inscrire</button>
+
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Rôle</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th><%= user.nom %></th>
+                <th><%= user.prenom %></th>
+                <th><%= user.mail %></th>
+                <th><%= user.tel %></th>
+                <th><%= user.role %></th>
+                <th><%= user.status %></th>
+            </tr>
+        </tbody>
+    </table>
+
+
+</body>
