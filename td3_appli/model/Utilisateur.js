@@ -14,6 +14,15 @@ module.exports = {
         });
     },
 
+    readId: function (id, callback) {
+        db.query("SELECT * FROM Utilisateur WHERE id = ?", id, function (err, results) {
+            // Gestion des erreurs lors de l'exécution de la requête.
+            if (err) throw err;
+            // Retour des résultats via la fonction de callback.
+            callback(results);
+        });
+    },
+
     // Fonction pour lire les informations de tous les utilisateurs.
     readall: function (callback) {
         // Exécution d'une requête SQL pour sélectionner tous les utilisateurs.

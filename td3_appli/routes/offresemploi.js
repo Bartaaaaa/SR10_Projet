@@ -48,6 +48,7 @@ router.post('/addCandidature', upload.array('fileUpload', 10), function(req, res
   } else {
     res.redirect('/connexion');
   }
+  // (Manon: pourquoi pas de res.send ?)
 });
 
 

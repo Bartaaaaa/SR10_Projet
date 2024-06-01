@@ -42,7 +42,7 @@ router.post('/verifuser', function(req, res, next) {
   //      res.status(500).json({ error: "Failed to connectuser" });
   //};
   router.get('/userslist', function (req, res, next) {
-    result=userModel.readall(function(result){
+    userModel.readall(function(result){
         res.render('usersList', { title: 'Liste des utilisateurs', users: result });
     });
 });
@@ -112,6 +112,22 @@ router.post('/updateRole', function (req, res) {
             res.json({ message: "Role updated successfully" });
         }
     });
+});
+
+router.get('/:id', function (req, res) {
+    const id = req.params.id;
+    userModel.readId(id, function (results) {
+        const user = results[0]
+        roleModel.read(id, function(err, roleResults) {
+            if (err) {
+                console.log("Failed to get role:", err);
+                res.status(500).json({ error: "Failed to get role" });
+            }
+            const role = roleResults[0].role;
+            user.role = role;
+            res.render('detailutilisateur', { user });
+        })
+    })
 });
 
 module.exports = router;

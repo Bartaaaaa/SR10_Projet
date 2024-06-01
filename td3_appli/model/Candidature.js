@@ -20,7 +20,8 @@ module.exports = {
         db.query(sql, [offreEmploi, candidat, date, piecesChemAcces, etat], function (err, results) {
             if (err) {
                 console.error("Erreur lors de l'exécution de la requête SQL :", err);
-                return callback(false, err);
+                alert('Vous avez déjà candidaté à cette offre.')
+                return callback(false, err); // (Manon: précédente candidature non garantie ?)
             } else {
                 return callback(true);
             }
