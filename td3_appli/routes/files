@@ -11,8 +11,8 @@ router.get('/download/:filename', function (req, res) {
   console.log('Demande de téléchargement pour le fichier:', filename);
   console.log('Chemin complet du fichier:', filePath);
 //res.download(filePath, filename, function (err) {...}) : Utilise la méthode res.download d'Express pour envoyer le fichier au client.
-filePath : Le chemin complet du fichier à télécharger.
-filename : Le nom du fichier tel qu'il apparaîtra lors du téléchargement par le client.
+//filePath : Le chemin complet du fichier à télécharger.
+//filename : Le nom du fichier tel qu'il apparaîtra lors du téléchargement par le client.
   res.download(filePath, filename, function (err) {
     if (err) {
       console.log('Erreur lors du téléchargement du fichier:', err);
