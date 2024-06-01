@@ -4,12 +4,15 @@ const router = express.Router();
 
 router.get('/download/:filename', function (req, res) {
   const filename = req.params.filename;
+  //: Construction du chemin complet du fichier en joignant le répertoire actuel (__dirname), le dossier parent (../uploads), et le nom du fichier. Cela permet d'obtenir le chemin complet du fichier dans le répertoire uploads.
   const filePath = path.join(__dirname, '../uploads', filename);
 
   // Ajout de logs pour vérifier le chemin complet du fichier
   console.log('Demande de téléchargement pour le fichier:', filename);
   console.log('Chemin complet du fichier:', filePath);
-
+//res.download(filePath, filename, function (err) {...}) : Utilise la méthode res.download d'Express pour envoyer le fichier au client.
+filePath : Le chemin complet du fichier à télécharger.
+filename : Le nom du fichier tel qu'il apparaîtra lors du téléchargement par le client.
   res.download(filePath, filename, function (err) {
     if (err) {
       console.log('Erreur lors du téléchargement du fichier:', err);
