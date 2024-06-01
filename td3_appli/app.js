@@ -26,6 +26,7 @@ var offresEmploiRouter = require('./routes/offresemploi');
 var candidaturesRouter = require('./routes/candidature');
 var filesRouter = require('./routes/files');
 
+// var detailsOffre = require('./routes/detailsoffre.js')
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

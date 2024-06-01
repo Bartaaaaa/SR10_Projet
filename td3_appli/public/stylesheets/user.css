@@ -1,0 +1,136 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+}
+
+/* Navigation Bar */
+nav {
+    width: 100%;
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 14px 20px;
+    display: block;
+}
+
+nav ul li a:hover {
+    background-color: #575757;
+}
+
+/* Main Content */
+.content {
+    margin: 70px auto; /* Adjust this margin to avoid overlap with the navbar */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.header .status {
+    font-size: 0.9em;
+    color: green;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="text"], form input[type="email"], form input[type="tel"] {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form .form-group {
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.buttons .btn-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.buttons .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.buttons .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.buttons .btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Return Button */
+.return-button {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.return-button button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.return-button button:hover {
+    background-color: #0056b3;
+}

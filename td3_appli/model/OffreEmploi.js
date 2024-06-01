@@ -28,6 +28,8 @@ module.exports = {
             }
         });
     },
+
+    
     delete : function(id ,callback){
         let sql = "DELETE FROM OffreEmploi WHERE id = ?";
         db.query(sql,id,function(err,results){
