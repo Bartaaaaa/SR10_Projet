@@ -16,31 +16,39 @@ router.get('/offresemploilist', function (req, res, next) {
   
 
 
+const upload = require('../config/multer-config'); // Import multer configuration
 
 var Candidaturemodel= require('../model/Candidature')
 
-router.post('/addCandidature', function(req, res, next) {
+router.post('/addCandidature', upload.array('fileUpload', 10), function(req, res, next) {
   if (req.session.userid) {
+    Candidaturemodel.read(req.session.userid, function(result) {
+      const alreadyApplied = result.some(cand => cand.offreEmploi === req.body.offreEmploi);
+
+      if (alreadyApplied) {
+        return res.status(500).json({ error: "Vous ne pouvez pas candidater deux fois à la même candidature" });
+      }
+
       const offreEmploi = req.body.offreEmploi;
       const candidat = req.session.userid;
       const date = req.body.date;
-      const pieces = req.body.piecesChemAcces;
+      const pieces = req.files.map(file => file.path); // Array of file paths
       const etat = req.body.etat;
 
-
-      Candidaturemodel.create(offreEmploi, candidat, date, pieces, etat, function(success) {
-          if (success) {
-            res.json({ message: "Candidature inserted successfuly" });
-          } else {
-            
-            res.status(500).json({ error: "Erreur lors de l'enregistrement de la candidature" });
-          }
+      Candidaturemodel.create(offreEmploi, candidat, date, pieces.join(','), etat, function(success, err) {
+        if (err) {
+          return res.status(500).json({ error: "Erreur lors de l'enregistrement de la candidature" });
+        } else {
+          res.json({ message: "Candidature insérée avec succès" });
+        }
+      });
     });
   } else {
-      res.redirect('/connexion'); // Redirige l'utilisateur vers la page de connexion
+    res.redirect('/connexion');
   }
   // (Manon: pourquoi pas de res.send ?)
 });
+
 
 module.exports = router;
 

@@ -33,75 +33,66 @@
             </tbody>
         </table>
     </div>
-    <form id="candidatureForm">
+    <form id="candidatureForm" enctype="multipart/form-data">
         <label for="candidatureId">Saisissez l'id de l'offre à laquelle vous voulez candidater</label>
         <input required type="text" id="candidatureId">
         <label for="fileUpload">Ajouter des pièces jointes :</label>
         <input type="file" id="fileUpload" name="fileUpload" multiple>
         <button type="submit" class="btn btn-primary">Soumettre</button>
-    </form>
+      </form>
 
 <script> 
  
 
-
-
  document.getElementById('candidatureForm').addEventListener('submit', function(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const submitButton = event.target.querySelector('button[type="submit"]');
-    //submitButton.disabled = true; // Disable the submit button
+  const submitButton = event.target.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
 
-    const offreIdInput = document.getElementById('candidatureId').value;
-    const offreIds = Array.from(document.querySelectorAll('.offre-id')).map(td => td.textContent);
+  const offreIdInput = document.getElementById('candidatureId').value;
+  const offreIds = Array.from(document.querySelectorAll('.offre-id')).map(td => td.textContent);
 
-    if (!offreIds.includes(offreIdInput)) {
-                alert('L\'ID de l\'offre saisi n\'est pas valide. Veuillez saisir un ID valide.');
-                submitButton.disabled = false; // Re-enable the submit button
-                return;
-            }
+  if (!offreIds.includes(offreIdInput)) {
+    alert('L\'ID de l\'offre saisi n\'est pas valide. Veuillez saisir un ID valide.');
+    submitButton.disabled = false;
+    return;
+  }
 
-    const formData = {
-        offreEmploi: document.getElementById('candidatureId').value,
-        date: new Date().toISOString().split('T')[0], // Format date as YYYY-MM-DD
-        piecesChemAcces: "temporaire",
-        etat: "attente",
-    };
+  const form = document.getElementById('candidatureForm');
+  const formData = new FormData(form);
+  formData.append('offreEmploi', offreIdInput);
+  formData.append('date', new Date().toISOString().split('T')[0]);
+  formData.append('etat', 'attente');
 
-    console.log('Sending form data:', formData);
-
-    fetch('/offresemploi/addCandidature', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => {
-        console.log('Response status:', response.status);
-        if (response.redirected) {
-            // If the response is a redirect, follow it
-            window.location.href = response.url;
-        } else if (!response.ok) {
-            return response.json().then(errorData => {
-                throw new Error(errorData.error || 'Erreur lors de l\'enregistrement de la candidature');
-            });
-        } else {
-            return response.json();
-        }
-    })
-    .then(data => {
-        console.log('Success:', data);
-        alert(data.message || 'Type enregistré avec succès!');
-        window.location.href = 'http://localhost:3000/offresemploi/offresemploilist';
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    })
-    .finally(() => {
-        submitButton.disabled = false; // Re-enable the submit button
-    });
+  fetch('/offresemploi/addCandidature', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (response.redirected) {
+      window.location.href = response.url;
+    } else if (!response.ok) {
+      return response.json().then(errorData => {
+        throw new Error(errorData.error || 'Erreur lors de l\'enregistrement de la candidature');
+      });
+    } else {
+      return response.json();
+    }
+  })
+  .then(data => {
+    alert(data.message || 'Candidature enregistrée avec succès!');
+    window.location.href = '/offresemploi/offresemploilist';
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert(error.message || 'Erreur lors de l\'enregistrement de la candidature');
+  })
+  .finally(() => {
+    submitButton.disabled = false;
+  });
 });
+
 
 
      
