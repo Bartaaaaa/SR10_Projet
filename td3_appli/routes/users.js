@@ -83,6 +83,7 @@ router.post('/adduser', function (req, res) {
 });
 
 //Supprimer un utilisateur 
+// (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
 router.post('/deleteuser', function (req, res) {
     function deleteUserCallback (success) {
         if (success) {
@@ -137,9 +138,12 @@ router.get('/:id', function (req, res) {
                 if (err) {
                     console.log("Failed to get role:", err);
                 } 
+                // Explications : 
+                // - '?.' = 'si l'attribut suivant existe, on le renvoie, sinon on renvoie undefined'
+                // - '??' = 'si l'élément avant le ?? existe, on le renvoie, sinon on renvoie celui d'après'
                 const role = roleResults[0]?.role ?? 'Rôle non défini';
                 user.role = role;
-                res.render('detailutilisateur', { user });
+                res.render('detailutilisateur', { user: user });
             })
         } else {
             res.status(404).json({ error: "User not found" });
@@ -147,8 +151,9 @@ router.get('/:id', function (req, res) {
     })
 });
 
+// Gestion du formulaire
 router.post('/updateUser', function (req, res) {
-    const { id, nom, prenom, tel, mail, statut } = req.body;
+    const { id, nom, prenom, tel, mail } = req.body;
     let canUpdate = false;
     // Vérifier si id de requête === id de utilisateur connecté, si oui canUpdate = true
 
@@ -171,7 +176,7 @@ router.post('/updateUser', function (req, res) {
     }
 
     if (canUpdate) {
-        userModel.update(id, mail, nom, prenom, tel, statut, function(updateSuccessful) {
+        userModel.update(id, mail, nom, prenom, tel, function(updateSuccessful) {
             if (!updateSuccessful) {
                 console.log("Failed to update user");
                 res.status(500).json({ error: "Failed to update user" });

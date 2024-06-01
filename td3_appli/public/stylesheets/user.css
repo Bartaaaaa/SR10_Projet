@@ -48,12 +48,14 @@ nav ul li a:hover {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 50%;
+    min-width: 300px;
 }
 
 .main-content {
     display: flex;
     justify-content: space-between;
     flex-direction: row; /* Change flex-direction to column */
+    flex-wrap: wrap;
 }
 
 /* Form Column */
@@ -114,15 +116,16 @@ form input, form select {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 
 .buttons .btn-secondary {
-    background-color: #6c757d;
+    background-color: #6F74E7;
     color: #ffffff;
 }
 
 .buttons .btn-secondary:hover {
-    background-color: #5a6268;
+    background-color: #595db9;
 }
 
 /* Buttons Column */
@@ -144,21 +147,21 @@ form input, form select {
 }
 
 .buttons-column .btn-secondary {
-    background-color: #6c757d;
+    background-color: #6F74E7;
     color: #ffffff;
 }
 
 .buttons-column .btn-secondary:hover {
-    background-color: #5a6268;
+    background-color: #595db9;
 }
 
 .buttons-column .btn-primary {
-    background-color: #007bff;
+    background-color: #6F74E7;
     color: #ffffff;
 }
 
 .buttons-column .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #595db9;
 }
 
 .buttons-column .btn-danger {
@@ -167,7 +170,7 @@ form input, form select {
 }
 
 .buttons-column .btn-danger:hover {
-    background-color: #c82333;
+    background-color: #b02a37;
 }
 
 
@@ -182,11 +185,11 @@ form input, form select {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #6F74E7;
     color: #ffffff;
     cursor: pointer;
 }
 
 .return-button button:hover {
-    background-color: #0056b3;
+    background-color: #595db9;
 }

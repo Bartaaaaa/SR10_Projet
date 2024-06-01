@@ -34,13 +34,6 @@
                         <label for="tel">Téléphone</label>
                         <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone" value="<%= user.tel %>">
                     </div> 
-                    <div class="form-group">
-                        <label for="statut">Statut</label>
-                        <select id="statut" name="statut" required>
-                            <option value="actif" <%= user.statut === 'actif' ? 'selected' : '' %>>actif</option>
-                            <option value="inactif" <%= user.statut === 'inactif' ? 'selected' : '' %>>inactif</option>
-                        </select>
-                    </div>
 
                     <input type="text" id="role" name="role" hidden value="<%= user.role %>">
 
@@ -66,7 +59,33 @@
     </div>
 
     <script>
+        function sendDataToServer(endPoint, formData, errorMessage, callback = null) {
+            fetch(endPoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                alert(data.message);
+            })
+            .catch((error) => {
+                alert(errorMessage + error);
+            })
+            .finally(() => {
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+
         document.getElementById('updateUserForm').addEventListener('submit', function(event) {
+            // Évite que le formulaire soit envoyé automatiquement au chargement de la page
             event.preventDefault(); 
             const id = window.location.pathname.replace('/users/', '');
 
@@ -75,27 +94,10 @@
                 prenom: document.getElementById('prenom').value,
                 nom: document.getElementById('nom').value,
                 tel: document.getElementById('tel').value,
-                mail: document.getElementById('mail').value,
-                statut: document.getElementById('statut').value
+                mail: document.getElementById('mail').value
             };
-
-            fetch('/users/updateUser', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    throw data.error;
-                }
-                alert(data.message);
-            })
-            .catch((error) => {
-                alert("Erreur lors de la mise à jour de l'utilisateur : " + error);
-            });
+            // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
+            sendDataToServer('/users/updateUser', formData, "Erreur lors de la mise à jour de l'utilisateur : ", () => { window.location.reload(); });
         });
 
         const makeAdminButton = document.getElementById('make-admin');
@@ -104,7 +106,7 @@
         }
 
         const currentRole = document.getElementById('role').value;
-        document.getElementById('change-role').addEventListener('click', () => changeRole(currentRole === "candidat" ? "recruteur" : "candidat"))
+        document.getElementById('change-role').addEventListener('click', () => changeRole(currentRole === "candidat" ? "recruteur" : "candidat"));
 
         function changeRole (newRole) {
             const id = window.location.pathname.replace('/users/', '');
@@ -113,28 +115,11 @@
                 newRole: newRole
             }
 
-            fetch('/users/updateRole', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    throw data.error;
-                }
-                alert(data.message);
-            })
-            .catch((error) => {
-                console.error(error);
-                alert("Erreur lors de la mise à jour de l'utilisateur : " + error);
-            }).finally(() => {
-                window.location.reload();
-            });
+            // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
+            sendDataToServer('/users/updateRole', formData, "Erreur lors de la mise à jour de l'utilisateur : " , () => { window.location.reload(); });
         }
 
+        // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
         document.getElementById('supprimer').addEventListener('click', () => {
             if (confirm('ATTENTION : vous vous apprétez à supprimer cet utilisateur. Confirmer ?')) {
                 
@@ -143,25 +128,7 @@
                     id: id
                 }
 
-                fetch('/users/deleteuser', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        throw data.error;
-                    }
-                    alert(data.message);
-                })
-                .catch((error) => {
-                    alert("Erreur lors de la suppression de l'utilisateur : " + error);
-                }).finally(() => {
-                    window.location.href = 'http://localhost:3000';
-                });
+                sendDataToServer('/users/deleteuser', formData, "Erreur lors de la suppression de l'utilisateur : ", () => { window.location.href = 'http://localhost:3000'; });
             }
         });
 
