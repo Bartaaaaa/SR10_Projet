@@ -87,9 +87,7 @@ router.post('/adduser', function (req, res) {
 
 //Supprimer un utilisateur 
 router.post('/deleteuser', function (req, res) {
-    const email = req.body.email;
-  
-    userModel.delete(email, function(success) {
+    function deleteUserCallback (success) {
         if (success) {
             console.log("User deleted successfully!");
             res.json({success: true, message: "User deleted successfully"});
@@ -97,37 +95,97 @@ router.post('/deleteuser', function (req, res) {
             console.log("Failed to delete user.");
             res.json({success: false, message: "Failed to delete user"});
         }
-    });
+    }
+    const mail = req.body.mail
+    const id = req.body.id;
+    if (id) {
+        userModel.deleteById(id, deleteUserCallback);
+    } else if (mail) {
+        userModel.delete(mail, deleteUserCallback);
+    }
 });
 
 router.post('/updateRole', function (req, res) {
-    const { userId, newRole } = req.body;
-
-    roleModel.majRole(userId, newRole, function (err, result) {
+    function updateRoleCallback(err, result) {
         if (err) {
             console.log("Failed to update role:", err);
             res.status(500).json({ error: "Failed to update role" });
         } else {
             console.log("Role updated successfully!");
-            res.json({ message: "Role updated successfully" });
+            res.json({ message: "Role updated successfully to " + newRole });
         }
-    });
+    }
+    const { userId, newRole } = req.body;
+    try {
+        roleModel.read(userId, function (err, results) {
+            if (results.length === 0) {
+                console.log('No prior role. Adding role...');
+                roleModel.addRole(userId, newRole, () => updateRoleCallback(err, results));
+            } else {
+                console.log('Updating role...');
+                roleModel.majRole(userId, newRole, () => updateRoleCallback(err, results));
+            }
+        });
+    } catch(e) {
+        console.log('error here')
+    }
 });
 
 router.get('/:id', function (req, res) {
     const id = req.params.id;
     userModel.readId(id, function (results) {
         const user = results[0]
+        if (user !== undefined) {
+            roleModel.read(id, function(err, roleResults) {
+                if (err) {
+                    console.log("Failed to get role:", err);
+                } 
+                const role = roleResults[0]?.role ?? 'Rôle non défini';
+                user.role = role;
+                res.render('detailutilisateur', { user });
+            })
+        } else {
+            res.status(404).json({ error: "User not found" });
+        }
+    })
+});
+
+router.post('/updateUser', function (req, res) {
+    const { id, nom, prenom, tel, mail, statut } = req.body;
+    let canUpdate = false;
+    // Vérifier si id de requête === id de utilisateur connecté, si oui canUpdate = true
+
+    if (!canUpdate) {
+        // ID à prendre ici = id de l'utilisateur connecté, pas id de la requête
         roleModel.read(id, function(err, roleResults) {
             if (err) {
                 console.log("Failed to get role:", err);
                 res.status(500).json({ error: "Failed to get role" });
+            } else {
+                const role = roleResults[0].role;
+                if (role === "administrateur") {
+                    console.log('User is admin');
+                    canUpdate = true;
+                } else {
+                    console.log('Not admin, cannot update');
+                }
             }
-            const role = roleResults[0].role;
-            user.role = role;
-            res.render('detailutilisateur', { user });
-        })
-    })
+        });
+    }
+
+    if (canUpdate) {
+        userModel.update(id, mail, nom, prenom, tel, statut, function(updateSuccessful) {
+            if (!updateSuccessful) {
+                console.log("Failed to update user");
+                res.status(500).json({ error: "Failed to update user" });
+            } else {
+                console.log("User updated successfully!");
+                res.json({ message: "User updated successfully" });
+            }
+        });
+    } else {
+        res.status(500).json({ error: "Impossible de modifier un autre utilisateur sans être administrateur" });
+    }
 });
 
 module.exports = router;

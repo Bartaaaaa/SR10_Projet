@@ -106,7 +106,30 @@ module.exports = {
                 callback(true);
             }
         });
-    }
+    },
+
+    deleteById: function(id, callback) {
+        let sql = "DELETE FROM Utilisateur WHERE id = ?";
+        db.query(sql, mail, function(err, results) {
+            if (err) {
+                console.error('Error while deleting user:', err);
+                callback(false);
+            } else {
+                callback(true);
+            }
+        });
+    },
     
+    update: function(id, mail, nom, prenom, tel, statut, callback) {
+        const sql = "UPDATE Utilisateur SET mail = ?, nom = ?, prenom = ?, tel = ?, statut = ? WHERE id = ?";
+        db.query(sql, [mail, nom, prenom, tel, statut, id], function(err, results) {
+            if (err) {
+                console.error('Error while updating user:', err);
+                callback(false);
+            } else {
+                callback(true);
+            }
+        });
+    }
 
 }

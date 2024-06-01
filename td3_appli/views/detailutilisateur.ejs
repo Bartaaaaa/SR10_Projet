@@ -16,47 +16,157 @@
             </h2>
         </div>
         <div class="main-content">
-                    <div class="form-column">
-            <form>
-                <div class="form-group">
-                    <label for="nom">Nom</label>
-                    <input type="text" id="nom" name="nom" required placeholder="Entrez votre Nom" value="<%= user.nom %>">    
-                </div>
-                <div class="form-group">
-                    <label for="prenom">Prénom</label>
-                    <input type="text" id="prenom" name="prenom" required placeholder="Entrez votre Prénom" value="<%= user.prenom %>">
-                </div>
-                <div class="form-group">
-                    <label for="mail">Mail</label>
-                    <input type="email" id="mail" name="mail" required placeholder="Entrez votre mail" value="<%= user.mail %>">
-                </div>
-                <div class="form-group">
-                    <label for="tel">Téléphone</label>
-                    <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone" value="<%= user.tel %>">
-                </div> 
-                <div class="form-group">
-                    <label for="statut">Statut</label>
-                    <select id="statut" name="statut" required>
-                        <option value="actif" <%= user.statut === 'actif' ? 'selected' : '' %>>actif</option>
-                        <option value="inactif" <%= user.statut === 'inactif' ? 'selected' : '' %>>inactif</option>
-                    </select>
-                </div>
-                <div class="buttons">
-                    <button class="btn-secondary" type="submit">Sauvegarder les modifications</button>
-                </div>
-            </form>
-        </div>
-        <div class="buttons-column">
-            <button type="button" class="btn-danger">Supprimer</button>
-            <button type="button" class="btn-primary">Rendre Administrateur</button>
-            <button type="button" class="btn-primary">Rendre Candidat</button>
-        </div>
+            <div class="form-column">
+                <form id="updateUserForm">
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" id="nom" name="nom" required placeholder="Entrez votre Nom" value="<%= user.nom %>">    
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom</label>
+                        <input type="text" id="prenom" name="prenom" required placeholder="Entrez votre Prénom" value="<%= user.prenom %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="mail">Mail</label>
+                        <input type="email" id="mail" name="mail" required placeholder="Entrez votre mail" value="<%= user.mail %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="tel">Téléphone</label>
+                        <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone" value="<%= user.tel %>">
+                    </div> 
+                    <div class="form-group">
+                        <label for="statut">Statut</label>
+                        <select id="statut" name="statut" required>
+                            <option value="actif" <%= user.statut === 'actif' ? 'selected' : '' %>>actif</option>
+                            <option value="inactif" <%= user.statut === 'inactif' ? 'selected' : '' %>>inactif</option>
+                        </select>
+                    </div>
+
+                    <input type="text" id="role" name="role" hidden value="<%= user.role %>">
+
+                    <div class="buttons">
+                        <button class="btn-secondary" type="submit">Sauvegarder les modifications</button>
+                    </div>
+                </form>
+            </div>
+            <div class="buttons-column">
+                <button type="button" class="btn-danger" id="supprimer">Supprimer</button>
+
+                <!-- Vérifier le rôle ici par rapport à l'utilisateur connecté et non pas le profil affiché -->
+                <% if (user.role !== 'administrateur') { %>
+                    <button type="button" class="btn-primary" id="make-admin">Rendre Administrateur</button>
+                <% } %>
+                <button type="button" class="btn-primary" id="change-role">Rendre <%= user.role === "candidat" ? "Recruteur" : "Candidat" %> </button>
+            </div>
         </div>
 
     </div>
     <div class="return-button">
         <button type="button">Revenir à la recherche</button>
     </div>
+
+    <script>
+        document.getElementById('updateUserForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            const id = window.location.pathname.replace('/users/', '');
+
+            const formData = {
+                id: id,
+                prenom: document.getElementById('prenom').value,
+                nom: document.getElementById('nom').value,
+                tel: document.getElementById('tel').value,
+                mail: document.getElementById('mail').value,
+                statut: document.getElementById('statut').value
+            };
+
+            fetch('/users/updateUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                alert(data.message);
+            })
+            .catch((error) => {
+                alert("Erreur lors de la mise à jour de l'utilisateur : " + error);
+            });
+        });
+
+        const makeAdminButton = document.getElementById('make-admin');
+        if (makeAdminButton) {
+            makeAdminButton.addEventListener('click', () => changeRole('administrateur'));
+        }
+
+        const currentRole = document.getElementById('role').value;
+        document.getElementById('change-role').addEventListener('click', () => changeRole(currentRole === "candidat" ? "recruteur" : "candidat"))
+
+        function changeRole (newRole) {
+            const id = window.location.pathname.replace('/users/', '');
+            const formData = {
+                userId: id, 
+                newRole: newRole
+            }
+
+            fetch('/users/updateRole', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                alert(data.message);
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Erreur lors de la mise à jour de l'utilisateur : " + error);
+            }).finally(() => {
+                window.location.reload();
+            });
+        }
+
+        document.getElementById('supprimer').addEventListener('click', () => {
+            if (confirm('ATTENTION : vous vous apprétez à supprimer cet utilisateur. Confirmer ?')) {
+                
+                const id = window.location.pathname.replace('/users/', '');
+                const formData = {
+                    id: id
+                }
+
+                fetch('/users/deleteuser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw data.error;
+                    }
+                    alert(data.message);
+                })
+                .catch((error) => {
+                    alert("Erreur lors de la suppression de l'utilisateur : " + error);
+                }).finally(() => {
+                    window.location.href = 'http://localhost:3000';
+                });
+            }
+        });
+
+    </script>
     
 </body>
 </html>
+
