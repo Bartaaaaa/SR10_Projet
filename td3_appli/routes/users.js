@@ -48,8 +48,6 @@ router.post('/verifuser', function(req, res, next) {
 });
 
 //Ajouter un utilisateur 
-//Ajouter un utilisateur 
-
 router.post('/adduser', function (req, res) {
     const { nom, prenom, mail: email, tel: telephone, mdp: motDePasse } = req.body;
     const currentDate = new Date();
@@ -83,7 +81,6 @@ router.post('/adduser', function (req, res) {
         }
     });
 });
-
 
 //Supprimer un utilisateur 
 router.post('/deleteuser', function (req, res) {

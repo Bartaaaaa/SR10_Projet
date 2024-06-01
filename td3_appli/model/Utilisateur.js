@@ -110,7 +110,7 @@ module.exports = {
 
     deleteById: function(id, callback) {
         let sql = "DELETE FROM Utilisateur WHERE id = ?";
-        db.query(sql, mail, function(err, results) {
+        db.query(sql, id, function(err, results) {
             if (err) {
                 console.error('Error while deleting user:', err);
                 callback(false);
