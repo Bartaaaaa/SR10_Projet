@@ -28,7 +28,7 @@
                         <td><%= user.dateCreation %></td>
                         <td>
                             <button class="btn btn-primary" onclick="window.location.href = 'http://localhost:3000/users/<%= user.id %>';">Détail utilisateur</button>
-                            <button class="btn btn-danger" data-mail="<%= user.mail %>">Supprimer</button>
+                            <button class="btn btn-error" data-mail="<%= user.mail %>">Supprimer</button>
                         </td>
                     </tr>
                 <% }) %>
@@ -41,14 +41,14 @@
 
     <script>
         // (Manon) Avec ce code actif, le bouton 'Détail utilisateur' ne s'affiche pas
-    // document.addEventListener("DOMContentLoaded", function() {
-    //         const users = <%- JSON.stringify(users) %>; // Passer les utilisateurs à partir de EJS
-    //         const pagination = document.getElementById("pagination");
-    //         const rowsPerPage = 7;
-    //         const usersTableBody = document.getElementById("usersTableBody");
+     document.addEventListener("DOMContentLoaded", function() {
+             const users = <%- JSON.stringify(users) %>; // Passer les utilisateurs à partir de EJS
+             const pagination = document.getElementById("pagination");
+             const rowsPerPage = 7;
+             const usersTableBody = document.getElementById("usersTableBody");
 
-    //         setupPagination(users, pagination, rowsPerPage, usersTableBody, renderUserRow);
-    // }); 
+             setupPagination(users, pagination, rowsPerPage, usersTableBody, renderUserRow);
+     }); 
     </script>
 
     

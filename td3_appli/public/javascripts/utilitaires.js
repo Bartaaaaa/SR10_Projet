@@ -76,15 +76,20 @@ function deleteUser(email, row, items, pagination, rowsPerPage) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email: email })
+        body: JSON.stringify({ mail: email })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             row.remove();
             items = items.filter(item => item.mail !== email);
 
-            alert('L utilisateur a bien été supprimé');
+            alert('L\'utilisateur a bien été supprimé');
 
             // Optionally, you can refresh the pagination and the item list
             // setupPagination(items, pagination, rowsPerPage, document.getElementById("usersTableBody"), renderUserRow);
@@ -97,7 +102,6 @@ function deleteUser(email, row, items, pagination, rowsPerPage) {
         alert('Erreur lors de la suppression de l\'utilisateur.');
     });
 }
-
 
 function deleteCandidature(offreEmploi, candidat, row, items, pagination, rowsPerPage) {
     fetch('/candidature/deletecandidature', {
@@ -134,7 +138,8 @@ function renderUserRow(user) {
         <td>${user.mail}</td>
         <td>${user.tel}</td>
         <td>${user.dateCreation}</td>
-        <td><button class="btn btn-error" data-mail="${user.mail}">Supprimer</button></td>
+        <td> <button class="btn btn-primary" onclick="window.location.href = 'http://localhost:3000/users/${user.id}';">Détail utilisateur</button>
+        <button class="btn btn-error" data-mail="${user.mail}">Supprimer</button></td>
     `;
 }
 

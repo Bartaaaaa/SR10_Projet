@@ -25,6 +25,27 @@ router.get('/', function(req, res, next) {
         res.redirect('/connexion');
     }
 });
+router.get('/user-info', function(req, res, next) {
+    if (req.session.userid) {
+        // Create a user object with the required information
+        const user = {
+            nom: req.session.name,
+            prenom: req.session.firstname,
+            tel: req.session.tel,
+            mail: req.session.mail,
+            mdp: req.session.mdp,
+            creationDate: req.session.creationDate,
+            role: req.session.role,
+            statut: req.session.statut
+        };
+
+        // Send the user object as the response
+        res.json(user);
+    } else {
+        // If the user is not authenticated, send an appropriate response
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+});
 
 router.get('/deconnexion', function(req, res, next) {
     req.session.destroy(function(err) {
