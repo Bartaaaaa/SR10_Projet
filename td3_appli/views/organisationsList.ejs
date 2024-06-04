@@ -19,6 +19,8 @@
                     <th>Nom</th>
                     <th>Adresse</th>
                     <th>Type</th>
+                    <th>Adhérer</th>
+
                 </tr>
             </thead>
             <tbody id="organisationsTableBody">
@@ -28,11 +30,53 @@
                         <td><%= organisation.nom %></td>
                         <td><%= organisation.adrSiegeSocial %></td>
                         <td><%= organisation.type %></td>
+                        <td>                           
+                            <button class="btn btn-primary" onclick="adhereToOrganisation('<%= organisation.siren %>')">Adhérer</button>
+                        </td>
                     </tr>
                 <% }) %>
             </tbody>
+            
         </table>
+        <script>
+            function adhereToOrganisation(siren) {
+                fetch('/pageperso/user-info')
+                    .then(response => response.json())
+                    .then(user => {
+                        // Préparer les données pour l'adhésion
+                        const data = {
+                            siren: siren,
+                            userId: user.id,
+                        };
+                       
+                        // Envoyer la demande d'adhésion au serveur
+                        fetch('/DemandeAdherRecruteur/addAdherence', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                alert('Demande d\'adhésion envoyée avec succès.');
+                            } else {
+                                alert('Erreur lors de la demande d\'adhésion. Vous avez peut être déjà candidaté pour cette organisation');
+                                if (data.userId==null){
+                                     window.location.href = 'http://localhost:3000/connexion';
+                                return;
+                                 }
+
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+            </script>
     </div>
+  
     <div id="pagination" class="pagination-container"></div>
     <form action="/organisations/addtype" method="post" id="typeForm">
         <div>
@@ -65,6 +109,7 @@
         </div>
     </form>
     <script src="/javascripts/utilitaires.js"></script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const organisations = <%- JSON.stringify(organisations) %>; // Passer les organisations à partir de EJS

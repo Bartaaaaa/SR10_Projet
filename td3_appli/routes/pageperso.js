@@ -29,6 +29,7 @@ router.get('/user-info', function(req, res, next) {
     if (req.session.userid) {
         // Create a user object with the required information
         const user = {
+            id: req.session.userid, // Ajoutez cette ligne pour inclure l'ID de l'utilisateur
             nom: req.session.name,
             prenom: req.session.firstname,
             tel: req.session.tel,

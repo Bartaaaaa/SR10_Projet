@@ -149,7 +149,9 @@ function renderOrganisationRow(organisation) {
         <td>${organisation.nom}</td>
         <td>${organisation.adrSiegeSocial}</td>
         <td>${organisation.type}</td>
-    `;
+    
+        <td> <button class="btn btn-primary" onclick="adhereToOrganisation(${organisation.siren})">Adhérer</button>
+        `;
 }
 
 

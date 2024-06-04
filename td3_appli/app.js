@@ -25,7 +25,7 @@ var inscriptionRouter = require('./routes/inscription');
 var offresEmploiRouter = require('./routes/offresemploi');
 var candidaturesRouter = require('./routes/candidature');
 var filesRouter = require('./routes/files');
-
+var adherenceRouter = require('./routes/DemandeAdherRecruteur');
 // var detailsOffre = require('./routes/detailsoffre.js')
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -55,7 +55,7 @@ app.use('/pageperso', pagepersoRouter);
 app.use('/offresemploi', offresEmploiRouter);
 app.use('/candidature', candidaturesRouter);
 app.use('/files', filesRouter);
-
+app.use('/DemandeAdherRecruteur',adherenceRouter);
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
