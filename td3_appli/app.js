@@ -50,9 +50,9 @@ var sessionJS = require('./session');
 
 // Middleware pour vérifier les sessions et les rôles
 app.all("*", function (req, res, next) {
-  const nonSecurePaths = ["/", "/connexion", "/inscription","/offresemploi/offresemploilist","/fichesPoste/fichesPosteListe"];
-  const adminPaths = ["/organisations/organisationsList","/users/usersList"]; // Liste des URLs admin
-  const recruteurPaths = ["/someRecruteurPath"]; // Ajouter les chemins recruteur ici
+  const nonSecurePaths = ["/", "/connexion", "/inscription", "/offresemploi/offresemploilist", "/fichesPoste/fichesPosteListe","/pageperso"];
+  const adminPaths = ["/organisations/organisationsList", "/users/usersList"]; // Liste des URLs admin
+  const recruteurPaths = ["/organisations/organisationsList"]; // Ajouter les chemins recruteur ici
 
   // Si la route est non sécurisée, on passe au middleware suivant
   if (nonSecurePaths.includes(req.path)) return next();
@@ -75,18 +75,16 @@ app.all("*", function (req, res, next) {
     `);
   };
 
-  // Vérifier les routes admin
-  if (adminPaths.includes(req.path)) {
-    if (sessionJS.isConnected(req.session, { role: "administrateur" })) {
+  if (sessionJS.isConnected(req.session, { role: "administrateur" })) {
+    if (adminPaths.includes(req.path) ) {
       return next();
     } else {
       return redirectWithAlert("Cette page est uniquement accessible aux administrateurs");
     }
   }
 
-  // Vérifier les routes recruteur
-  if (recruteurPaths.includes(req.path)) {
-    if (sessionJS.isConnected(req.session, { role: "recruteur" })) {
+  if (sessionJS.isConnected(req.session, { role: "recruteur" })) {
+    if (recruteurPaths.includes(req.path)) {
       return next();
     } else {
       return redirectWithAlert("Cette page est uniquement accessible aux recruteurs");
