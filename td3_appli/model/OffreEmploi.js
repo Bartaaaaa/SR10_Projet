@@ -1,6 +1,8 @@
 var db = require('./db.js');
 
 module.exports = {
+
+    // Récupérer l'offre d'emploi à partir de son id
     read: function (id, callback) {
         db.query("SELECT * FROM OffreEmploi WHERE id = ?", id, function (err, results) {
             if (err)                 console.log("erreur");
@@ -9,6 +11,7 @@ module.exports = {
         });
     },
 
+    // Récupérer toutes les offres d'emploi
     readall: function (callback) {
         db.query("SELECT * FROM OffreEmploi", function (err, results) {
             if (err)                 console.log("erreur");
@@ -39,5 +42,45 @@ module.exports = {
                 callback(true);
             }
         })
+    },
+
+
+    // récupère toutes les informations liées à une offre grâce à son id
+    // des infos seront peut être à supprimer si elles ne sont pas utilisées
+    readAllInfo : function(id, callback){ 
+        const sql = "SELECT "
+        + "oe.id AS offre_id, "
+        + "oe.etatOffre, "
+        + "oe.dateValidite, "
+        + "oe.indication, "
+        + "oe.nbPieces, "
+        + "fp.id AS fichePoste_id, "
+        + "fp.etat AS fichePoste_etat, "
+        + "fp.lieuMission, "
+        + "fp.rythme, "
+        + "fp.salaireMin, "
+        + "fp.salaireMax, "
+        + "fp.description, "
+        + "fp.statutPoste, "
+        + "sp.nom as statutPoste_nom, "
+        + "m.id AS metier_id, "
+        + "m.nom AS metier_nom, "
+        + "o.siren AS organisation_siren, "
+        + "o.nom AS organisation_nom, "
+        + "o.adrSiegeSocial, "
+        + "o.type AS organisation_type "
+    + "FROM OffreEmploi oe "
+    + "JOIN FichePoste fp ON oe.fichePoste = fp.id "
+    + "JOIN METIER m ON fp.metier = m.id "
+    + "JOIN Organisation o ON fp.organisation = o.siren "
+    + "JOIN StatutPoste sp ON fp.statutPoste = sp.id "
+    + "WHERE oe.id = ?;"
+    
+    db.query(sql, id, function (err, results) {
+        if (err) console.log("Erreur :", err);
+        callback(results);
+    })
+
+
     }
 }

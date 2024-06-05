@@ -14,6 +14,7 @@ module.exports = {
         });
     },
 
+    // Renvoie un utilisateur à partir de son id
     readId: function (id, callback) {
         db.query("SELECT * FROM Utilisateur WHERE id = ?", id, function (err, results) {
             // Gestion des erreurs lors de l'exécution de la requête.

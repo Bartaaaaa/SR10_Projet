@@ -61,6 +61,7 @@ nav ul li a:hover {
 /* Form Column */
 .form-column {
     margin-right: 20px;
+    flex-wrap: wrap;
 }
 
 /* Ensure Header spans the entire content div and is centered */

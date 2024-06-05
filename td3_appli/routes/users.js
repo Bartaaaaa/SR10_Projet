@@ -130,7 +130,7 @@ router.post('/updateRole', function (req, res) {
 });
 
 router.get('/:id', function (req, res) {
-    const id = req.params.id;
+    const id = req.params.id; //récupérer l'id dans l'url
     userModel.readId(id, function (results) {
         const user = results[0]
         if (user !== undefined) {

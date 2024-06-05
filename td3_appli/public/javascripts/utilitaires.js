@@ -139,7 +139,7 @@ function renderUserRow(user) {
         <td>${user.tel}</td>
         <td>${user.dateCreation}</td>
         <td> <button class="btn btn-primary" onclick="window.location.href = 'http://localhost:3000/users/${user.id}';">Détail utilisateur</button>
-        <button class="btn btn-error" data-mail="${user.mail}">Supprimer</button></td>
+        <button class="btn btn-danger" data-mail="${user.mail}">Supprimer</button></td>
     `;
 }
 

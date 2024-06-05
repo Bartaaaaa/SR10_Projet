@@ -13,7 +13,36 @@ router.get('/offresemploilist', function (req, res, next) {
   });
 });
 
-  
+// Détails d'une offre d'emploi
+router.get('/:id', function (req, res) {
+  const id = req.params.id // récupérer l'id dans l'URL
+  OffreEmploimodel.readAllInfo(id, function(results){
+    const offre = results[0];
+    if (offre !== undefined){
+      console.log(offre);
+      // Valeurs de test avant réelle récupération dans database
+      // offre.intitule = "intitule";
+      // offre.organisation = "organisation";
+      // offre.lieu = "lieu";
+      // offre.datePubli = "Date de publication";
+      // offre.pieces = "Pièces demandées";
+      // offre.statutPoste = "Statut de poste";
+      // offre.metier = "Métier";
+      // offre.resp = "Responsable hiérarchique";
+      // offre.description = "blablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablabla";
+      // offre.remuneration = "75K / an";
+      // offre.horaires = "96h";
+      offre.intitule = offre.statutPoste_nom + " - " + offre.metier_nom + " chez " + offre.organisation_nom;
+      
+
+
+      res.render('detailsoffre', {offer: offre});  // {varVue : varLocale}
+    } else {
+      res.status(404).json({ error: "Offer not found" });
+    }
+  })
+ 
+});
 
 
 const upload = require('../config/multer-config'); // Import multer configuration

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails offre</title>
+    <link rel="stylesheet" href="/stylesheets/user.css">
+</head>
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+
+    <div class="content">
+        <div class="header">
+            <h2>
+                <%= offer.intitule %>
+            </h2>
+        </div>
+        <div class="main-content">
+            <div class="form-column">
+               <div>
+                <b>Organisation : </b><%= offer.organisation_nom %>
+               </div> 
+
+               <div>
+                <b>Lieu : </b><%= offer.lieuMission %>
+               </div>
+
+               <div>
+                <b>Date de publication : </b><%= offer.datePubli %>
+               </div>
+
+               <div>
+                <b>Pièces demandées : </b><%= offer.nbPieces %>
+               </div>
+
+               <div>
+                <b>Statut du poste : </b><%= offer.statutPoste_nom %>
+               </div>
+
+               <div>
+                <b>Type de métier : </b><%= offer.metier_nom %>
+               </div>
+
+               <div>
+                <b>Responsable hiérarchique : </b><%= offer.resp %>
+               </div>
+
+               <div>
+                <b>Description : </b><%= offer.description %>
+               </div>
+            </div>
+            <div class="buttons-column">
+                <div>
+                    Rémunération : <%= offer.remuneration %>
+                </div>
+
+                <div>
+                    Horaires : <%= offer.horaires %>
+                </div>
+            </div>
+        </div>
+
+        <div class="return-button">
+            <button type="button">Candidater</button>
+        </div>
+    </div>
+    <div class="return-button">
+        <button type="button" onclick="window.history.go(-1);">Revenir à la page précédente</button>
+    </div>
+
+    <script>
+        function sendDataToServer(endPoint, formData, errorMessage, callback = null) {
+            fetch(endPoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw data.error;
+                }
+                alert(data.message);
+            })
+            .catch((error) => {
+                alert(errorMessage + error);
+            })
+            .finally(() => {
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+
+        document.getElementById('updateUserForm').addEventListener('submit', function(event) {
+            // Évite que le formulaire soit envoyé automatiquement au chargement de la page
+            event.preventDefault(); 
+            const id = window.location.pathname.replace('/users/', '');
+
+            const formData = {
+                id: id,
+                prenom: document.getElementById('prenom').value,
+                nom: document.getElementById('nom').value,
+                tel: document.getElementById('tel').value,
+                mail: document.getElementById('mail').value
+            };
+            // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
+            sendDataToServer('/users/updateUser', formData, "Erreur lors de la mise à jour de l'utilisateur : ", () => { window.location.reload(); });
+        });
+
+        const makeAdminButton = document.getElementById('make-admin');
+        if (makeAdminButton) {
+            makeAdminButton.addEventListener('click', () => changeRole('administrateur'));
+        }
+
+        const currentRole = document.getElementById('role').value;
+        document.getElementById('change-role').addEventListener('click', () => changeRole(currentRole === "candidat" ? "recruteur" : "candidat"));
+
+        function changeRole (newRole) {
+            const id = window.location.pathname.replace('/users/', '');
+            const formData = {
+                userId: id, 
+                newRole: newRole
+            }
+
+            // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
+            sendDataToServer('/users/updateRole', formData, "Erreur lors de la mise à jour de l'utilisateur : " , () => { window.location.reload(); });
+        }
+
+        // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
+        document.getElementById('supprimer').addEventListener('click', () => {
+            if (confirm('ATTENTION : vous vous apprétez à supprimer cet utilisateur. Confirmer ?')) {
+                
+                const id = window.location.pathname.replace('/users/', '');
+                const formData = {
+                    id: id
+                }
+
+                sendDataToServer('/users/deleteuser', formData, "Erreur lors de la suppression de l'utilisateur : ", () => { window.location.href = 'http://localhost:3000'; });
+            }
+        });
+
+    </script>
+    
+</body>
+</html>
+
