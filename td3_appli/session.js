@@ -28,9 +28,10 @@ module.exports = {
     return session;
   },
 
-  isConnected: (session, role) => {
-    if (!session.userid || session.userid === undefined) return false;
-    if (role && session.role !== role) return false;
+  isConnected: (session, data) => {
+    console.log(session);
+    if (!session.userid || session.userid === undefined|| session.userid === null) return false;
+    if (data && data.role && session.role !== data.role) return false;
     return true;
   },
 

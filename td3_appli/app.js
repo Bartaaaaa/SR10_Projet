@@ -26,7 +26,7 @@ var offresEmploiRouter = require('./routes/offresemploi');
 var candidaturesRouter = require('./routes/candidature');
 var filesRouter = require('./routes/files');
 var adherenceRouter = require('./routes/DemandeAdherRecruteur');
-// var detailsOffre = require('./routes/detailsoffre.js')
+
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -43,19 +43,77 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/connexion', connexionRouter);
+app.use('/inscription', inscriptionRouter);
+// Code pour garder la session d'un utilisateur
+var sessionJS = require('./session');
+
+// Middleware pour vérifier les sessions et les rôles
+app.all("*", function (req, res, next) {
+  const nonSecurePaths = ["/", "/connexion", "/inscription","/offresemploi/offresemploilist","/fichesPoste/fichesPosteListe"];
+  const adminPaths = ["/organisations/organisationsList","/users/usersList"]; // Liste des URLs admin
+  const recruteurPaths = ["/someRecruteurPath"]; // Ajouter les chemins recruteur ici
+
+  // Si la route est non sécurisée, on passe au middleware suivant
+  if (nonSecurePaths.includes(req.path)) return next();
+
+  const redirectWithAlert = (message) => {
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Redirection</title>
+          <script>
+            alert("${message}");
+            window.history.back();
+          </script>
+      </head>
+      <body></body>
+      </html>
+    `);
+  };
+
+  // Vérifier les routes admin
+  if (adminPaths.includes(req.path)) {
+    if (sessionJS.isConnected(req.session, { role: "administrateur" })) {
+      return next();
+    } else {
+      return redirectWithAlert("Cette page est uniquement accessible aux administrateurs");
+    }
+  }
+
+  // Vérifier les routes recruteur
+  if (recruteurPaths.includes(req.path)) {
+    if (sessionJS.isConnected(req.session, { role: "recruteur" })) {
+      return next();
+    } else {
+      return redirectWithAlert("Cette page est uniquement accessible aux recruteurs");
+    }
+  }
+
+  // Vérifier si l'utilisateur est connecté pour les autres routes
+  if (sessionJS.isConnected(req.session, {})) {
+    return next();
+  } else {
+    return redirectWithAlert("Vous devez être connecté pour accéder à cette page");
+  }
+});
+
 
 // Define routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/organisations', organisationsRouter);
 app.use('/fichesposte', fichesPosteRouter);
-app.use('/connexion', connexionRouter);
-app.use('/inscription', inscriptionRouter);
+
 app.use('/pageperso', pagepersoRouter);
 app.use('/offresemploi', offresEmploiRouter);
 app.use('/candidature', candidaturesRouter);
 app.use('/files', filesRouter);
-app.use('/DemandeAdherRecruteur',adherenceRouter);
+app.use('/DemandeAdherRecruteur', adherenceRouter);
+
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -70,26 +128,6 @@ app.use(function(err, req, res, next) {
   // Render the error page
   res.status(err.status || 500);
   res.render('error');
-});
-
-// Code pour garder la session d'un utilisateur
-var sessionJS = require('./session');
-
-// Ce code va nous permettre plus tard de gérer quelle page est accessible à quel type d'utilisateur
-app.all("*", function (req, res, next) {
-  const nonSecurePaths = ["/connexion", "/inscription"];
-  const adminPaths = []; // Liste des urls admin
-  if (nonSecurePaths.includes(req.path)) return next();
-  // Authentification de l'utilisateur
-  if (adminPaths.includes(req.path)) {
-    if (sessionJS.isConnected(req.session, "admin")) return next();
-    else
-      res.status(403).render("error", { message: "Unauthorized access", error: {} });
-  } else {
-    if (sessionJS.isConnected(req.session)) return next();
-    // Non authentifié
-    else res.redirect("/inscription");
-  }
 });
 
 module.exports = app;

@@ -95,6 +95,7 @@ router.post('/deleteuser', function (req, res) {
         }
     }
     const mail = req.body.mail
+    
     const id = req.body.id;
     if (id) {
         userModel.deleteById(id, deleteUserCallback);

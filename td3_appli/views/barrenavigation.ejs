@@ -21,33 +21,7 @@
         <a href="/pageperso" class="right">Page Personnelle</a>
 
     </div>
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var usersLink = document.getElementById("ListeUsers");
 
-    usersLink.style.display = "none";
-
-    // Fetch the user's role from the "/user-info" endpoint
-    fetch('/pageperso/user-info')
-        .then(response => response.json())
-        .then(user => {
-            // Get the user's role
-            var userRole = user.role;
-
-            // Get the "Utilisateurs" link element
-
-            // Check if the user's role is "recruteur"
-            if (userRole === "administrateur") {
-                // If the user's role is "recruteur", display the "Utilisateurs" link
-                usersLink.style.display = "block";
-            } else {
-                // If the user's role is not "recruteur", hide the "Utilisateurs" link
-                usersLink.style.display = "none";
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});
-</script>
 <style>  
 .right {
     margin-left: auto;
@@ -76,3 +50,30 @@ document.addEventListener("DOMContentLoaded", function() {
  
 </body>
 </html>
+<script> /*  
+    document.addEventListener("DOMContentLoaded", function() {
+        var usersLink = document.getElementById("ListeUsers");
+    
+        usersLink.style.display = "none";
+    
+        // Fetch the user's role from the "/user-info" endpoint
+        fetch('/pageperso/user-info')
+            .then(response => response.json())
+            .then(user => {
+                // Get the user's role
+                var userRole = user.role;
+    
+                // Get the "Utilisateurs" link element
+    
+                // Check if the user's role is "recruteur"
+                if (userRole === "administrateur") {
+                    // If the user's role is "recruteur", display the "Utilisateurs" link
+                    usersLink.style.display = "block";
+                } else {
+                    // If the user's role is not "recruteur", hide the "Utilisateurs" link
+                    usersLink.style.display = "none";
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });*/
+    </script>
