@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page de Garde</title>
     <link rel="stylesheet" href="../fichiers.css/pagegarde.css">
-
 </head>
 <body>
     <div id="navbar">
         <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
     </div>
 
-    <button id = "mescandidatures" type="button" class="top-right-button">Visualiser mes candidatures</button>
+    <button id="mescandidatures" type="button" class="top-right-button">Visualiser mes candidatures</button>
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
@@ -25,13 +24,20 @@
                         <span class="text-3xl">D</span>
                     </div>
                 </li>
-                <!-- Sidebar content here -->
+                <!-- Sidebar content here -->         
+                <li id="id" style="display: none;"><a><%= user.id %></a></li>
+
                 <li><a>Nom: <%= user.nom %></a></li>
                 <li><a>Prénom: <%= user.prenom %></a></li>
                 <li><a>Téléphone: <%= user.tel %></a></li>
                 <li><a>Mail: <%= user.mail %></a></li>
                 <li><a>Statut: <%= user.statut %></a></li>
                 <li><a>Role: <%= user.role %></a></li>
+                <li><a>Mon organisation:</a></li>
+                <li><a id="siren">SIREN: </a></li>
+                <li><a id="org-name">Nom: </a></li>
+                <li><a id="adr-siege">Adresse Siège Social: </a></li>
+                <li><a id="org-type">Type: </a></li>
 
                 <li>
                     <form id="logout-form" action="/pageperso/deconnexion" method="get">
@@ -43,10 +49,61 @@
     </div>
 
 </body>
-<script>  
+<script>
   document.getElementById('mescandidatures').addEventListener('click', function(event) {
     window.location.href = "http://localhost:3000/candidature/mescandidatures";
-})
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const userIdElement = document.getElementById('id');
+    if (userIdElement) {
+        const userId = userIdElement.textContent.trim();
+        console.log('User ID:', userId);
+
+        fetch('/DemandeAdherRecruteur/readOrga', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId: userId })
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            const contentType = response.headers.get("content-type");
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('Error text:', text);
+                    throw new Error('Network response was not ok');
+                });
+            }
+            if (contentType && contentType.includes("application/json")) {
+                return response.json();
+            } else {
+                return response.text().then(text => {
+                    console.error('Response text:', text);
+                    throw new Error('Response was not JSON');
+                });
+            }
+        })
+        .then(data => {
+            console.log('Data received:', data);
+            if (data.success) {
+                document.getElementById('siren').textContent = 'SIREN: ' + data.result.siren;
+                document.getElementById('org-name').textContent = 'Nom: ' + data.result.nom;
+                document.getElementById('adr-siege').textContent = 'Adresse Siège Social: ' + data.result.adrSiegeSocial;
+                document.getElementById('org-type').textContent = 'Type: ' + data.result.type;
+            } else {
+                console.error('Failed to fetch organization data');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    } else {
+        console.error('User ID element not found');
+    }
+  });
 </script>
 <style>
   .top-right-button {

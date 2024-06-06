@@ -2,10 +2,13 @@ var db = require('./db.js');
 
 module.exports = {
     read: function (siren, callback) {
-        db.query("SELECT * FROM Organisation WHERE siren = ?", siren, function (err, results) {
-            if (err)                 console.log("erreur");
-
-            callback(results);
+        db.query("SELECT * FROM Organisation WHERE siren = ?", [siren], function (err, results) {
+            if (err) {
+                console.log("Erreur lors de la lecture de l'organisation :", err);
+                callback(err, null);
+            } else {
+                callback(null, results[0]); // Supposons qu'il n'y a qu'une seule organisation correspondant
+            }
         });
     },
 

@@ -27,6 +27,16 @@ module.exports = {
         });
     },
 
+    readUser: function (recruteur, callback) {
+        db.query("SELECT * FROM DemandeAdherRecruteur WHERE recruteur = ?", [recruteur], function (err, results) {
+            if (err) {
+                console.log("Erreur lors de la lecture de l'utilisateur :", err);
+                callback(err, null);
+            } else {
+                callback(null, results[0]); // Supposons qu'il n'y a qu'un seul utilisateur correspondant
+            }
+        });
+    },
  
   
 };

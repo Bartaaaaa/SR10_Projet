@@ -50,7 +50,7 @@ var sessionJS = require('./session');
 
 // Middleware pour vérifier les sessions et les rôles
 app.all("*", function (req, res, next) {
-  const nonSecurePaths = ["/", "/connexion", "/inscription", "/offresemploi/offresemploilist", "/fichesPoste/fichesPosteListe","/pageperso" ,"/candidature/mescandidatures"];
+  const nonSecurePaths = ["/pageperso/deconnexion","/", "/connexion", "/inscription", "/offresemploi/offresemploilist", "/fichesPoste/fichesPosteListe","/pageperso" ,"/candidature/mescandidatures","/DemandeAdherRecruteur/readOrga"];
   const adminPaths = ["/organisations/organisationsList", "/users/usersList"]; // Liste des URLs admin
   const recruteurPaths = ["/organisations/organisationsList"]; // Ajouter les chemins recruteur ici
 
@@ -79,7 +79,7 @@ app.all("*", function (req, res, next) {
     if (adminPaths.includes(req.path) ) {
       return next();
     } else {
-      return redirectWithAlert("Cette page est uniquement accessible aux administrateurs");
+      return redirectWithAlert("Cette page n'est pas accessible pour vous");
     }
   }
 
@@ -87,7 +87,7 @@ app.all("*", function (req, res, next) {
     if (recruteurPaths.includes(req.path)) {
       return next();
     } else {
-      return redirectWithAlert("Cette page est uniquement accessible aux recruteurs");
+      return redirectWithAlert("Cette page n'est pas accessible pour vous");
     }
   }
 

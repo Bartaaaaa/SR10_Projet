@@ -11,6 +11,8 @@ router.get('/', function(req, res, next) {
         res.render('pageperso', { 
             title: 'Page personnelle',
             user: {
+                id: req.session.userid, // Ajoutez cette ligne pour inclure l'ID de l'utilisateur
+
                 nom : req.session.name,
                 prenom: req.session.firstname,
                 tel: req.session.tel,
