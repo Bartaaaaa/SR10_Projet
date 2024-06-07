@@ -172,3 +172,12 @@ function renderCandidatureRow(candidature) {
     `;
 }
 
+function renderAdherenceRow(adherence) {
+    return `
+        <tr>
+            <td>${adherence.organisation}</td>
+            <td>${adherence.recruteur}</td>
+            <td>${adherence.etat}</td>
+        </tr>
+    `;
+}

@@ -12,6 +12,7 @@
     </div>
 
     <button id="mescandidatures" type="button" class="top-right-button">Visualiser mes candidatures</button>
+    <button id="adherences" type="button" class="top-right-button2">Visualiser les demandes d'adhérences</button>
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
@@ -53,6 +54,10 @@
   document.getElementById('mescandidatures').addEventListener('click', function(event) {
     window.location.href = "http://localhost:3000/candidature/mescandidatures";
   });
+  document.getElementById('adherences').addEventListener('click', function(event) {
+    window.location.href = "http://localhost:3000/DemandeAdherRecruteur/adherencesList";
+  });
+
 
   document.addEventListener('DOMContentLoaded', function() {
     const userIdElement = document.getElementById('id');
@@ -119,8 +124,21 @@
       border-radius: 5px;
       cursor: pointer;
   }
+  .top-right-button2 {
+      position: fixed;
+      top: 270px;
+      right: 20px;
+      z-index: 1000;
+      padding: 15px 25px; /* Adjust padding for larger size */
+      font-size: 18px; /* Adjust font size for larger text */
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
 
-  .top-right-button:hover {
+  .top-right-button:hover,.top-right-button2:hover {
       background-color: #0056b3;
   }
 

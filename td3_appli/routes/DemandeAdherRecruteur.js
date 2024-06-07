@@ -50,5 +50,10 @@ router.post('/readOrga', function(req, res, next) {
 });
 
 
+router.get('/adherenceslist', function (req, res, next) {
+    Adhermodel.readall(function(result){
+        res.render('adherencesList', { title: 'Liste des adhérences', adherences: result });
+    });
+});
 
 module.exports = router;

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+    <title><%= title %></title>
+</head>
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+    <h1><%= title %></h1>
+    <div class="overflow-x-auto">
+        <table class="table" id="adherencesTable">
+            <thead>
+                <tr>
+                    <th>Organisation ID</th>
+                    <th>Recruteur ID</th>
+                    <th>Etat</th>
+                </tr>
+            </thead>
+            <tbody id="adherencesTableBody">
+                <% adherences.forEach((adherence) => { %>
+                    <tr class="hover">
+                      <td><%= adherence.organisation %></td>
+                      <td><%= adherence.recruteur %></td>
+                      <td><%= adherence.etat %></td>
+                    </tr>
+                  <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagination" class="pagination-container"></div>
+    <script src="/javascripts/utilitaires.js"></script>
+</body>
+</html>
+         </tbody>
+        </table>
+    </div>
+    <div id="pagination" class="pagination-container"></div>
+    <script src="/javascripts/utilitaires.js"></script>
+</body>
+</html>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const adherences = <%- JSON.stringify(adherences) %>; // Passer les adhérences à partir de EJS
+    const pagination = document.getElementById("pagination");
+    const rowsPerPage = 7;
+    const adherencesTableBody = document.getElementById("adherencesTableBody");
+
+    console.log('Adhérences chargées:', adherences);
+
+    setupPagination(adherences, pagination, rowsPerPage, adherencesTableBody, renderAdherenceRow);
+});
+</script>
