@@ -16,39 +16,113 @@
                     <th>Organisation ID</th>
                     <th>Recruteur ID</th>
                     <th>Etat</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="adherencesTableBody">
                 <% adherences.forEach((adherence) => { %>
                     <tr class="hover">
-                      <td><%= adherence.organisation %></td>
-                      <td><%= adherence.recruteur %></td>
-                      <td><%= adherence.etat %></td>
+                        <td><%= adherence.organisation %></td>
+                        <td><%= adherence.recruteur %></td>
+                        <td><%= adherence.etat %></td>
+                        <td>
+                            <button class="accept-btn" data-organisation="<%= adherence.organisation %>" data-recruteur="<%= adherence.recruteur %>">Accepter</button>
+                            <button class="reject-btn" data-organisation="<%= adherence.organisation %>" data-recruteur="<%= adherence.recruteur %>">Refuser</button>
+                        </td>
                     </tr>
-                  <% }) %>
+                <% }) %>
             </tbody>
         </table>
     </div>
     <div id="pagination" class="pagination-container"></div>
     <script src="/javascripts/utilitaires.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const adherences = <%- JSON.stringify(adherences) %>; // Passer les adhérences à partir de EJS
+        const pagination = document.getElementById("pagination");
+        const rowsPerPage = 7;
+        const adherencesTableBody = document.getElementById("adherencesTableBody");
+
+        console.log('Adhérences chargées:', adherences);
+
+        setupPagination(adherences, pagination, rowsPerPage, adherencesTableBody, renderAdherenceRow);
+
+        // Handle accept and reject button clicks
+        document.querySelectorAll('.accept-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const organisation = this.dataset.organisation;
+                const recruteur = this.dataset.recruteur;
+                updateAdherenceState(organisation, recruteur, 'validee');
+            });
+        });
+
+        document.querySelectorAll('.reject-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const organisation = this.dataset.organisation;
+                const recruteur = this.dataset.recruteur;
+                updateAdherenceState(organisation, recruteur, 'refusee');
+            });
+        });
+    });
+
+    function updateAdherenceState(organisation, recruteur, etat) {
+        fetch('/DemandeAdherRecruteur/updateAdherence', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ organisation, recruteur, etat })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload(); // Reload the page to see the updates
+            } else {
+                console.error('Error updating adherence state:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    </script>
 </body>
 </html>
-         </tbody>
-        </table>
-    </div>
-    <div id="pagination" class="pagination-container"></div>
-    <script src="/javascripts/utilitaires.js"></script>
-</body>
-</html>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const adherences = <%- JSON.stringify(adherences) %>; // Passer les adhérences à partir de EJS
-    const pagination = document.getElementById("pagination");
-    const rowsPerPage = 7;
-    const adherencesTableBody = document.getElementById("adherencesTableBody");
-
-    console.log('Adhérences chargées:', adherences);
-
-    setupPagination(adherences, pagination, rowsPerPage, adherencesTableBody, renderAdherenceRow);
-});
-</script>
+<style>/* Styles pour les boutons Accepter et Refuser */
+    button.accept-btn {
+        background-color: #4CAF50; /* Vert pour accepter */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    
+    button.reject-btn {
+        background-color: #f44336; /* Rouge pour refuser */
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    
+    button.accept-btn:hover {
+        background-color: #45a049; /* Vert plus foncé pour le survol */
+    }
+    
+    button.reject-btn:hover {
+        background-color: #d32f2f; /* Rouge plus foncé pour le survol */
+    }
+    </style>

@@ -37,6 +37,17 @@ module.exports = {
             }
         });
     },
- 
+    update: function(organisation, recruteur, etat,  callback) {
+        const sql = "UPDATE DemandeAdherRecruteur SET organisation = ?, recruteur = ?, etat = ? WHERE organisation = ? AND recruteur = ?";
+        db.query(sql, [organisation, recruteur, etat, organisation, recruteur], function(err, results) {
+            if (err) {
+                console.error('Error while updating user:', err);
+                callback(false);
+            } else {
+                callback(true);
+            }
+        });
+    }
+    
   
 };

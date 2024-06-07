@@ -178,6 +178,10 @@ function renderAdherenceRow(adherence) {
             <td>${adherence.organisation}</td>
             <td>${adherence.recruteur}</td>
             <td>${adherence.etat}</td>
+            <td>
+                <button class="accept-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Accepter</button>
+                <button class="reject-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Refuser</button>
+            </td>
         </tr>
     `;
 }

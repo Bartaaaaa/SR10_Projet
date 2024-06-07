@@ -50,9 +50,33 @@ router.post('/readOrga', function(req, res, next) {
 });
 
 
-router.get('/adherenceslist', function (req, res, next) {
+/*router.get('/adherenceslist', function (req, res, next) {
     Adhermodel.readall(function(result){
         res.render('adherencesList', { title: 'Liste des adhérences', adherences: result });
+    });
+});*/
+
+router.get('/adherenceslist/:organisationId', function (req, res, next) {
+    const organisationId = req.params.organisationId;
+
+    Adhermodel.read(organisationId, function(result) {
+        res.render('adherencesList', { title: 'Liste des adhérences', adherences: result });
+    });
+});
+
+router.post('/updateAdherence', function (req, res, next) {
+    const { organisation, recruteur, etat } = req.body;
+
+    if (!organisation || !recruteur || !etat) {
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+
+    Adhermodel.update(organisation, recruteur, etat, function (success) {
+        if (success) {
+            res.json({ success: true, message: 'Adherence updated successfully.' });
+        } else {
+            res.status(500).json({ success: false, message: 'Error updating adherence.' });
+        }
     });
 });
 
