@@ -1,6 +1,6 @@
-var express = require('express');
-var fichesPosteModel = require('../model/FichePoste')
-var router = express.Router();
+const express = require('express');
+const fichesPosteModel = require('../model/FichePoste')
+const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {

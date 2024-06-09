@@ -132,50 +132,93 @@ form input, form select {
     background-color: #595db9;
 }
 
-/* Buttons Column */
-.buttons-column {
+
+
+
+
+
+
+
+
+
+
+/* Right Column */
+
+.right-column {
     display: flex;
-    flex-direction: column-reverse;
-    align-items: flex-end;
-    margin-bottom: 60px;
+    flex-direction: column;
+    flex-direction: 1;
+    align-items: flex-end; /* Align items to the right */
+    max-width: 45%;
 }
 
-.buttons-column button {
+.right-column .info-part {
+    display: flex;
+    flex-direction: column;
+    height: 40%;
+    width: 100%; /* Ensure it spans the entire width */
+}
+
+.right-column .info-part .info {
+    padding-bottom: 3px;
+}
+
+.right-column .info-part .little_blue_card {
+    background-color: #D5F5FF;
+    border-radius: 10px;
+    padding: 7px 14px;  /* 1st value : top & bottom,  2nd : right & left */
+    width: max-content;
+    max-width: 100%;
+
+}
+.buttons-part {
+    display: flex;
+    height: 60%;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.buttons-part button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    /* margin-top : auto; */
     margin-bottom: 10px; /* Space between buttons */
     width: 200px; /* Ensure all buttons have the same width */
     text-align: center;
 }
 
-.buttons-column .btn-secondary {
+.buttons-part .btn-secondary {
     background-color: #6F74E7;
     color: #ffffff;
 }
 
-.buttons-column .btn-secondary:hover {
+.buttons-part .btn-secondary:hover {
     background-color: #595db9;
 }
 
-.buttons-column .btn-primary {
+.buttons-part .btn-primary {
     background-color: #6F74E7;
     color: #ffffff;
 }
 
-.buttons-column .btn-primary:hover {
+.buttons-part .btn-primary:hover {
     background-color: #595db9;
 }
 
-.buttons-column .btn-danger {
+.buttons-part .btn-danger {
     background-color: #dc3545;
     color: #ffffff;
 }
 
-.buttons-column .btn-danger:hover {
+.buttons-part .btn-danger:hover {
     background-color: #b02a37;
 }
+
+
 
 
 /* Return Button */

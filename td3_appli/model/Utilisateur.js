@@ -14,6 +14,10 @@ module.exports = {
         });
     },
 
+
+
+
+
     // Renvoie un utilisateur à partir de son id
     readId: function (id, callback) {
         db.query("SELECT * FROM Utilisateur WHERE id = ?", id, function (err, results) {
@@ -23,6 +27,9 @@ module.exports = {
             callback(results);
         });
     },
+
+
+
 
     // Fonction pour lire les informations de tous les utilisateurs.
     readall: function (callback) {
@@ -34,6 +41,11 @@ module.exports = {
             callback(results);
         });
     },
+
+
+    
+
+
 
     // Fonction pour vérifier si un couple mail/mot de passe est valide.
     areValid: function (mail, callback) {
@@ -58,6 +70,9 @@ module.exports = {
         });
     },
     
+
+
+
     isValidUser: function (mail,mdp, callback) {
         // Définition de la requête SQL pour obtenir le mail et le mot de passe d'un utilisateur donné.
         let sql = "SELECT mdp FROM Utilisateur WHERE mail = ?";
@@ -80,6 +95,9 @@ module.exports = {
         });
     },
     
+
+
+
     // Fonction pour créer un nouvel utilisateur.
     creat: function (mail, nom, prenom, mdp, tel, dateCreation, statut, callback) {
         // Définition de la requête SQL pour insérer un nouvel utilisateur.
@@ -97,6 +115,9 @@ module.exports = {
             }
         });
     },
+
+
+    // Fonction pour supprimer un utilisateur.
     delete: function(mail, callback) {
         let sql = "DELETE FROM Utilisateur WHERE mail = ?";
         db.query(sql, mail, function(err, results) {

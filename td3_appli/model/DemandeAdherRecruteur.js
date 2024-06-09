@@ -47,7 +47,31 @@ module.exports = {
                 callback(true);
             }
         });
+    },
+
+
+
+
+    ////////// RECUPERER L'ORGANISATION D'UN RECRUTEUR //////////
+    /**
+     * Récupérer le SIREN de l'organisation dont l'utilisateur est recruteur
+     * (si le tableau de retour ne contient rien, c'est que l'utilisateur est recruteur sans organisation ou non recruteur) 
+     * @param {int} userId - id de l'utilisateur
+     * @returns {array} un tableau contenant le SIREN de l'organisation dont l'utilisateur est recruteur
+     */
+    getOrgaDuRecruteur: function(id, callback){
+
+        // Exécution d'une requête SQL pour sélectionner l'organisation dont la demande pour devenir recruteur est validee et qui a comme recruteur l'id donné 
+        const sql = "SELECT o.siren, o.nom, o.adrSiegeSocial, o.type "
+        + "FROM DemandeAdherRecruteur dar "
+        + "JOIN Organisation o ON dar.organisation = o.siren "
+        + "WHERE etat = 'validee' AND recruteur = ?;"
+
+        db.query(sql, id, function (err, results) {
+            // Gestion des erreurs lors de l'exécution de la requête.
+            if (err) throw err;
+            // Retour des résultats via la fonction de callback.
+            callback(results);
+        });
     }
-    
-  
 };

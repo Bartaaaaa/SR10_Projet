@@ -1,7 +1,8 @@
-var express = require('express');
-var userModel = require('../model/Utilisateur')
-var router = express.Router();
-var roleModel = require('../model/RoleUtilisateur')
+const express = require('express');
+const userModel = require('../model/Utilisateur')
+const router = express.Router();
+const roleModel = require('../model/RoleUtilisateur')
+const AdherenceModel = require('../model/DemandeAdherRecruteur')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -9,6 +10,16 @@ router.get('/', function(req, res, next) {
 });
 
 
+
+
+
+
+
+
+
+
+
+////////// ???? //////////
 router.post('/verifuser', function(req, res, next) {
   userModel.readall(function(result) {
       let userFound = false;
@@ -47,7 +58,60 @@ router.post('/verifuser', function(req, res, next) {
     });
 });
 
-//Ajouter un utilisateur 
+
+
+
+
+////////// RECUPERATION DES INFO DE L'UTILISATEUR POUR AFFICHAGE DE LA PAGE DETAILS UTILISATEUR ////////// --> a laisser en dernier getter, sinon erreur 404
+router.get('/:id', function (req, res) {
+    const id = req.params.id; //récupérer l'id dans l'URL
+
+    // récupérer les infos de l'utilisateur à partir de l'id dans l'URL
+    userModel.readId(id, function (results) {
+        const user = results[0];
+
+        if (user === undefined) { // si l'id dans l'URL n'existe pas dans la table des utilisateurs
+            return res.status(404).json({ error: "Utilisateur non trouvé" });
+        } 
+        
+        else {
+            // Récupérer le role de l'utilisateur
+            roleModel.read(id, function(err, roleResults) {
+                if (err) {
+                    console.log("Failed to get role:", err);
+                } 
+                // Explications : 
+                // - '?.' = 'si l'attribut suivant existe, on le renvoie, sinon on renvoie undefined'
+                // - '??' = 'si l'élément avant le ?? existe, on le renvoie, sinon on renvoie celui d'après'
+                const role = roleResults[0]?.role ?? 'Rôle non défini';
+                user.role = role;
+
+                // Si l'utilisateur est recruteur, récupérer son organisation
+                if (role === "recruteur" || role === "administrateur"){ // (Manon) j'ai mis les 2 au cas où on garde le fait qu'un utilisateur n'a qu'un seul role 
+                    AdherenceModel.getOrgaDuRecruteur(id, function(result){
+                        organisation = result[0];
+                        
+                        if (organisation === undefined || organisation === null) { 
+                            user.orga = "Aucune organisation";
+                        } else {
+                            user.orga = organisation.nom + " (SIREN : " + organisation.siren + ")";
+                        }
+                        res.render('detailutilisateur', { user: user }); // mis 2 fois parce-que user.orga est une var locale ici
+                    })
+                } else {
+                    res.render('detailutilisateur', { user: user });
+                }
+            })
+            
+            
+
+        }
+    })
+});
+
+
+
+////////// AJOUTER UN UTILISATEUR //////////
 router.post('/adduser', function (req, res) {
     const { nom, prenom, mail: email, tel: telephone, mdp: motDePasse } = req.body;
     const currentDate = new Date();
@@ -82,7 +146,12 @@ router.post('/adduser', function (req, res) {
     });
 });
 
-//Supprimer un utilisateur 
+
+
+
+
+
+////////// SUPPRIMER UN UTILISATEUR //////////
 // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
 router.post('/deleteuser', function (req, res) {
     function deleteUserCallback (success) {
@@ -104,6 +173,11 @@ router.post('/deleteuser', function (req, res) {
     }
 });
 
+
+
+
+
+////////// METTRE A JOUR LE ROLE D'UN UTILISATEUR //////////
 router.post('/updateRole', function (req, res) {
     function updateRoleCallback(err, result) {
         if (err) {
@@ -130,37 +204,23 @@ router.post('/updateRole', function (req, res) {
     }
 });
 
-router.get('/:id', function (req, res) {
-    const id = req.params.id; //récupérer l'id dans l'url
-    userModel.readId(id, function (results) {
-        const user = results[0]
-        if (user !== undefined) {
-            roleModel.read(id, function(err, roleResults) {
-                if (err) {
-                    console.log("Failed to get role:", err);
-                } 
-                // Explications : 
-                // - '?.' = 'si l'attribut suivant existe, on le renvoie, sinon on renvoie undefined'
-                // - '??' = 'si l'élément avant le ?? existe, on le renvoie, sinon on renvoie celui d'après'
-                const role = roleResults[0]?.role ?? 'Rôle non défini';
-                user.role = role;
-                res.render('detailutilisateur', { user: user });
-            })
-        } else {
-            res.status(404).json({ error: "User not found" });
-        }
-    })
-});
 
-// Gestion du formulaire
+
+
+
+
+////////// MODIFIER UN UTILISATEUR //////////  
 router.post('/updateUser', function (req, res) {
+    // (Manon) marche sûrement pas, jsp pq
+    if (!req.session.userid) {
+        res.redirect('/connexion');
+    }
     const { id, nom, prenom, tel, mail } = req.body;
     let canUpdate = false;
     // Vérifier si id de requête === id de utilisateur connecté, si oui canUpdate = true
 
     if (!canUpdate) {
-        // ID à prendre ici = id de l'utilisateur connecté, pas id de la requête
-        roleModel.read(id, function(err, roleResults) {
+        roleModel.read(req.session.userid, function(err, roleResults) {
             if (err) {
                 console.log("Failed to get role:", err);
                 res.status(500).json({ error: "Failed to get role" });

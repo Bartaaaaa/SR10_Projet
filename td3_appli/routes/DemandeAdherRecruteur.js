@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var Adhermodel = require('../model/DemandeAdherRecruteur')
-var Orgamodel = require('../model/Organisation')
+const express = require('express');
+const router = express.Router();
+const Adhermodel = require('../model/DemandeAdherRecruteur')
+const Orgamodel = require('../model/Organisation')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

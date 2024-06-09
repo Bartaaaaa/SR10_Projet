@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var userModel = require('../model/Utilisateur')
-var roleModel = require('../model/RoleUtilisateur')
-var sessionManager = require('../session');
+const express = require('express');
+const router = express.Router();
+const userModel = require('../model/Utilisateur')
+const roleModel = require('../model/RoleUtilisateur')
+const sessionManager = require('../session');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

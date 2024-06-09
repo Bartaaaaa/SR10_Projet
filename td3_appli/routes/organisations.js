@@ -1,8 +1,8 @@
-var express = require('express');
-var organisationModel = require('../model/Organisation')
-var typeOrgamodel= require('../model/TypeOrga')
+const express = require('express');
+const organisationModel = require('../model/Organisation')
+const typeOrgamodel= require('../model/TypeOrga')
 
-var router = express.Router();
+const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {

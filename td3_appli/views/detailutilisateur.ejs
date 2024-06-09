@@ -43,14 +43,34 @@
                     </div>
                 </form>
             </div>
-            <div class="buttons-column">
-                <button type="button" class="btn-danger" id="supprimer">Supprimer</button>
 
-                <!-- Vérifier le rôle ici par rapport à l'utilisateur connecté et non pas le profil affiché -->
-                <% if (user.role !== 'administrateur') { %>
-                    <button type="button" class="btn-primary" id="make-admin">Rendre Administrateur</button>
-                <% } %>
-                <button type="button" class="btn-primary" id="change-role">Rendre <%= user.role === "candidat" ? "Recruteur" : "Candidat" %> </button>
+
+
+            <div class="right-column">
+                <div class="info-part">
+
+                    <% if (user.role === 'recruteur' || user.role === 'administrateur' ) { %>
+                    <div class="info"> 
+                        <b> Recruteur chez : </b> 
+                    </div>
+                    <div class="little_blue_card">
+                        <%= user.orga %>
+                    </div>
+                    <% } %>
+
+                </div>
+                <div class="buttons-part">
+                    
+
+                    <!-- Vérifier le rôle ici par rapport à l'utilisateur connecté et non pas le profil affiché -->
+                    <button type="button" class="btn-primary" id="change-role">Rendre <%= user.role === "candidat" ? "Recruteur" : "Candidat" %> </button>
+                    
+                    <% if (user.role !== 'administrateur') { %>
+                        <button type="button" class="btn-primary" id="make-admin">Rendre Administrateur</button>
+                    <% } %>
+
+                    <button type="button" class="btn-danger" id="supprimer">Supprimer</button>
+                </div>
             </div>
         </div>
 
@@ -60,6 +80,7 @@
     </div>
 
     <script>
+
         function sendDataToServer(endPoint, formData, errorMessage, callback = null) {
             fetch(endPoint, {
                 method: 'POST',
@@ -119,6 +140,9 @@
             // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
             sendDataToServer('/users/updateRole', formData, "Erreur lors de la mise à jour de l'utilisateur : " , () => { window.location.reload(); });
         }
+
+
+
 
         // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
         document.getElementById('supprimer').addEventListener('click', () => {
