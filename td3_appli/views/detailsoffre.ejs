@@ -69,7 +69,7 @@
                 </div>
                 
                 <div > 
-                    <br>Statut de l'offre : <%= offer.etatOffre %> 
+                    <br><br>Statut de l'offre : <%= offer.etatOffre %> 
                 </div>
                 <div > 
                     Valide jusqu'au <%= offer.dateValidite %> 
@@ -91,8 +91,8 @@
                     <input type="file" id="fileUpload" name="fileUpload" class="file-upload" multiple>
                 </div>
 
-                <!-- Champ caché -->
-                <input type="hidden" id="offreEmploi" name="offreEmploi" value="<%= offer.offre_id %>">
+                <!-- Champs cachés -->
+                <input type="hidden" id="idOffreEmploi" name="idOffreEmploi" value="<%= offer.offre_id %>">
                 <div class="return-button"> <!-- changer la classe : form line-->
                     <button type="submit" class="btn btn-primary" id="candidater">Candidater</button>
                 </div>
@@ -116,6 +116,7 @@
             const formData = new FormData(form);
             formData.append('date', new Date().toISOString().split('T')[0]);
             formData.append('etat', 'attente');
+            console.log(formData);
 
             fetch('/offresemploi/addCandidature', {
                 method: 'POST',

@@ -1,7 +1,7 @@
 var db = require('./db.js');
 
 module.exports = {
-    read: function (candidat, callback) {
+    getAllCandidaturesFromCandidat: function (candidat, callback) {
         db.query("SELECT * FROM Candidature WHERE  candidat = ?", candidat, function (err, results) {
             if (err) console.log("erreur");
             callback(results);

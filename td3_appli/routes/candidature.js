@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var candidatureModel = require('../model/Candidature');
 const path = require('path'); // Import path module
 const fs = require('fs'); // Import fs module
 
@@ -14,7 +13,7 @@ const Candidaturemodel = require('../model/Candidature');
 // Route to display candidatures
 router.get('/mescandidatures', function(req, res, next) {
   if (req.session.userid) {
-    Candidaturemodel.read(req.session.userid, function(result) {
+    Candidaturemodel.getAllCandidaturesFromCandidat(req.session.userid, function(result) {
       if (result) {
         console.log('Candidatures récupérées:', result);
 

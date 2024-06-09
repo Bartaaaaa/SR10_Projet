@@ -39,67 +39,6 @@
         </table>
     </div>
   
-<script> 
- 
-
- document.getElementById('candidatureForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  const submitButton = event.target.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-
-  const offreIdInput = document.getElementById('candidatureId').value;
-  const offreIds = Array.from(document.querySelectorAll('.offre-id')).map(td => td.textContent);
-
-  if (!offreIds.includes(offreIdInput)) {
-    alert('L\'ID de l\'offre saisi n\'est pas valide. Veuillez saisir un ID valide.');
-    submitButton.disabled = false;
-    return;
-  }
-
-  const form = document.getElementById('candidatureForm');
-  const formData = new FormData(form);
-  formData.append('offreEmploi', offreIdInput);
-  formData.append('date', new Date().toISOString().split('T')[0]);
-  formData.append('etat', 'attente');
-
-  fetch('/offresemploi/addCandidature', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-    if (response.redirected) {
-      window.location.href = response.url;
-    } else if (!response.ok) {
-      return response.json().then(errorData => {
-        throw new Error(errorData.error || 'Erreur lors de l\'enregistrement de la candidature');
-      });
-    } else {
-      return response.json();
-    }
-  })
-  .then(data => {
-    alert(data.message || 'Candidature enregistrée avec succès!');
-    window.location.href = '/offresemploi/offresemploilist';
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert(error.message || 'Erreur lors de l\'enregistrement de la candidature');
-  })
-  .finally(() => {
-    submitButton.disabled = false;
-  });
-});
-
-
-
-     
-
-   
-
-
-
-</script>
 
     <style>
         .table-container {
