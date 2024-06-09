@@ -2,11 +2,12 @@
 
 /* Global Styles */
 body {
-    font-family: 'Poppins';
     background-color: #f2f2f2;
     margin: 0;
     padding-bottom: 20px; /* Added padding to ensure there's always some space at the bottom */
 }
+
+
 
 /* Navigation Bar */
 nav {
@@ -41,31 +42,43 @@ nav ul li a:hover {
     background-color: #575757;
 }
 
+
+
+
 /* Main Content */
 .content {
     align-items: center; /* Center content horizontally */
     margin: 70px auto; /* Adjust this margin to avoid overlap with the navbar */
+    margin-bottom: 50px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 50%;
+    width: 60%;
     min-width: 300px;
 }
 
 .main-content {
     display: flex;
     justify-content: space-between;
-    flex-direction: row; /* Change flex-direction to column */
-    flex-wrap: wrap;
     padding : 20px;
+    padding-bottom: 50px;
 }
 
-/* Form Column */
-.form-column {
-    margin-right: 20px;
-    flex-wrap: wrap;
+.info {
+    padding-top: 10px;
 }
+
+
+
+/* Left Column */
+.left-column {
+    flex-wrap: wrap;
+    /* padding-right : 20px; */
+    width : 65%;
+}
+
+
 
 /* Ensure Header spans the entire content div and is centered */
 .header {
@@ -86,21 +99,88 @@ nav ul li a:hover {
     color: green;
 }
 
-/* Form */
+
+
+
+
+
+/* Right Column */
+.right-column {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+}
+
+
+.right-column .little_blue_card {
+    background-color: #D5F5FF;
+    border-radius: 10px;
+    padding: 7px 14px;  /* 1st value : top & bottom,  2nd : right & left */
+    width: max-content;
+}
+
+
+/* Return Button */
+.return-button {
+    text-align: center;
+}
+
+.return-button button {
+    padding: 7px 15px;
+    margin-bottom: 7px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6F74E7;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.return-button button:hover {
+    background-color: #595db9;
+}
+
+
+
+
+
+
+/* class soumission-candidature et Form */
+.soumission-candidature{
+    align-items: center;
+    text-align: center;
+    background-color: #ededfc;
+    border-radius: 10px;
+    padding: 12px 14px;  /* 1st value : top & bottom,  2nd : right & left */
+}
+
+.title-candidature{
+    font-size : 20px;
+}
+
+
 form {
     display: flex;
     flex-direction: column;
 }
 
 form .form-group {
-    margin-bottom: 15px;
+    padding-top: 20px;
+    padding-bottom: 15px;
     display: flex;
-    flex-direction: column;
+}
+
+.file-label{
+    width: 50%;
+    text-align: justify;
+    padding-right: 5%;
+}
+.file-upload{
+    width: 50%;
 }
 
 form label {
     margin-bottom: 5px;
-    font-weight: bold;
+    font-weight: 600;/* equivalent semibold for Poppins font*/
 }
 
 form input, form select {
@@ -132,68 +212,3 @@ form input, form select {
     background-color: #595db9;
 }
 
-/* Buttons Column */
-.buttons-column {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: flex-end;
-    margin-bottom: 60px;
-}
-
-.buttons-column button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px; /* Space between buttons */
-    width: 200px; /* Ensure all buttons have the same width */
-    text-align: center;
-}
-
-.buttons-column .btn-secondary {
-    background-color: #6F74E7;
-    color: #ffffff;
-}
-
-.buttons-column .btn-secondary:hover {
-    background-color: #595db9;
-}
-
-.buttons-column .btn-primary {
-    background-color: #6F74E7;
-    color: #ffffff;
-}
-
-.buttons-column .btn-primary:hover {
-    background-color: #595db9;
-}
-
-.buttons-column .btn-danger {
-    background-color: #dc3545;
-    color: #ffffff;
-}
-
-.buttons-column .btn-danger:hover {
-    background-color: #b02a37;
-}
-
-
-/* Return Button */
-.return-button {
-    margin-top: 20px;
-    text-align: center;
-    padding-bottom: 20px; /* Added padding to create space at the bottom */
-}
-
-.return-button button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #6F74E7;
-    color: #ffffff;
-    cursor: pointer;
-}
-
-.return-button button:hover {
-    background-color: #595db9;
-}

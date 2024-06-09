@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails offre</title>
-    <link rel="stylesheet" href="/stylesheets/user.css">
+    <link rel="stylesheet" href="/stylesheets/offre.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
@@ -16,134 +17,134 @@
             </h2>
         </div>
         <div class="main-content">
-            <div class="form-column">
-               <div>
+            <div class="left-column">
+               <div class="info">
                 <b>Organisation : </b><%= offer.organisation_nom %>
                </div> 
 
-               <div>
+               <div class="info">
                 <b>Lieu : </b><%= offer.lieuMission %>
                </div>
 
-               <div>
-                <b>Date de publication : </b><%= offer.datePubli %>
-               </div>
-
-               <div>
-                <b>Pièces demandées : </b><%= offer.nbPieces %>
-               </div>
-
-               <div>
+               <div class="info">
                 <b>Statut du poste : </b><%= offer.statutPoste_nom %>
                </div>
 
-               <div>
+               <div class="info">
                 <b>Type de métier : </b><%= offer.metier_nom %>
                </div>
 
-               <div>
+               <div class="info">
                 <b>Responsable hiérarchique : </b><%= offer.resp %>
                </div>
 
-               <div>
-                <b>Description : </b><%= offer.description %>
+               <div class="info">
+                <b>Description du poste : </b><%= offer.description %>
+               </div>
+               <br>
+               <div class="info">
+                <b>Pièces demandées : </b><%= offer.nbPieces %>
+               </div>
+
+               <div class="info">
+                <b>Indications de l'offre : </b><%= offer.indication %>
                </div>
             </div>
-            <div class="buttons-column">
-                <div>
-                    Rémunération : <%= offer.remuneration %>
+
+
+            <div class="right-column">
+                <div class="info"> 
+                    <b> Rémunération : </b> 
+                </div>
+                
+                <div class="little_blue_card">
+                    <%= offer.remuneration %>
                 </div>
 
-                <div>
-                    Horaires : <%= offer.horaires %>
+                <div class="info"> 
+                    <b> Rythme : </b> 
                 </div>
+                <div class="little_blue_card">
+                    <%= offer.rythme %>
+                </div>
+                
+                <div > 
+                    <br>Statut de l'offre : <%= offer.etatOffre %> 
+                </div>
+                <div > 
+                    Valide jusqu'au <%= offer.dateValidite %> 
+                </div>
+                
             </div>
         </div>
 
-        <div class="return-button">
-            <button type="button">Candidater</button>
+
+
+
+        <div class="soumission-candidature">
+            <div class="title-candidature"> 
+                <b>Soumettre ma candidature</b>
+            </div>
+            <form id="candidatureForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="fileUpload" class="file-label">Ajouter les pièces jointes indiquées dans la description de l'offre :</label>
+                    <input type="file" id="fileUpload" name="fileUpload" class="file-upload" multiple>
+                </div>
+
+                <!-- Champ caché -->
+                <input type="hidden" id="offreEmploi" name="offreEmploi" value="<%= offer.offre_id %>">
+                <div class="return-button"> <!-- changer la classe : form line-->
+                    <button type="submit" class="btn btn-primary" id="candidater">Candidater</button>
+                </div>
+            </form>
         </div>
+
     </div>
     <div class="return-button">
         <button type="button" onclick="window.history.go(-1);">Revenir à la page précédente</button>
     </div>
 
+
+
+
+
     <script>
-        function sendDataToServer(endPoint, formData, errorMessage, callback = null) {
-            fetch(endPoint, {
+        document.getElementById('candidatureForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('candidatureForm');
+            const formData = new FormData(form);
+            formData.append('date', new Date().toISOString().split('T')[0]);
+            formData.append('etat', 'attente');
+
+            fetch('/offresemploi/addCandidature', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
+                body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (response.redirected) {
+                window.location.href = response.url;
+                } else if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Erreur lors de l\'enregistrement de la candidature');
+                });
+                } else {
+                return response.json();
+                }
+            })
             .then(data => {
-                if (data.error) {
-                    throw data.error;
-                }
-                alert(data.message);
+                alert(data.message || 'Candidature enregistrée avec succès!');
+                window.location.href = '/offresemploi/offresemploilist';
             })
-            .catch((error) => {
-                alert(errorMessage + error);
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message || 'Erreur lors de l\'enregistrement de la candidature');
             })
-            .finally(() => {
-                if (callback) {
-                    callback();
-                }
-            });
-        }
-
-        document.getElementById('updateUserForm').addEventListener('submit', function(event) {
-            // Évite que le formulaire soit envoyé automatiquement au chargement de la page
-            event.preventDefault(); 
-            const id = window.location.pathname.replace('/users/', '');
-
-            const formData = {
-                id: id,
-                prenom: document.getElementById('prenom').value,
-                nom: document.getElementById('nom').value,
-                tel: document.getElementById('tel').value,
-                mail: document.getElementById('mail').value
-            };
-            // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
-            sendDataToServer('/users/updateUser', formData, "Erreur lors de la mise à jour de l'utilisateur : ", () => { window.location.reload(); });
         });
+       
 
-        const makeAdminButton = document.getElementById('make-admin');
-        if (makeAdminButton) {
-            makeAdminButton.addEventListener('click', () => changeRole('administrateur'));
-        }
-
-        const currentRole = document.getElementById('role').value;
-        document.getElementById('change-role').addEventListener('click', () => changeRole(currentRole === "candidat" ? "recruteur" : "candidat"));
-
-        function changeRole (newRole) {
-            const id = window.location.pathname.replace('/users/', '');
-            const formData = {
-                userId: id, 
-                newRole: newRole
-            }
-
-            // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
-            sendDataToServer('/users/updateRole', formData, "Erreur lors de la mise à jour de l'utilisateur : " , () => { window.location.reload(); });
-        }
-
-        // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
-        document.getElementById('supprimer').addEventListener('click', () => {
-            if (confirm('ATTENTION : vous vous apprétez à supprimer cet utilisateur. Confirmer ?')) {
-                
-                const id = window.location.pathname.replace('/users/', '');
-                const formData = {
-                    id: id
-                }
-
-                sendDataToServer('/users/deleteuser', formData, "Erreur lors de la suppression de l'utilisateur : ", () => { window.location.href = 'http://localhost:3000'; });
-            }
-        });
 
     </script>
-    
 </body>
 </html>
 
