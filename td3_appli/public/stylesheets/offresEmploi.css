@@ -1,0 +1,40 @@
+@import url("./general.css");
+
+/* Global Styles */
+body {
+    margin: 0;
+    padding-bottom: 20px; /* Added padding to ensure there's always some space at the bottom */
+}
+
+
+/* Main Content */
+.main-content{
+
+}
+
+
+
+/* Left Colum */
+.left-column{
+    background-color: rgb(240, 252, 209);
+    width : 70%;
+}
+
+.offer-card{
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+/* Right Column */
+.right-column{
+    background-color: rgb(250, 209, 243);
+    width : 70%;
+
+}
