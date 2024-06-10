@@ -46,8 +46,8 @@ router.get('/:id', function (req, res) {
 
 ////////////  AJOUTER UNE CANDIDATURE A UNE OFFRE D'EMPLOI ////////////  -->  GESTION DES FICHIERS A FAIRE
 const multer = require('multer');
-const upload = multer({dest: '../user_uploads'}); // Import multer configuration
-
+//const upload = multer({dest: '../user_uploads'}); // Import multer configuration
+const upload = require('../config/multer-config');
 var Candidaturemodel= require('../model/Candidature')
 //upload.array('fileUpload', 10) : C'est un middleware multer qui gère le téléchargement de fichiers. Il permet de télécharger jusqu'à 10 fichiers à la fois, provenant du champ de formulaire fileUpload.
 //upload.array('fileUpload', 10) : Ce middleware traite les fichiers envoyés sous le champ fileUpload et les enregistre dans le répertoire uploads selon la configuration définie.
