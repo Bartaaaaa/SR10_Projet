@@ -3,18 +3,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/offresEmploi.css"> <!-- Correct CSS inclusion -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
+    <title><%= title %></title>
 </head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
 
-    <h1><%= title %></h1>
-
-
-
-    <div> SEARCHBAR INCOMING </div>
     <div class="main-content">
         <div class="left-column">
+            <input type="search" name="searchbar" id="searchbar" class="searchbar" placeholder="Rechercher une offre...">
             <% allOffers.forEach((offre) => { %>
             <div class="offer-card">
                 <div class="card-content">
@@ -43,13 +39,37 @@
                     </div>
                 </div>
                 <div class="buttons">
-                    <button class="btn-secondary">Voir détails / Candidater</button>
+                    <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/detailsoffre/<%= offre.offre_id %>'">Voir détails / Candidater</button>
                 </div>
             </div>
             <% }) %>
         </div>
         <div class="right-column"> 
-            test
+            <div class="offer-card">
+                <fieldset>
+                    <legend class="cardTitle">
+                        Tri
+                    </legend>
+                    
+                    <input type="radio" name="datePubli" id="datePubli">
+                    <label for="datePubli">date de publication</label>
+                    
+                    <br><input type="radio" name="distance" id="distance">
+                    <label for="distance">distance</label>
+                </fieldset>
+            </div>
+            <div class="container-column offer-card">
+                <div class="cardTitle">
+                    Filtres
+                </div>
+                <div>
+                    <label for="salaireMin">Salaire</label>
+                    <input type="text" name="salaireMin" id="salaireMin" placeholder="Min"> - <input type="text" name="salaireMax" id="salaireMax" placeholder="Max">
+                </div>
+                <div>
+                    
+                </div>
+            </div>
         </div>
     </div>
   

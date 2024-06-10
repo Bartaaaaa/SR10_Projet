@@ -26,7 +26,7 @@ router.get('/:id', function (req, res) {
 
     if (offre !== undefined){
       offre.intitule = offre.statutPoste_nom + " - " + offre.metier_nom + " chez " + offre.organisation_nom;
-      offre.remuneration = offre.salaireMin + " - " + offre.salaireMax + " brut/mois";
+      offre.remuneration = offre.salaireMin + " - " + offre.salaireMax + "€ brut/mois";
       
       // formatage de la date de Validité
       const dateVal = new Date(offre.dateValidite);
