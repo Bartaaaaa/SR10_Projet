@@ -34,7 +34,7 @@
                 <li><a>Téléphone: <%= user.tel %></a></li>
                 <li><a>Mail: <%= user.mail %></a></li>
                 <li><a>Statut: <%= user.statut %></a></li>
-                <li><a>Role: <%= user.role %></a></li>
+                <li><a id="role">Role: <%= user.role %></a></li>
                 <li><a>Mon organisation:</a></li>
                 <li ><a id="siren">SIREN: </a></li>
                 <li><a id="org-name">Nom: </a></li>
@@ -57,15 +57,12 @@
   });
   document.getElementById('adherences').addEventListener('click', function(event) {
     const organisationId = document.getElementById('siren').textContent.split(': ')[1];
-    if(organisationId){
-        window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/${organisationId}`;
+    if (organisationId) {
+        window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/${organisationId}`;    } else {
+        alert("Vous avez été accepté dans encore aucune organisation");
+    }
+});
 
-    }
-    else{
-        alert("Vous avez été accepté dans encore aucune organisation")
-    }
-    
-})
 
 
   document.addEventListener('DOMContentLoaded', function() {

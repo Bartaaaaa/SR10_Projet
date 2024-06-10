@@ -39,33 +39,69 @@
     <script src="/javascripts/utilitaires.js"></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const adherences = <%- JSON.stringify(adherences) %>; // Passer les adhérences à partir de EJS
-        const pagination = document.getElementById("pagination");
-        const rowsPerPage = 7;
-        const adherencesTableBody = document.getElementById("adherencesTableBody");
+document.addEventListener("DOMContentLoaded", function() {
+    // Cacher initialement le lien ListeUsers
+    var usersLink = document.getElementById("ListeUsers");
+    usersLink.style.display = "none";
 
-        console.log('Adhérences chargées:', adherences);
+    // Récupérer les informations de l'utilisateur
+    fetch('/pageperso/user-info')
+        .then(response => response.json())
+        .then(user => {
+            var userRole = user.role;
+            // Afficher le lien ListeUsers si l'utilisateur est un administrateur
+            if (userRole === "administrateur") {
+                usersLink.style.display = "block";
+            } else {
+                usersLink.style.display = "none";
+            }
 
-        setupPagination(adherences, pagination, rowsPerPage, adherencesTableBody, renderAdherenceRow);
+            // Si l'utilisateur a le rôle de recruteur ou administrateur, permettre la validation ou le refus des demandes
+            if (userRole === 'recruteur' || userRole === 'administrateur') {
+                // Handle accept and reject button clicks
+                document.querySelectorAll('.accept-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const organisation = this.dataset.organisation;
+                        const recruteur = this.dataset.recruteur;
+                        updateAdherenceState(organisation, recruteur, 'validee');
+                    });
+                });
 
-        // Handle accept and reject button clicks
-        document.querySelectorAll('.accept-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const organisation = this.dataset.organisation;
-                const recruteur = this.dataset.recruteur;
-                updateAdherenceState(organisation, recruteur, 'validee');
-            });
-        });
+                document.querySelectorAll('.reject-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const organisation = this.dataset.organisation;
+                        const recruteur = this.dataset.recruteur;
+                        updateAdherenceState(organisation, recruteur, 'refusee');
+                    });
+                });
+            } else {
+                console.log('Access denied: You do not have the required role to perform this action.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
 
-        document.querySelectorAll('.reject-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const organisation = this.dataset.organisation;
-                const recruteur = this.dataset.recruteur;
-                updateAdherenceState(organisation, recruteur, 'refusee');
-            });
-        });
+function updateAdherenceState(organisation, recruteur, etat) {
+    fetch('/DemandeAdherRecruteur/updateAdherence', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ organisation, recruteur, etat })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // Reload the page to see the updates
+        } else {
+            console.error('Error updating adherence state:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
     });
+}
+
 
     function updateAdherenceState(organisation, recruteur, etat) {
         fetch('/DemandeAdherRecruteur/updateAdherence', {
