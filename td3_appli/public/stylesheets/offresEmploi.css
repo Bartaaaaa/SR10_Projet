@@ -24,6 +24,7 @@ body {
     width: 85%;
     padding-left: 15px;
     padding-top: 8px;
+    align-items: center;
 }
 
 
@@ -85,6 +86,7 @@ body {
 .offer-card input {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 55px;
+    padding-left: 3px;
 }
 
 .offer-card label {
