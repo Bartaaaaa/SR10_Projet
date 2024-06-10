@@ -3,38 +3,108 @@
 /* Global Styles */
 body {
     margin: 0;
-    padding-bottom: 20px; /* Added padding to ensure there's always some space at the bottom */
+    padding-bottom: 20px;
 }
 
 
 /* Main Content */
 .main-content{
-
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 20px auto;
 }
 
+.container-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 85%;
+    padding-left: 15px;
+    padding-top: 8px;
+}
 
 
 /* Left Colum */
 .left-column{
-    background-color: rgb(240, 252, 209);
+    /* background-color: rgb(240, 252, 209); */
     width : 70%;
+    margin: 10px auto;
 }
 
-.offer-card{
+
+.little_blue_card {
+    background-color: #D5F5FF;
+    border-radius: 10px;
+    padding: 7px 14px;  /* 1st value : top & bottom,  2nd : right & left */
+    width: max-content;
+}
+
+.offer-card {
+    display: flex;
     background-color: rgb(255, 255, 255);
     width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 15px;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 
+.cardTitle {
+    padding-left: 15px;
+    text-align: left;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+}
 
-
+.card-content {
+    font-size: small;
+    width: 70%;
+    text-align: center;
+}
 
 
 
 
 /* Right Column */
-.right-column{
-    background-color: rgb(250, 209, 243);
-    width : 70%;
+.right-column {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
 
+
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    width: auto;
+    font-size: small;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.buttons .btn-secondary {
+    background-color: #6F74E7;
+    color: #ffffff;
+}
+
+.buttons .btn-secondary:hover {
+    background-color: #595db9;
 }

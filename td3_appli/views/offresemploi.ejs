@@ -1,26 +1,55 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/offresEmploi.css"> <!-- Correct CSS inclusion -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+</head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/stylesheets/offresEmploi.css"> <!-- Correct CSS inclusion -->
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-    </head>
     <h1><%= title %></h1>
-
 
 
 
     <div> SEARCHBAR INCOMING </div>
     <div class="main-content">
         <div class="left-column">
+            <% allOffers.forEach((offre) => { %>
             <div class="offer-card">
-                yo l'asticot <br><br>
+                <div class="card-content">
+                    <div class="cardTitle">
+                        <%= offre.intitule %>
+                    </div>
+                    <div class="container-row">
+                        <div>
+                            <%= offre.organisation_nom %>
+                        </div>
+                        <div>
+                            <%= offre.lieuMission %>
+                        </div>
+                        <div>
+                            Disponible jusqu'au <%= offre.dateValidite %>
+                        </div>
+                    </div>
+
+                    <div class="container-row">
+                        <div class="little_blue_card">
+                            <%= offre.remuneration %>
+                        </div>
+                        <div class="little_blue_card">
+                            <%= offre.rythme %>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="btn-secondary">Voir détails / Candidater</button>
+                </div>
             </div>
+            <% }) %>
         </div>
         <div class="right-column"> 
-
+            test
         </div>
     </div>
   
