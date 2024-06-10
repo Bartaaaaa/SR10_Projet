@@ -1,3 +1,48 @@
 body {
     font-family: "Poppins";
+    background-color: #f2f2f2;
+}
+
+
+/* Navigation Bar */
+.right {
+    margin-left: auto;
+}
+
+nav {
+    background-color: black; 
+    overflow: hidden; /* Assure que le contenu de la barre ne déborde pas */
+    position: sticky;
+    top: 0;
+}
+
+nav ul {
+    list-style-type: none; /* Enlever les puces des éléments de la liste */
+    margin: 0; 
+    padding: 0; 
+    display: flex; /* Disposition en ligne des éléments */
+}
+
+nav li {
+    float: left; /* Positionnement des éléments de la liste à gauche */
+}
+
+nav li.right {
+    margin-left: auto; /* Positionner l'élément à droite */
+}
+
+
+nav a {
+    display: block; /* Affichage en bloc */
+    color: white; 
+    text-align: center; 
+    padding: 14px 20px; 
+    text-decoration: none; /* Pas de soulignement pour les liens */
+    font-size: 17px; 
+}
+
+
+nav a:hover {
+    background-color: #2f2e35;
+
 }

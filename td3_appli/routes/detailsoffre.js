@@ -15,6 +15,9 @@ router.get('/readdetailsoffre', function (req, res, next) {
 });
 
 
+
+
+
 //////////// POUR AFFICHER LA PAGE DETAILS OFFRE //////////// 
 router.get('/:id', function (req, res) {
   const id = req.params.id // récupérer l'id dans l'URL

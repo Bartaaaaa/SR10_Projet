@@ -3,93 +3,27 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+        <link rel="stylesheet" href="/stylesheets/offresEmploi.css"> <!-- Correct CSS inclusion -->
         <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
     </head>
     <h1><%= title %></h1>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Etat</th>
-                    <th>Date de validité</th>
-                    <th>Indications</th>
-                    <th>Nombre de pièces</th>
-                    <th>Fiche de poste associée</th>
-                    <th> Action </th>
-                </tr>
-            </thead>
-            <tbody>
-                <% OffresEmploi.forEach((offre) => { %>
-                <tr>
-                    <td class="offre-id"><%= offre.id %></td>
-                    <td><%= offre.etatOffre %></td>
-                    <td><%= offre.dateValidite %></td>
-                    <td><%= offre.indication %></td>
-                    <td><%= offre.nbPieces %></td>
-                    <td><%= offre.fichePoste %></td>
-                    <td> 
-                      <button class="btn btn-primary" onclick="window.location.href = 'http://localhost:3000/detailsOffre/<%= offre.id %>';">Détails offre - Candidater</button>
-                    </td>
-                </tr>
-                <% }) %>
-            </tbody>
-        </table>
+
+
+
+
+    <div> SEARCHBAR INCOMING </div>
+    <div class="main-content">
+        <div class="left-column">
+            <div class="offer-card">
+                yo l'asticot <br><br>
+            </div>
+        </div>
+        <div class="right-column"> 
+
+        </div>
     </div>
   
 
-    <style>
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        form input[type="text"],
-        form input[type="file"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        form button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        form button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+
 </body>
