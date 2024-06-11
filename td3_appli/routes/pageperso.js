@@ -1,32 +1,45 @@
 var express = require('express');
 var router = express.Router();
+const Adhermodel = require('../model/DemandeAdherRecruteur')
+const Orgamodel = require('../model/Organisation')
 
 /* GET home page. */
 
 module.exports = router;
 
 router.get('/', function(req, res, next) {
+    const pageData = { 
+        title: 'Page personnelle',
+        user: {
+            id: req.session.userid,
+            nom : req.session.name,
+            prenom: req.session.firstname,
+            tel: req.session.tel,
+            mail: req.session.mail,
+            mdp : req.session.mdp,
+            creationDate : req.session.creationDate,
+            role : req.session.role,
+            statut: req.session.statut
+        },
+        isPagePerso: true
+    };
     if (req.session.userid) {
-        // Passer les données de l'utilisateur à la vue
-        res.render('pageperso', { 
-            title: 'Page personnelle',
-            user: {
-                id: req.session.userid, // Ajoutez cette ligne pour inclure l'ID de l'utilisateur
-
-                nom : req.session.name,
-                prenom: req.session.firstname,
-                tel: req.session.tel,
-                mail: req.session.mail,
-                mdp : req.session.mdp,
-                creationDate : req.session.creationDate,
-                role : req.session.role,
-                statut: req.session.statut
-            }
-        });
+        if (req.session.role === 'recruteur' || req.session.role === 'administrateur') {
+            Adhermodel.getOrgaDuRecruteur(req.session.userid, (results) => {
+                const orga = results[0];
+                pageData.organisation = orga;
+                pageData.user.orga = orga?.nom + " (SIREN : " + orga?.siren + ")" ?? "Aucune organisation";
+                res.render('detailutilisateur', pageData);
+            });
+        } else {
+            // Passer les données de l'utilisateur à la vue
+            res.render('detailutilisateur', pageData);
+        }
     } else {
         res.redirect('/connexion');
     }
 });
+
 router.get('/user-info', function(req, res, next) {
     if (req.session.userid) {
         // Create a user object with the required information

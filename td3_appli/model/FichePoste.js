@@ -45,5 +45,34 @@ module.exports = {
                 callback(true);
             }
         })
+    },
+
+    readAllInfo: function (callback) {
+        const sql = "SELECT "
+        + "fp.id AS fichePoste_id, "
+        + "fp.etat AS fichePoste_etat, "
+        + "fp.lieuMission, "
+        + "fp.rythme, "
+        + "fp.salaireMin, "
+        + "fp.salaireMax, "
+        + "fp.description, "
+        + "fp.statutPoste, "
+        // + "fp.responsableHierarchique, " (Manon) : pas de responsable hiérarchique dans la table pour l'instant
+        + "sp.nom as statutPoste_nom, "
+        + "m.id AS metier_id, "
+        + "m.nom AS metier_nom, "
+        + "o.siren AS organisation_siren, "
+        + "o.nom AS organisation_nom, "
+        + "o.adrSiegeSocial, "
+        + "o.type AS organisation_type "
+        + "FROM FichePoste fp "
+        + "JOIN METIER m ON fp.metier = m.id "
+        + "JOIN Organisation o ON fp.organisation = o.siren "
+        + "JOIN StatutPoste sp ON fp.statutPoste = sp.id; "
+
+        db.query(sql, function (err, results) {
+            if (err) console.log("Erreur :", err);
+            callback(results);
+        });
     }
 }

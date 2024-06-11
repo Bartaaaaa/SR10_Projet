@@ -96,10 +96,10 @@ router.get('/:id', function (req, res) {
                         } else {
                             user.orga = organisation.nom + " (SIREN : " + organisation.siren + ")";
                         }
-                        res.render('detailutilisateur', { user: user }); // mis 2 fois parce-que user.orga est une var locale ici
+                        res.render('detailutilisateur', { user: user, title: "Détail utilisateur", isPagePerso: false }); // mis 2 fois parce-que user.orga est une var locale ici
                     })
                 } else {
-                    res.render('detailutilisateur', { user: user });
+                    res.render('detailutilisateur', { user: user, title: "Détail utilisateur", isPagePerso: false });
                 }
             })
             

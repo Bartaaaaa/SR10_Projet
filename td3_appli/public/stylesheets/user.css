@@ -203,6 +203,8 @@ form input, form select {
     background-color: #6F74E7;
     color: #ffffff;
     cursor: pointer;
+    width: fit-content;
+    margin: auto;
 }
 
 .return-button button:hover {

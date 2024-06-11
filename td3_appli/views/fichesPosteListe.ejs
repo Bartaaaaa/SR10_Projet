@@ -1,66 +1,85 @@
 <head>
-    <link rel="stylesheet" href="/stylesheets/fichePosteListe.css">
+    <link rel="stylesheet" href="/stylesheets/offresEmploi.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title><%= title %></title>
 </head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
 
-    <h1>
-        <%= title %>
-    </h1>
-    <table border>
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>etat</th>
-                <th>lieuMission</th>
-                <th>rythme</th>
-                <th>salaireMin</th>
-                <th>salaireMax</th>
-                <th>description</th>
-                <th>metier</th>
-                <th>statutPoste</th>
-                <th>organisation</th>
-            </tr>
-        </thead>
-        <tbody>
-            <div class="overflow-x-auto">
-                <table class="table">
+    <h1 class="heading">Fiches de poste</h1>
+    <div class="main-content">
+        <div class="left-column"> 
+            <input type="search" name="searchbar" id="searchbar" class="searchbar" placeholder="Rechercher une fiche<%= isRecruteur === true ? ' de l\'organisation dont je suis recruteur' : '' %>...">
             <% fichesPoste.forEach((fiche) => { %>
-                <tr class="hover">
-                    <td>
-                        <%= fiche.id %>
-                    </td>
-                    <td>
-                        <%= fiche.etat %>
-                    </td>
-                    <td>
-                        <%= fiche.lieuMission %>
-                    </td>
-                    <td>
-                        <%= fiche.rythme %>
-                    </td>
-                    <td>
-                        <%= fiche.salaireMin %>
-                    </td>
-                    <td>
-                        <%= fiche.salaireMax %>
-                    </td>
-                    <td>
-                        <%= fiche.description %>
-                    </td>
-                    <td>
-                        <%= fiche.metier %>
-                    </td>
-                    <td>
-                        <%= fiche.statutPoste %>
-                    </td>
-                    <td>
-                        <%= fiche.organisation %>
-                    </td>
-                </tr>
+                <div class="offer-card">
+                    <div class="container-column card-content">
+                        <div class="cardTitle">
+                            <%= fiche.organisation_nom %> (<%= fiche.organisation_siren %>) - <%= fiche.statutPoste_nom %>, <%= fiche.metier_nom %> 
+                        </div>
+                        <div class="container-row">
+                            <div class="little_blue_card">
+                                <%= fiche.lieuMission %>
+                            </div>                    
+                            <div class="little_blue_card">
+                                <%= fiche.salaireMin %>€ - <%= fiche.salaireMax %>€ brut/an
+                            </div>                            
+                            <div class="little_blue_card">
+                                <%= fiche.rythme %>
+                            </div>
+                        </div>
+                        <div class="container-row">
+                            Responsable hiérarchique : <%= fiche.responsableHierarchique %>
+                        </div>
+                        <div class="container-row">
+                            Description : <%= fiche.description %>
+                        </div>    
+                    </div>
+                    <div class="container-column right small">
+                        <div class="buttons bottom-margin">
+                            <button class="btn-secondary">Modifier</button>
+                            <button class="btn-danger">Supprimer</button>
+                        </div>
+                        <div>
+                            ID Fiche : <%= fiche.fichePoste_id %>
+                        </div>
+                        <div>
+                            Etat : <%= fiche.fichePoste_etat %>
+                        </div>
+                    </div>
+                </div>
             <% }) %>
-        </tbody>
-    </table>
+        </div>
+
+        <div class="right-column"> 
+            <div class="offer-card">
+                <fieldset>
+                    <legend class="cardTitle">
+                        Tri
+                    </legend>
+                    
+                    <input type="radio" name="datePubli" id="datePubli">
+                    <label for="datePubli">date de publication</label>
+                    
+                    <br><input type="radio" name="distance" id="distance">
+                    <label for="distance">distance</label>
+                </fieldset>
+            </div>
+            <div class="container-column offer-card">
+                <div class="cardTitle">
+                    Filtres
+                </div>
+                <div>
+                    <label for="salaireMin">Salaire</label>
+                    <input type="text" name="salaireMin" id="salaireMin" placeholder="Min"> - <input type="text" name="salaireMax" id="salaireMax" placeholder="Max">
+                </div>
+                <div>
+                    
+                </div>
+            </div>
+        </div>
+            
+        
+
+    </div>
 
 </body>

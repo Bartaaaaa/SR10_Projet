@@ -4,7 +4,6 @@
 body {
     margin: 0;
     padding-bottom: 20px;
-    height: 100%;
 }
 
 
@@ -100,6 +99,7 @@ body {
     justify-content: center;
     width: auto;
     font-size: small;
+
 }
 
 .buttons button {
@@ -107,6 +107,7 @@ body {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    margin: auto 3px;
 }
 
 .buttons .btn-secondary {
@@ -116,6 +117,15 @@ body {
 
 .buttons .btn-secondary:hover {
     background-color: #595db9;
+}
+
+.buttons .btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.buttons .btn-danger:hover {
+    background-color: #b02a37;
 }
 
 .searchbar {
@@ -129,4 +139,23 @@ body {
     background-repeat: no-repeat;
     background-size: 25px;
     padding: 12px 20px 12px 60px;
+}
+
+.right {
+    align-items: end;
+}
+
+.small {
+    font-size: small;
+}
+
+.bottom-margin {
+    margin-bottom: 10px;
+}
+
+.heading {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    padding-top: 25px;
 }

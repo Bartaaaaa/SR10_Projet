@@ -8,9 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="navbar">
-        <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
-    </div>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
 
     <button id="mescandidatures" type="button" class="top-right-button">Visualiser mes candidatures</button>
     <button id="adherences" type="button" class="top-right-button2">Visualiser les demandes d'adhérences</button>
@@ -26,20 +24,18 @@
                         <span class="text-3xl">D</span>
                     </div>
                 </li>
-                <!-- Sidebar content here -->         
-                <li id="id" style="display: none;"><a><%= user.id %></a></li>
+                <!-- Sidebar content here -->
 
                 <li><a>Nom: <%= user.nom %></a></li>
                 <li><a>Prénom: <%= user.prenom %></a></li>
                 <li><a>Téléphone: <%= user.tel %></a></li>
                 <li><a>Mail: <%= user.mail %></a></li>
                 <li><a>Statut: <%= user.statut %></a></li>
-                <li><a id="role">Role: <%= user.role %></a></li>
-                <li><a>Mon organisation:</a></li>
-                <li ><a id="siren">SIREN: </a></li>
-                <li><a id="org-name">Nom: </a></li>
-                <li><a id="adr-siege">Adresse Siège Social: </a></li>
-                <li><a id="org-type">Type: </a></li>
+                <li><a>Role: <%= user.role %></a></li>
+                <li><a>Mon organisation: <%= organisation.nom %></a></li>
+                <li><a>SIREN: <%= organisation.siren %></a></li>
+                <li><a>Adresse Siège Social: <%= organisation.adrSiegeSocial %></a></li>
+                <li><a>Type: <%= organisation.type %></a></li>
 
                 <li>
                     <form id="logout-form" action="/pageperso/deconnexion" method="get">
@@ -56,66 +52,14 @@
     window.location.href = "http://localhost:3000/candidature/mescandidatures";
   });
   document.getElementById('adherences').addEventListener('click', function(event) {
-    const organisationId = document.getElementById('siren').textContent.split(': ')[1];
+    const organisationId = <%= organisation.siren %>;
     if (organisationId) {
         window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/${organisationId}`;    } else {
         alert("Vous avez été accepté dans encore aucune organisation");
     }
 });
-
-
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const userIdElement = document.getElementById('id');
-    if (userIdElement) {
-        const userId = userIdElement.textContent.trim();
-        console.log('User ID:', userId);
-
-        fetch('/DemandeAdherRecruteur/readOrga', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userId: userId })
-        })
-        .then(response => {
-            console.log('Response status:', response.status);
-            console.log('Response headers:', response.headers);
-            const contentType = response.headers.get("content-type");
-            if (!response.ok) {
-                return response.text().then(text => {
-                    console.error('Error text:', text);
-                    throw new Error('Network response was not ok');
-                });
-            }
-            if (contentType && contentType.includes("application/json")) {
-                return response.json();
-            } else {
-                return response.text().then(text => {
-                    console.error('Response text:', text);
-                    throw new Error('Response was not JSON');
-                });
-            }
-        })
-        .then(data => {
-            console.log('Data received:', data);
-            if (data.success) {
-                document.getElementById('siren').textContent = 'SIREN: ' + data.result.siren;
-                document.getElementById('org-name').textContent = 'Nom: ' + data.result.nom;
-                document.getElementById('adr-siege').textContent = 'Adresse Siège Social: ' + data.result.adrSiegeSocial;
-                document.getElementById('org-type').textContent = 'Type: ' + data.result.type;
-            } else {
-                console.error('Failed to fetch organization data');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    } else {
-        console.error('User ID element not found');
-    }
-  });
 </script>
+
 <style>
   .top-right-button {
       position: fixed;
@@ -155,10 +99,5 @@
       padding: 0;
   }
 
-  #navbar {
-    top : 0;
-    position: sticky; 
-    z-index: 999; /* Ensure the navbar is above other elements */
-  }
 </style>
 </html>
