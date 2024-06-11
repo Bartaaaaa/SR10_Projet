@@ -26,8 +26,11 @@ module.exports = {
         db.query(sql, [siren, nom, adrSiegeSocial, type], function (err, results) {
             if (err) {
                 console.error("Erreur lors de l'exécution de la requête SQL :", err);
-                alert('Une organisation avec un tel siren existe déjà.')
-                return; // Arrêter l'exécution de la fonction            } else {
+                callback(false); // Arrêter l'exécution de la fonction            } else {
+            }
+            else{
+                callback(true);
+
             }
         });
     },

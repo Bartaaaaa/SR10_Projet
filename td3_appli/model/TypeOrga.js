@@ -13,7 +13,15 @@ module.exports = {
         });
     },
 
-
+    readallTypes: function (callback) {
+        db.query("SELECT id, nom FROM TypeOrga", function (err, results) {
+            if (err) {
+                console.log("Erreur lors de la récupération des types d'organisation :", err);
+                return callback(err, null); // Appel du callback avec l'erreur
+            }
+            callback(null, results); // Appel du callback avec les résultats
+        });
+    },
 // Fonction pour créer un nouveau métier
     create: function (nom, callback) {
         // On vérifie si le métier n'existe pas déjà
@@ -22,8 +30,10 @@ module.exports = {
         db.query(sql, nom, function (err, results) {
              if (err) {
                  console.error("Erreur lors de l'exécution de la requête SQL :", err);
-                 callback(true); // Indiquer une erreur à la fonction de rappel
-                  return; // Arrêter l'exécution de la fonction            } else {
+                 callback(false); // Indiquer une erreur à la fonction de rappel
+                    }
+                    else {
+                        callback(true);
                     }
                 });
             },

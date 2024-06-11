@@ -37,6 +37,7 @@
                     </tr>
                 <% }) %>
             </tbody>
+           
             
         </table>
         <script>
@@ -77,41 +78,22 @@
             }
             </script>
     </div>
-  
+                            
+   
     <div id="pagination" class="pagination-container"></div>
-    <form action="/organisations/addtype" method="post" id="typeForm">
-        <div>
-            <label for="type">Type :</label>
-            <input type="text" id="type" name="type" required>
-        </div>
-        <div>
-            <button type="submit" id="addType">Ajouter Type</button>
-        </div>
-    </form>
-    <form id="organisationForm" action="/organisations/addorganisation" method="post">
-        <div>
-            <label for="siren">Siren :</label>
-            <input type="text" id="siren" name="siren" required>
-        </div>
-        <div>
-            <label for="nom">Nom :</label>
-            <input type="text" id="nom" name="nom" required>
-        </div>
-        <div>
-            <label for="adrSiegeSocial">Adresse Siege Social :</label>
-            <input type="text" id="adrSiegeSocial" name="adrSiegeSocial" required>
-        </div>
-        <div>
-            <label for="typeId">Type ID :</label>
-            <input type="text" id="typeId" name="typeId" required>
-        </div>
-        <div>
-            <button type="submit" id="addOrganisation">Ajouter Organisation</button>
-        </div>
-    </form>
+  
+          <button id="CreateOrga" class="btn btn-primary" action="/organisations/detailsCreationOrganisation">Créer votre organisation</button>
+    </div>
+
     <script src="/javascripts/utilitaires.js"></script>
     
     <script>
+        document.getElementById("CreateOrga").addEventListener("click",function(event){
+            event.preventDefault();
+            window.location.href = "http://localhost:3000/organisations/detailsCreationOrganisation"
+
+        });
+
         document.addEventListener("DOMContentLoaded", function() {
             const organisations = <%- JSON.stringify(organisations) %>; // Passer les organisations à partir de EJS
             const pagination = document.getElementById("pagination");
@@ -121,65 +103,8 @@
             setupPagination(organisations, pagination, rowsPerPage, organisationsTableBody, renderOrganisationRow);
         });
 
-             document.getElementById('typeForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const type = document.getElementById('type').value;
-
-                fetch('/organisations/addtype', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ nomType: type })
-                })
-
-                .then(response => response.json())
-                .then(data => {
-                console.log('Success:', data);
-                alert('Type enregistré avec succès!');
-                window.location.href = 'http://localhost:3000/organisations/organisationsList';
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('Erreur lors de l\'enregistrement du type.');
-            });
-         
-        });
-    
-            document.getElementById('organisationForm').addEventListener('submit', async function(event) {
-                event.preventDefault();
-    
-                const formData = {
-                    siren: document.getElementById('siren').value,
-                    nom: document.getElementById('nom').value,
-                    adrSiegeSocial: document.getElementById('adrSiegeSocial').value,
-                    typeId: document.getElementById('typeId').value
-                };
-    
-                try {
-                    const orgaResponse = await fetch('/organisations/addorganisation', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData)
-                    });
-    
-                    const orgaResult = await orgaResponse.json();
-                    console.log("Organisation response received:", orgaResult);
-    
-                    if (orgaResult.message) {
-                        alert('Organisation enregistrée avec succès!');
-                        window.location.href = 'http://localhost:3000/organisations/organisationsList';
-                    } else {
-                        throw new Error("Failed to insert organisation");
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Erreur lors de l\'enregistrement de l\'organisation');
-                }
-            });
+            
+        
         </script>
         
     </body>

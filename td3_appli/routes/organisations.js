@@ -35,13 +35,25 @@ router.get('/organisationslist', function (req, res, next) {
       });
     });
   });
-
+  router.get('/readTypes', (req, res) => {
+    typeOrgamodel.readallTypes(function(err, results) {
+        if (err) {
+            return res.status(500).json({ error: "Erreur lors de la récupération des types d'organisation" });
+        }
+        // Formater les résultats pour avoir une liste d'objets { id, nom }
+        const types = results.map(row => ({
+            id: row.id,
+            nom: row.nom
+        }));
+        res.json(types);
+    });
+});
 
   router.post('/addtype', function (req, res, next) {
     const { nomType } = req.body;
   
     // Vérifiez si le type d'organisation existe déjà
-    typeOrgamodel.readall(function(resultOrga) {
+    typeOrgamodel.readall(function (resultOrga) {
   
       // Cherchez le type dans les résultats
       let type = resultOrga.find(orga => orga.nom === nomType);
@@ -53,18 +65,18 @@ router.get('/organisationslist', function (req, res, next) {
       }
   
       // Si le type n'existe pas, créez-le et utilisez le nouvel ID
-      typeOrgamodel.create(nomType, function(success, newId) {
+      typeOrgamodel.create(nomType, function (success, newId) {
         if (success) {
-          res.json({ message: "Type inserted successfully" });
+          res.json({ message: "Type inserted successfully", typeId: newId });
         } else {
-          console.log("Failed to insert user.");
-          res.status(500).json({ error: "Failed to insert user" });
+          console.log("Failed to insert type.");
+          res.status(500).json({ error: "Failed to insert type" });
         }
       });
-      res.json({ message: "Type inserted successfully" });
-
     });
   });
+  
+
   router.post('/addorganisation', async function (req, res, next) {
     try {
       const { nom, siren, adrSiegeSocial: adresse, typeId } = req.body;
@@ -88,7 +100,18 @@ router.get('/organisationslist', function (req, res, next) {
   });
   
   
-
+  router.get('/detailsCreationOrganisation', function (req, res, next) {
+    // Lecture de tous les types d'organisation
+   
+      // Lecture de toutes les organisations
+      organisationModel.readall(function(result){
+        // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
+        transformtype(result, function(result) {
+          // Rendu de la vue avec les organisations mises à jour
+          res.render('detailsCreationOrganisation', { title: 'Liste des organisations', organisations: result});
+        });
+      });
+    });
 // faut que lorsqu'un utilsateur ajoute une organisation de type "test", le code doit vérifier si ce type existe déjà , si oui il creat l'organisation avec la valeur 
 //integer type associé, sinon il créer d'abord le type d'organisation correspondant, puis ajoute l'organisation
 

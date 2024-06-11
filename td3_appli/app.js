@@ -51,8 +51,8 @@ var sessionJS = require('./session');
 
 // Middleware pour vérifier les sessions et les rôles
 app.all("*", function (req, res, next) {
-  const adminPaths = ["/organisations/organisationsList", "/users/usersList"]; // Liste des URLs admin
-  const recruteurPaths = ["/organisations/organisationsList"]; // Ajouter les chemins recruteur ici
+  const adminPaths = [ "/users/usersList"]; // Liste des URLs admin
+  const recruteurPaths = []; // Ajouter les chemins recruteur ici
 
   const redirectWithAlert = (message) => {
     res.send(`
