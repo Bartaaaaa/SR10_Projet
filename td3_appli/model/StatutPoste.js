@@ -6,8 +6,12 @@ module.exports = {
 
     readall: function (callback) {
         db.query("SELECT * FROM StatutPoste", function (err, results) {
-            if (err) throw err;
-            callback(results);
+            if (err) {
+                callback(err);
+            }
+            else{
+                callback(null,results);
+            }
         });
     },
 

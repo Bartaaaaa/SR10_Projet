@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/user.css">
+</head>
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+
+    <div class="content">
+        <div class="main-content">
+            <div class="form-column">
+                <form action="/organisations/addtype" method="post" id="typeForm">
+                    <div>
+                        <label for="type">Type :</label>
+                        <input type="text" id="type" name="type" required>
+                    </div>
+                    <div>
+                        <button  class="btn btn-primary" type="submit" id="addType">Ajouter Type</button>
+                    </div>
+                </form>
+                <form id="organisationForm" action="/organisations/addorganisation" method="post">
+                    <div>
+                        <label for="siren">Siren :</label>
+                        <input type="text" id="siren" name="siren" required>
+                    </div>
+                    <div>
+                        <label for="nom">Nom :</label>
+                        <input type="text" id="nom" name="nom" required>
+                    </div>
+                    <div>
+                        <label for="adrSiegeSocial">Adresse Siege Social :</label>
+                        <input type="text" id="adrSiegeSocial" name="adrSiegeSocial" required>
+                    </div>
+                    <div>
+                        <label for="typeId">Type ID :</label>
+                        <select id="typeId" name="typeId" required>
+                            <option value="">Sélectionnez un type</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <button class="btn btn-primary" type="submit" id="addOrganisation">Créer votre Organisation</button>
+                    </div>
+                </form>
+                <script src="/javascripts/utilitaires.js"></script>
+            </div>
+        </div>
+    </div>
+    <div class="return-button">
+        <button type="button" onclick="window.history.go(-1);">Revenir à la page précédente</button>
+    </div>
+
+    <script>
+
+
+
+
+
+
+
+      
+    </script>
+</body>
+</html>

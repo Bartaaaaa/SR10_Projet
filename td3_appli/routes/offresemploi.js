@@ -37,11 +37,21 @@ router.get('/offresemploilist', function (req, res) {
     res.render('offresemploi', {allOffers: allOffersInfo, title: "Offres d'emploi"});  
   });
 });
+const organisationModel = require('../model/Organisation')
 
 
  
 
-
+router.get('/detailsCreationOffre', function (req, res, next) {
+  // Lecture de tous les types d'organisation
+ 
+    // Lecture de toutes les organisations
+    organisationModel.readall(function(result){
+      // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
+        // Rendu de la vue avec les organisations mises à jour
+        res.render('detailsCreationOffre', { title: 'Liste des organisations', organisations: result});
+    });
+  });
 
 module.exports = router;
 

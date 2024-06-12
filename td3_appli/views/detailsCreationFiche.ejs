@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/user.css">
+</head>
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+
+    <div class="content">
+        <div class="main-content">
+            <div class="form-column" style="display: flex; flex-direction: column; align-items: center;">
+                <form id="organisationForm" action="/organisations/addorganisation" method="post" style="width: 80%;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="flex: 1; margin-right: 10px;">
+                            <label for="etat">Etat</label>
+                            <input type="text" id="etat" name="etat" required class="full-width-select">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="lieuMission">Lieu de Mission</label>
+                            <input type="text" id="lieuMission" name="lieuMission" required>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="flex: 1; margin-right: 10px;">
+                            <label for="salaireMin">Salaire Minimum</label>
+                            <input type="text" id="salaireMin" name="salaireMin" required>
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="salaireMax">Salaire Maximum</label>
+                            <input type="text" id="salaireMax" name="salaireMax" required>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label for="rythme">Rythme</label>
+                        <input type="text" id="rythme" name="rythme" required style="width: 100%;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" required rows="4" style="width: 100%;"></textarea>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="flex: 1; margin-right: 10px;">
+                            <label for="metier">Métier</label>
+                            <select id="metier" name="metier" required  class="full-width-select">
+                                <option value="">Sélectionnez un type</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="statutPoste">Statut Poste</label>
+                            <select id="statutPoste" name="statutPoste" required required class="full-width-select">
+                                <option value="">Sélectionnez un type</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" type="submit">Créer votre Fiche</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="return-button">
+        <button type="button" onclick="window.history.go(-1);">Revenir à la page précédente</button>
+    </div>
+    <script src="/javascripts/utilitaires.js"></script>
+</body>
+<script>async function fetchMetiers() {
+    try {
+        const response = await fetch('/fichesPoste/readMetier');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const types = await response.json();
+        
+        const select = document.getElementById('metier');
+        if (select) {
+            types.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.id;
+                option.textContent = type.nom; // Affiche uniquement le nom
+                select.appendChild(option);
+            });
+        } else {
+            console.error('Element select not found');
+        }
+    } catch (error) {
+        console.error('Error fetching types:', error);
+        alert('Erreur lors de la récupération des types.');
+    }
+}
+document.addEventListener('DOMContentLoaded', fetchMetiers);
+
+async function fetchStatutsPoste() {
+    try {
+        const response = await fetch('/fichesPoste/readStatutPoste');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const types = await response.json();
+        
+        const select = document.getElementById('statutPoste');
+        if (select) {
+            types.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.id;
+                option.textContent = type.nom; // Affiche uniquement le nom
+                select.appendChild(option);
+            });
+        } else {
+            console.error('Element select not found');
+        }
+    } catch (error) {
+        console.error('Error fetching types:', error);
+        alert('Erreur lors de la récupération des types.');
+    }
+}
+document.addEventListener('DOMContentLoaded', fetchStatutsPoste);
+
+</script>
+<style> textarea {
+    border: 1px solid #ccc; /* Contour pour le champ de description */
+    resize: vertical; /* Permet à l'utilisateur de redimensionner verticalement */
+}
+
+.full-width-select {
+    width: 100%;
+}
+
+</style>
+</html>

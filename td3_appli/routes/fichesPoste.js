@@ -30,5 +30,48 @@ router.get('/fichesposteliste', function (req, res, next) {
   });
 });
 
-  
+
+router.get('/detailsCreationFiche', function (req, res, next) {
+  // Lecture de tous les types d'organisation
+ 
+    // Lecture de toutes les organisations
+      // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
+        // Rendu de la vue avec les organisations mises à jour
+        res.render('detailsCreationFiche', { title: 'Liste des organisations'});
+  });
+
+  const metierModel = require('../model/Metier')
+
+  router.get('/readMetier', (req, res) => {
+    metierModel.readall(function(err, results) {
+        if (err) {
+            return res.status(500).json({ error: "Erreur lors de la récupération des types d'organisation" });
+        }
+        // Formater les résultats pour avoir une liste d'objets { id, nom }
+        const types = results.map(row => ({
+            id: row.id,
+            nom: row.nom
+        }));
+        res.json(types);
+    });
+});
+
+
+const StatutPosteModel= require('../model/StatutPoste')
+
+router.get('/readStatutPoste', (req, res) => {
+  StatutPosteModel.readall(function(err, results) {
+      if (err) {
+          return res.status(500).json({ error: "Erreur lors de la récupération des types d'organisation" });
+      }
+      // Formater les résultats pour avoir une liste d'objets { id, nom }
+      const types = results.map(row => ({
+          id: row.id,
+          nom: row.nom
+      }));
+      res.json(types);
+  });
+});
+
+
 module.exports = router;

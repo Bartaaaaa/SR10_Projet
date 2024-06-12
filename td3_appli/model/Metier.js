@@ -5,12 +5,17 @@ module.exports = {
     //
 
     readall: function (callback) {
-        db.query("SELECT * FROM Metier", function (err, results) {
-            if (err) throw err;
-            callback(results);
+        db.query("SELECT id, nom FROM METIER", function (err, results) {
+            if (err) {
+                // Pass the error to the callback
+                callback(err);
+            } else {
+                // Pass null as the first argument to indicate "no error"
+                callback(null, results);
+            }
         });
     },
-
+    
 
 // Fonction pour créer un nouveau métier
     create: function (nom, callback) {
