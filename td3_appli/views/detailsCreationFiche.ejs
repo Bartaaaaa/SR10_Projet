@@ -13,11 +13,15 @@
     <div class="content">
         <div class="main-content">
             <div class="form-column" style="display: flex; flex-direction: column; align-items: center;">
-                <form id="organisationForm" action="/organisations/addorganisation" method="post" style="width: 80%;">
+                <form id="FichePosteForm" action="/fichesPoste/addFichePoste" method="post" style="width: 80%;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
                         <div style="flex: 1; margin-right: 10px;">
                             <label for="etat">Etat</label>
-                            <input type="text" id="etat" name="etat" required class="full-width-select">
+                            <select id="etat" name="etat" required  class="full-width-select">
+                                <option value="">Sélectionnez un Etat</option>
+                                <option value="nonPubliee">Non publiée</option>
+                                <option value="publiee">Publiée</option>
+                                <option value="expiree">Expirée</option>                            </select>
                         </div>
                         <div style="flex: 1;">
                             <label for="lieuMission">Lieu de Mission</label>
@@ -56,6 +60,26 @@
                             </select>
                         </div>
                     </div>
+                    <div style="margin-bottom: 20px;">
+                        <label for="rythme">Organisation</label>
+                        <input readonly type="text" id="organisation" name="rythme" required style="width: 100%;">
+                    </div>
+                    
+                    <script>
+                        // Function to get the value of a query parameter by name
+                        function getQueryParam(name) {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            return urlParams.get(name);
+                        }
+                    
+                        // Get the organization ID from the URL
+                        const orgaId = getQueryParam('orgaId');
+                    
+                        // Set the organization ID as the value of the input element
+                        if (orgaId) {
+                            document.getElementById('organisation').value = orgaId;
+                        }
+                    </script>
                     <div>
                         <button class="btn btn-primary" type="submit">Créer votre Fiche</button>
                     </div>
@@ -68,7 +92,67 @@
     </div>
     <script src="/javascripts/utilitaires.js"></script>
 </body>
-<script>async function fetchMetiers() {
+<script>
+
+document.getElementById('FichePosteForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            console.log("Formulaire organisation soumis");
+
+            const formData = {
+                etat: document.getElementById('etat').value,
+                lieuMission: document.getElementById('lieuMission').value,
+                rythme: document.getElementById('rythme').value,
+                salaireMin: document.getElementById('salaireMin').value,
+                salaireMax: document.getElementById('salaireMax').value,
+                description: document.getElementById('description').value,
+                metier: document.getElementById('metier').value,
+                statutPoste: document.getElementById('statutPoste').value,
+                organisation: document.getElementById('organisation').value
+            };
+            console.log("FormData:", formData);
+            console.log("Initial FormData:", formData);
+
+    // Validate and sanitize input
+    formData.salaireMin = parseFloat(formData.salaireMin);
+    formData.salaireMax = parseFloat(formData.salaireMax);
+    formData.metier = parseInt(formData.metier, 10);
+    formData.statutPoste = parseInt(formData.statutPoste, 10);
+    formData.organisation = parseInt(formData.organisation, 10);
+
+    if (isNaN(formData.salaireMin) || isNaN(formData.salaireMax)) {
+        alert('Invalid salary values');
+        return;
+    }
+
+    // Ensure other inputs are strings and trimmed
+
+            try {
+                const FicheResponse = await fetch('/fichesPoste/addFichePoste', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData) 
+                });
+
+                const FicheResult = await FicheResponse.json();
+                console.log("Fiche de poste response received:", FicheResult);
+
+                if (FicheResponse.ok) {
+                    alert('Fiche de poste enregistrée avec succès!');
+                  //  window.location.href = 'http://localhost:3000/organisations/organisationsList';
+                } else {
+                    alert('Erreur lors de l\'enregistrement de le la fiche de poste');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur lors de l\'enregistrement de la fiche de Poste');
+            }
+        });
+
+
+
+async function fetchMetiers() {
     try {
         const response = await fetch('/fichesPoste/readMetier');
         if (!response.ok) {

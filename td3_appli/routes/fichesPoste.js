@@ -74,4 +74,30 @@ router.get('/readStatutPoste', (req, res) => {
 });
 
 
+
+router.post('/addFichePoste', async function (req, res, next) {
+  try {
+    const { etat, lieuMission, rythme, salaireMin, salaireMax, description, metier, statutPoste, organisation } = req.body;
+ 
+    // Création de l'organisation avec le typeId fourni
+    const insertResult = await new Promise((resolve, reject) => {
+      fichesPosteModel.create(etat, lieuMission, rythme, salaireMin, salaireMax, description, metier, statutPoste, organisation, function(success) {
+        if (success) {
+          resolve({ message: "Fiche inserted successfully" });
+        } else {
+          reject({ error: "Failed to insert fiche" });
+        }
+      });
+    });
+
+    res.json(insertResult);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
+
 module.exports = router;

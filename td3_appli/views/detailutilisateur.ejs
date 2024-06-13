@@ -53,7 +53,7 @@
                     <div class="info"> 
                         <b> Recruteur chez : </b> 
                     </div>
-                    <div class="little_blue_card">
+                    <div class="little_blue_card" id="orgaId">
                         <%= user.orga %>
                     </div>
                     <% } %>
@@ -64,12 +64,26 @@
                     <% if (isPagePerso && user.role === 'recruteur') { %>
                         <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/candidature/mescandidatures'">Visualiser mes candidatures</button>
                         <button type="button" class="btn-primary" onclick="window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/<%= organisation.siren %>`;">Visualiser mes demandes d'adhérences</button>
-                        <button id="offresEmploi" type="button" class="btn-primary" onclick="window.location.href ='http://localhost:3000/fichesPoste/detailsCreationFiche' ">Créer une nouvelle fiche de Poste</button>
+                        <button id="offresEmploi" type="button" class="btn-primary" onclick="createNewFiche()">Créer une nouvelle fiche de Poste</button>
                         <button id="offresEmploi" type="button" class="btn-primary" onclick="window.location.href ='http://localhost:3000/offresemploi/detailsCreationOffre' ">Créer une nouvelle offre d'emploi</button>
 
                         <% } %>
                     
+                        <script>
+                            function createNewFiche() {
+                                // Retrieve the organization ID from the element
+                                var orgaIdElement = document.getElementById('orgaId');
+        var orgaIdText = orgaIdElement ? orgaIdElement.textContent.trim() : '';
 
+        // Extract only the digits from the organization ID
+        var orgaIdDigits = orgaIdText.match(/\d+/g).join('');
+
+        // Redirect to the new page with the organization ID digits as a query parameter
+        window.location.href = 'http://localhost:3000/fichesPoste/detailsCreationFiche?orgaId=' + encodeURIComponent(orgaIdDigits);
+                                
+                                // Redirect to the new page with the organization ID as a query parameter
+                            }
+                        </script>
                     <!-- Vérifier le rôle ici par rapport à l'utilisateur connecté et non pas le profil affiché -->
 
                     <% if (isPagePerso && user.role === 'candidat') { %>
