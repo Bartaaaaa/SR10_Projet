@@ -21,17 +21,17 @@ module.exports = {
     },
 
 
-    create: function (etatOffre, dateValidite,indication, nbPieces, fichePoste, callback) {
-        let sql = "INSERT INTO OffreEmploi (etatOffre, dateValidite,indication, nbPieces, fichePoste, VALUES (?, ?, ?, ?,?)";
-        db.query(sql, [etatOffre, dateValidite,indication, nbPieces, fichePoste ], function (err, results) {
+  
+    create: function (etatOffre, dateValidite, nbPieces, indication, fichePoste, callback) {
+        let sql = "INSERT INTO OffreEmploi (etatOffre, dateValidite, indication, nbPieces, fichePoste) VALUES (?, ?, ?, ?, ?)";
+        db.query(sql, [etatOffre, dateValidite, indication, nbPieces, fichePoste], function (err, results) {
             if (err) {
-                console.error("Erreur lors de l'exécution de la requête SQL :", err);
-                callback(true); // Indiquer une erreur à la fonction de rappel
-                return; // Arrêter l'exécution de la fonction            } else {
+                callback(false, err.message);
+            } else {
+                callback(true, results);
             }
         });
     },
-
     
     delete : function(id ,callback){
         let sql = "DELETE FROM OffreEmploi WHERE id = ?";

@@ -13,37 +13,56 @@
     <div class="content">
         <div class="main-content">
             <div class="form-column">
-                <form action="/organisations/addtype" method="post" id="typeForm">
-                    <div>
-                        <label for="type">Type :</label>
-                        <input type="text" id="type" name="type" required>
+                <form id="OffreEmploiForm" action="/fichesPoste/addFichePoste" method="post" style="width: 80%;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="flex: 1; margin-right: 10px;">
+                            <label for="etat">Etat</label>
+                            <select id="etat" name="etat" required  class="full-width-select">
+                                <option value="">Sélectionnez un Etat</option>
+                                <option value="nonPubliee">Non publiée</option>
+                                <option value="publiee">Publiée</option>
+                                <option value="expiree">Expirée</option>                            </select>
+                        </div>
+                      
                     </div>
-                    <div>
-                        <button  class="btn btn-primary" type="submit" id="addType">Ajouter Type</button>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <div style="flex: 1; margin-right: 10px;">
+                            <label for="DateValidite">Date validite</label>
+                            <input type="date" id="Datevalidite" name="Datevalidite" required>
+                        </div>
+                     
                     </div>
-                </form>
-                <form id="organisationForm" action="/organisations/addorganisation" method="post">
-                    <div>
-                        <label for="siren">Siren :</label>
-                        <input type="text" id="siren" name="siren" required>
+                    <div style="margin-bottom: 20px;">
+                        <label for="nbPieces">Nombre de pièces</label>
+                        <input type="text" id="nbPieces" name="nbPieces" required style="width: 100%;">
                     </div>
-                    <div>
-                        <label for="nom">Nom :</label>
-                        <input type="text" id="nom" name="nom" required>
+                    <div style="margin-bottom: 20px;">
+                        <label for="Indication">Indication</label>
+                        <textarea id="Indication" name="Indication" required rows="4" style="width: 100%;"></textarea>
                     </div>
-                    <div>
-                        <label for="adrSiegeSocial">Adresse Siege Social :</label>
-                        <input type="text" id="adrSiegeSocial" name="adrSiegeSocial" required>
-                    </div>
-                    <div>
-                        <label for="typeId">Type ID :</label>
-                        <select id="typeId" name="typeId" required>
-                            <option value="">Sélectionnez un type</option>
-                        </select>
+                   
+                    <div style="margin-bottom: 20px;">
+                        <label for="fichePoste">Fiche de poste</label>
+                        <input readonly type="text" id="fichePoste" name="fichePoste" required style="width: 100%;">
                     </div>
                     
+                    <script>
+                        // Function to get the value of a query parameter by name
+                        function getQueryParam(name) {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            return urlParams.get(name);
+                        }
+                    
+                        // Get the organization ID from the URL
+                        const orgaId = getQueryParam('ficheId');
+                    
+                        // Set the organization ID as the value of the input element
+                        if (orgaId) {
+                            document.getElementById('fichePoste').value = orgaId;
+                        }
+                    </script>
                     <div>
-                        <button class="btn btn-primary" type="submit" id="addOrganisation">Créer votre Organisation</button>
+                        <button class="btn btn-primary" type="submit">Créer votre Fiche</button>
                     </div>
                 </form>
                 <script src="/javascripts/utilitaires.js"></script>
@@ -53,16 +72,52 @@
     <div class="return-button">
         <button type="button" onclick="window.history.go(-1);">Revenir à la page précédente</button>
     </div>
-
     <script>
+document.getElementById('OffreEmploiForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
+            const formData = {
+                etat: document.getElementById('etat').value,
+                Datevalidite: document.getElementById('Datevalidite').value,
+                nbPieces: document.getElementById('nbPieces').value,
+                Indication: document.getElementById('Indication').value,
+                fichePoste: document.getElementById('fichePoste').value
+            };
+            console.log(formData)
+            try {
+                const FicheResponse = await fetch('/offresemploi/addOffreEmploi', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData) 
+                });
 
+                const FicheResult = await FicheResponse.json();
+                console.log("Offre de poste response received:", FicheResult);
 
+                if (FicheResponse.ok) {
+                    alert('Offre emploi poste enregistrée avec succès!');
+                   window.location.href = 'http://localhost:3000/fichesPoste/fichesPosteListe';
+                } else {
+                    alert('Erreur lors de l\'enregistrement de l\'offre d\'emploi');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur lors de l\'enregistrement de l\'offre d\'emploi');
+            }
+        });
 
-
-
-
-      
     </script>
+    <style> textarea {
+        border: 1px solid #ccc; /* Contour pour le champ de description */
+        resize: vertical; /* Permet à l'utilisateur de redimensionner verticalement */
+    }
+    
+    .full-width-select {
+        width: 100%;
+    }
+    
+    </style>
 </body>
 </html>

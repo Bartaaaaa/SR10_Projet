@@ -53,5 +53,30 @@ router.get('/detailsCreationOffre', function (req, res, next) {
     });
   });
 
+
+  router.post('/addOffreEmploi', async function (req, res, next) {
+    try {
+        const { etat, Datevalidite, nbPieces, Indication, fichePoste } = req.body;
+
+        // Création de l'offre d'emploi avec les données fournies
+        const insertResult = await new Promise((resolve, reject) => {
+            OffreEmploimodel.create(etat, Datevalidite, nbPieces, Indication, fichePoste, function(success, message) {
+                if (success) {
+                    resolve({ message: "Offre inserted successfully", details: message });
+                } else {
+                    reject({ error: "Failed to insert offre", details: message });
+                }
+            });
+        });
+
+        res.json(insertResult);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
+
 module.exports = router;
 

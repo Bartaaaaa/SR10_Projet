@@ -33,12 +33,24 @@
                         <div class="container-row">
                             Description : <%= fiche.description %>
                         </div>    
+
                     </div>
                     <div class="container-column right small">
                         <div class="buttons bottom-margin">
+                            <button id="fichePoste" type="button" class="btn-secondary" onclick="createNewOffer()">Créer une nouvelle offre</button>
                             <button class="btn-secondary">Modifier</button>
                             <button class="btn-danger">Supprimer</button>
                         </div>
+                        <script>
+                            function createNewOffer() {
+                                // Retrieve the organization ID from the element
+                                var ficheIdElement = '<%= fiche.fichePoste_id %>'
+                                // Extract only the digits from the organization ID
+                                // Redirect to the new page with the organization ID digits as a query parameter
+                                window.location.href = 'http://localhost:3000/offresemploi/detailsCreationOffre?ficheId=' + encodeURIComponent(ficheIdElement);
+                                // Redirect to the new page with the organization ID as a query parameter
+                            }
+                        </script>
                         <div>
                             ID Fiche : <%= fiche.fichePoste_id %>
                         </div>
