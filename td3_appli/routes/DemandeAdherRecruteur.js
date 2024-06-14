@@ -48,6 +48,23 @@ router.post('/readOrga', function(req, res, next) {
         });
     });
 });
+router.post('/readOrgaFromUser', function(req, res, next) {
+    const { userId } = req.body;
+
+    // Lire les informations de l'utilisateur
+    Adhermodel.readUser(userId, function(err, user) {
+        if (err || !user) {
+            console.log("Erreur lors de la lecture de l'utilisateur:", err);
+            return res.status(500).json({ success: false, error: "Failed to read user" });
+        }
+        if (user.etat !== "validee") {
+            console.log("L'utilisateur n'est pas validé:", err);
+            return res.status(500).json({ success: false, error: "Failed to read user" });
+        }
+
+        res.json({ success: true, result: user });
+    });
+});
 
 
 /*router.get('/adherenceslist', function (req, res, next) {
@@ -79,5 +96,8 @@ router.post('/updateAdherence', function (req, res, next) {
         }
     });
 });
+
+
+
 
 module.exports = router;

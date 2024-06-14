@@ -16,7 +16,7 @@
             <li><a href="/">Accueil</a></li>
             <li><a id="ListeUsers" href="/users/usersList">Utilisateurs</a></li>
             <li><a href="/organisations/organisationsList">Organisations</a></li>
-            <li><a href="/fichesPoste/fichesPosteListe">Fiches de poste</a></li>
+            <li><a id="ListeFiches" href="/fichesPoste/fichesPosteListe">Fiches de poste</a></li>
             <li><a href="/offresemploi/offresemploilist">Offres d'emploi</a></li>
             <li class="right"><a href="/pageperso">Page Personnelle</a></li>
         </ul>
@@ -25,6 +25,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var usersLink = document.getElementById("ListeUsers");
+            var fichesLink= document.getElementById("ListeFiches");
+
             usersLink.style.display = "none";
             fetch('/pageperso/user-info')
                 .then(response => response.json())
@@ -34,6 +36,13 @@
                         usersLink.style.display = "block";
                     } else {
                         usersLink.style.display = "none";
+                    }
+                    if (userRole === "administrateur" || userRole === "recruteur"){
+                        fichesLink.style.display = "block";
+
+                    }else{
+                        fichesLink.style.display = "none";
+
                     }
                 })
                 .catch(error => console.error('Error:', error));

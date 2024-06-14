@@ -13,7 +13,7 @@
             <% fichesPoste.forEach((fiche) => { %>
                 <div class="offer-card">
                     <div class="container-column card-content">
-                        <div class="cardTitle">
+                        <div id="orga" class="cardTitle">
                             <%= fiche.organisation_nom %> (<%= fiche.organisation_siren %>) - <%= fiche.statutPoste_nom %>, <%= fiche.metier_nom %> 
                         </div>
                         <div class="container-row">
@@ -37,21 +37,64 @@
                     </div>
                     <div class="container-column right small">
                         <div class="buttons bottom-margin">
-                            <button id="fichePoste" type="button" class="btn-secondary" onclick="createNewOffer()">Créer une nouvelle offre</button>
+                            <button diplay="none"id="createOfferButton" type="button" class="btn-secondary" onclick="createNewOffer()">Créer une nouvelle offre</button>
                             <button class="btn-secondary">Modifier</button>
                             <button class="btn-danger">Supprimer</button>
                         </div>
                         <script>
-                            function createNewOffer() {
-                                // Retrieve the organization ID from the element
-                                var ficheIdElement = '<%= fiche.fichePoste_id %>'
-                                // Extract only the digits from the organization ID
-                                // Redirect to the new page with the organization ID digits as a query parameter
-                                window.location.href = 'http://localhost:3000/offresemploi/detailsCreationOffre?ficheId=' + encodeURIComponent(ficheIdElement);
-                                // Redirect to the new page with the organization ID as a query parameter
-                            }
+    document.addEventListener("DOMContentLoaded", function() {
+    fetch('/pageperso/user-info')
+        .then(response => response.json())
+        .then(user => {
+            var userid = user.id;
+            var userRole = user.role;
+
+            if (userRole === "administrateur" || userRole === "recruteur") {
+                // Appeler l'endpoint /readOrga après avoir obtenu l'ID utilisateur
+                fetch('/DemandeAdherRecruteur/readOrgaFromUser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: userid })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("Organisation:", data.result);
+                        var userOrganisationSiren = data.result.organisation; // Assurez-vous que cette clé existe dans la réponse
+                        var offerOrganisationSiren = '<%= fiche.organisation_siren %>'; // SIREN de l'organisation de l'offre
+                        console.log(userOrganisationSiren);
+                        console.log(offerOrganisationSiren);
+                        if (userOrganisationSiren === offerOrganisationSiren) {
+                            // Afficher le bouton
+                            document.getElementById("createOfferButton").style.display = "block";
+                        }
+                        else{
+                            document.getElementById("createOfferButton").style.display = "none";
+
+                        }
+                        if (userRole === "administrateur" ){
+                            document.getElementById("createOfferButton").style.display = "block";
+
+                        }
+                    } else {
+                        console.error("Erreur lors de la lecture de l'organisation:", data.error);
+
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+function createNewOffer() {
+    var ficheIdElement = '<%= fiche.fichePoste_id %>';
+    window.location.href = 'http://localhost:3000/offresemploi/detailsCreationOffre?ficheId=' + encodeURIComponent(ficheIdElement);
+}
                         </script>
-                        <div>
+                        <div >
                             ID Fiche : <%= fiche.fichePoste_id %>
                         </div>
                         <div>

@@ -20,6 +20,7 @@ module.exports = {
     session.tel = data.tel; 
     session.creationDate = data.creationDate;
     session.statut = data.statut;
+ //  session.orgaEtat = data.userEtat;
     session.save(function (err) {
       if (err) {
         console.log(err);
