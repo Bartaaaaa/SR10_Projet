@@ -63,32 +63,23 @@
 
                     <% if (isPagePerso && user.role === 'recruteur' || user.role === 'administrateur') { %>
                         <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/candidature/mescandidatures'">Visualiser mes candidatures</button>
-                        <button type="button" class="btn-primary" onclick="window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/<%= organisation.siren %>`;">Visualiser mes demandes d'adhérences</button>
-                        <button id="fichePoste" type="button" class="btn-primary" onclick="createNewFiche()">Créer une nouvelle fiche de Poste</button>
+                    <% } %>
 
-                        <% } %>
+
+                    <% if (isPagePerso && organisation) { %>
+                        <button type="button" class="btn-primary" onclick="window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/<%= organisation.siren %>`;">Visualiser mes demandes d'adhérences</button>
+                        <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/fichesPoste/detailsCreationFiche?orgaId=<%= organisation.siren %>';">Créer une nouvelle fiche de Poste</button>
+                    <% } %>
                     
-                        <script>
-                            function createNewFiche() {
-                                // Retrieve the organization ID from the element
-                                var orgaIdElement = document.getElementById('orgaId');
-                                var orgaIdText = orgaIdElement ? orgaIdElement.textContent.trim() : '';
-                                // Extract only the digits from the organization ID
-                                var orgaIdDigits = orgaIdText.match(/\d+/g).join('');
-                                // Redirect to the new page with the organization ID digits as a query parameter
-                                window.location.href = 'http://localhost:3000/fichesPoste/detailsCreationFiche?orgaId=' + encodeURIComponent(orgaIdDigits);
-                                // Redirect to the new page with the organization ID as a query parameter
-                            }
-                        </script>
                     <!-- Vérifier le rôle ici par rapport à l'utilisateur connecté et non pas le profil affiché -->
 
                     <% if (isPagePerso && user.role === 'candidat') { %>
-                        <button type="button" class="btn-primary" id="change-role">Devenir recruteur</button>
+                        <button type="button" class="btn-primary" onclick="changeRole('recruteur')">Devenir recruteur</button>
                     <% } %>
 
                     <% if (!isPagePerso && user.role !== 'administrateur') { %>
-                        <button type="button" class="btn-primary" id="make-admin">Rendre Administrateur</button>
-                        <button type="button" class="btn-danger" id="supprimer">Supprimer</button>
+                        <button type="button" class="btn-primary" onclick="changeRole('administrateur')">Rendre Administrateur</button>
+                        <button type="button" class="btn-danger" onclick="deleteUser()">Supprimer</button>
                     <% } %>
                 </div>
             </div>
@@ -105,7 +96,6 @@
     </div>
 
     <script>
-
         function sendDataToServer(endPoint, formData, errorMessage, callback = null) {
             fetch(endPoint, {
                 method: 'POST',
@@ -134,7 +124,7 @@
         document.getElementById('updateUserForm').addEventListener('submit', function(event) {
             // Évite que le formulaire soit envoyé automatiquement au chargement de la page
             event.preventDefault(); 
-            const id = window.location.pathname.replace('/users/', '');
+            const id = "<%= user.id %>";
 
             const formData = {
                 id: id,
@@ -147,16 +137,8 @@
             sendDataToServer('/users/updateUser', formData, "Erreur lors de la mise à jour de l'utilisateur : ", () => { window.location.reload(); });
         });
 
-        const makeAdminButton = document.getElementById('make-admin');
-        if (makeAdminButton) {
-            makeAdminButton.addEventListener('click', () => changeRole('administrateur'));
-        }
-
-        const currentRole = document.getElementById('role').value;
-        document.getElementById('change-role').addEventListener('click', () => changeRole(currentRole === "candidat" ? "recruteur" : "candidat"));
-
         function changeRole (newRole) {
-            const id = window.location.pathname.replace('/users/', '');
+            const id = "<%= user.id %>";
             const formData = {
                 userId: id, 
                 newRole: newRole
@@ -166,21 +148,18 @@
             sendDataToServer('/users/updateRole', formData, "Erreur lors de la mise à jour de l'utilisateur : " , () => { window.location.reload(); });
         }
 
-
-
-
         // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
-        document.getElementById('supprimer').addEventListener('click', () => {
+        function deleteUser() {
             if (confirm('ATTENTION : vous vous apprétez à supprimer cet utilisateur. Confirmer ?')) {
                 
-                const id = window.location.pathname.replace('/users/', '');
+                const id = "<%= user.id %>";
                 const formData = {
                     id: id
                 }
 
                 sendDataToServer('/users/deleteuser', formData, "Erreur lors de la suppression de l'utilisateur : ", () => { window.location.href = 'http://localhost:3000'; });
             }
-        });
+        }
 
     </script>
     

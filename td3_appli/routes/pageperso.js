@@ -28,7 +28,8 @@ router.get('/', function(req, res, next) {
             Adhermodel.getOrgaDuRecruteur(req.session.userid, (results) => {
                 const orga = results[0];
                 pageData.organisation = orga;
-                pageData.user.orga = orga?.nom + " (SIREN : " + orga?.siren + ")" ?? "Aucune organisation";
+                pageData.user.orga = orga?.nom ? orga.nom + " (SIREN : " + orga.siren + ")" : "Aucune organisation";
+                // pageperso.ejs a été supprimée, detailutilisateur.ejs a été adaptée pour récupérer les fonctionnalités de cette vue
                 res.render('detailutilisateur', pageData);
             });
         } else {

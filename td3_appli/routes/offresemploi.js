@@ -49,7 +49,7 @@ router.get('/detailsCreationOffre', function (req, res, next) {
     organisationModel.readall(function(result){
       // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
         // Rendu de la vue avec les organisations mises à jour
-        res.render('detailsCreationOffre', { title: 'Liste des organisations', organisations: result});
+        res.render('detailsCreationOffre', { title: "Création d'offre", organisations: result});
     });
   });
 

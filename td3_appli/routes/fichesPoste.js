@@ -14,7 +14,7 @@ router.get('/fichesposteliste', function (req, res, next) {
     const {userid, role} = req.session;
     console.log(`userid: ${userid}, role: ${role}`);
     // filtre en fonction de l'orga
-    if (role === "recruteur") {
+    if (role === "recruteur" || role === "administrateur") {
       darModel.getOrgaDuRecruteur(userid, (orgaResult) => {
         if (orgaResult.length !== 0) {
           const orga = orgaResult[0];
@@ -22,7 +22,7 @@ router.get('/fichesposteliste', function (req, res, next) {
           console.log('filtré');
           return res.render('fichesPosteListe', { title: 'Liste des fiches de poste', fichesPoste: result, isRecruteur: true });
         }
-      })
+      });
     } else {
       console.log('pas filtré');
       res.render('fichesPosteListe', { title: 'Liste des fiches de poste', fichesPoste: result, isRecruteur: false });

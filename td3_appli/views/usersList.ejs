@@ -1,91 +1,87 @@
-<head>  
-    <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+<head>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/offresEmploi.css">
 </head>
 
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
     
 
-    <h1>
+    <h1 class="heading">
         <%= title %>
     </h1>
-    <div class="overflow-x-auto">
-        <table class="table" id="usersTable">
-            <thead>
-                <tr>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Date de Création</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="usersTableBody">
-                <% users.forEach((user) => { %>
-                    <tr class="hover">
-                        <td><%= user.prenom %></td>
-                        <td><%= user.nom %></td>
-                        <td><%= user.mail %></td>
-                        <td><%= user.tel %></td>
-                        <td><%= user.dateCreation %></td>
-                        <td>
-                            <button class="btn btn-primary" onclick="window.location.href = 'http://localhost:3000/users/<%= user.id %>';">Détails utilisateur</button>
+
+    <div class="main-content">
+        <div class="left-column">
+            <input type="search" name="searchbar" id="searchbar" class="searchbar" placeholder="Rechercher un utilisateur...">
+            <% users.forEach((user) => { %>
+                <div class="offer-card">
+                    <div class="card-content">
+                        <div class="cardTitle">
+                            <%= user.prenom %> <%= user.nom %> 
+                        </div>
+                        <div class="container-row">
+                            <div class="little_blue_card">
+                                <%= user.mail %> 
+                            </div>
+                            <div class="little_blue_card">
+                                <%= user.tel %> 
+                            </div>
+                            <div>
+                                Créé le <%= user.dateCreation %> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-column right small">
+                        <div class="buttons">
+                            <button class="btn btn-secondary" onclick="window.location.href = 'http://localhost:3000/users/<%= user.id %>';">Détails utilisateur</button>
                             <button class="btn btn-danger" data-mail="<%= user.mail %>">Supprimer</button>
-                        </td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+        <div class="right-column">
+            <div class="offer-card">
+                <div class="card-content">
+                    <form action="/users/adduser" method="post" id="userForm">
+                        <div class="cardTitle">
+                            Ajout d'utilisateur
+                        </div>
+                        <div class="container-row">
+                            <label for="nom">Nom</label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                        <div class="container-row">
+                            <label for="prenom">Prénom</label>
+                            <input type="text" id="prenom" name="prenom" required>
+                        </div>
+                        <div class="container-row">
+                            <label for="mail">E-mail</label>
+                            <input type="email" id="mail" name="mail" required>
+                        </div>
+                        <div class="container-row">
+                            <label for="tel">Téléphone</label>
+                            <input type="tel" id="tel" name="tel" required>
+                        </div>
+                        <div class="container-row">
+                            <label for="mdp">Mot de passe</label>
+                            <input type="mdp" id="mdp" name="mdp" required>
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" id="add" class="btn-secondary">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="pagination" class="pagination-container"></div>
-    <script src="/javascripts/utilitaires.js"></script>
-    <script src="/stylesheets/listes.css"></script>
-
-    <script>
-        
-     document.addEventListener("DOMContentLoaded", function() {
-             const users = <%- JSON.stringify(users) %>; // Passer les utilisateurs à partir de EJS
-             const pagination = document.getElementById("pagination");
-             const rowsPerPage = 7;
-             const usersTableBody = document.getElementById("usersTableBody");
-
-             setupPagination(users, pagination, rowsPerPage, usersTableBody, renderUserRow);
-     }); 
-    </script>
 
     
 </body>
 
 
-    <!-- Formulaire pour ajouter un nouvel utilisateur 
-    <form action="/users/adduser" method="post" id="userForm">
-        <div>
-            <label for="nom">Nom :</label>
-            <input type="text" id="nom" name="nom" required>
-        </div>
-        <div>
-            <label for="prenom">Prénom :</label>
-            <input type="text" id="prenom" name="prenom" required>
-        </div>
-        <div>
-            <label for="mail">E-mail :</label>
-            <input type="email" id="mail" name="mail" required>
-        </div>
-        <div>
-            <label for="tel">Téléphone :</label>
-            <input type="tel" id="tel" name="tel" required>
-        </div>
-        <div>
-            <label for="mdp">Mot de passe  :</label>
-            <input type="mdp" id="mdp" name="mdp" required>
-        </div>
-        <div>
-            <button type="submit" id="add">Ajouter</button>
-        </div>
-    </form>
-    
     <script>
         document.getElementById('userForm').addEventListener('submit', function(event) {
             event.preventDefault();  // Empêcher la soumission normale du formulaire
@@ -120,4 +116,3 @@
             });
         });
         </script>
-    -->

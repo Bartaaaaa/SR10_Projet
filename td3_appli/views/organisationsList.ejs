@@ -3,108 +3,197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <link rel="stylesheet" href="/stylesheets/listes.css">
+    <link rel="stylesheet" href="/stylesheets/offresEmploi.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
 
-    <h1>
+    <h1 class="heading">
         <%= title %>
     </h1>
-    <div class="overflow-x-auto">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Siren</th>
-                    <th>Nom</th>
-                    <th>Adresse</th>
-                    <th>Type</th>
-                    <th>Adhérer</th>
 
-                </tr>
-            </thead>
-            <tbody id="organisationsTableBody">
+    <div class="main-content">
+        <div class="left-column">
+            <div class="container-column">
                 <% organisations.forEach((organisation) => { %>
-                    <tr class="hover">
-                        <td><%= organisation.siren %></td>
-                        <td><%= organisation.nom %></td>
-                        <td><%= organisation.adrSiegeSocial %></td>
-                        <td><%= organisation.type %></td>
-                        <td>                           
-                            <button class="btn btn-primary" onclick="adhereToOrganisation('<%= organisation.siren %>')">Adhérer</button>
-                        </td>
-                    </tr>
+                    <div class="offer-card">
+                        <div class="container-column card-content">
+                            <div class="cardTitle">
+                                <%= organisation.nom %>
+                            </div>
+                            <div class="container-row">
+                                <div>
+                                    <%= organisation.adrSiegeSocial %>
+                                </div>
+                                <div class="little_blue_card">
+                                    <%= organisation.type %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-column small right">
+                            <div class="container-row buttons">
+                                <button class="btn-secondary" onclick="adhereToOrganisation('<%= organisation.siren %>')">Adhérer</button>
+                                <button class="btn-secondary" onclick="window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/<%= organisation.siren %>`;">Demandes d'adhérences</button>
+                            </div>
+                            <div class="top-margin">
+                                Siren : <%= organisation.siren %>
+                            </div>
+                        </div>
+                    </div>
                 <% }) %>
-            </tbody>
-           
-            
-        </table>
-        <script>
-            function adhereToOrganisation(siren) {
-                fetch('/pageperso/user-info')
-                    .then(response => response.json())
-                    .then(user => {
-                        // Préparer les données pour l'adhésion
-                        const data = {
-                            siren: siren,
-                            userId: user.id,
-                        };
-                       
-                        // Envoyer la demande d'adhésion au serveur
-                        fetch('/DemandeAdherRecruteur/addAdherence', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-                        })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.success) {
-                                alert('Demande d\'adhésion envoyée avec succès.');
-                            } else {
-                                alert('Erreur lors de la demande d\'adhésion. Vous avez peut être déjà candidaté pour cette organisation');
-                                if (data.userId==null){
-                                     window.location.href = 'http://localhost:3000/connexion';
-                                return;
-                                 }
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="offer-card">
+                <form action="/organisations/addtype" method="post" id="typeForm">
+                    <div class="cardTitle">
+                        Ajouter un type d'organisation
+                    </div>
+                    <div class="container-column">
+                        <div class="container-row">
+                            <label for="type">Type :</label>
+                            <input type="text" id="type" name="type" class="longer-input" required>
+                        </div>
+                    </div>
+                    <div class="buttons top-margin">
+                        <button type="submit" id="addType" class="btn-secondary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+            <div class="offer-card">
+                <form id="organisationForm" action="/organisations/addorganisation" method="post">
+                    <div class="cardTitle">
+                        Ajouter une organisation
+                    </div>
+                    <div class="container-column">
+                        <div class="container-row">
+                            <label for="siren">Siren :</label>
+                            <input type="text" id="siren" name="siren" required>
+                        </div>
+                        <div class="container-row">
+                            <label for="nom">Nom :</label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                        <div class="container-row">
+                            <label for="adrSiegeSocial">Siège Social :</label>
+                            <input type="text" id="adrSiegeSocial" name="adrSiegeSocial" required>
+                        </div>
+                        <div class="container-row">
+                            <label for="typeId">ID Type :</label>
+                            <input type="text" id="typeId" name="typeId" required>
+                        </div>
+                        
+                    </div>
+                    <div class="buttons top-margin">
+                        <button type="submit" id="addOrganisation" class="btn-secondary">Ajouter Organisation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                    })
-                    .catch(error => console.error('Error:', error));
-            }
-            </script>
-    </div>
-                            
-   
-    <div id="pagination" class="pagination-container"></div>
-  
-          <button id="CreateOrga" class="btn btn-primary" action="/organisations/detailsCreationOrganisation">Créer votre organisation</button>
-    </div>
+
 
     <script src="/javascripts/utilitaires.js"></script>
-    
+
     <script>
-        document.getElementById("CreateOrga").addEventListener("click",function(event){
+
+        function adhereToOrganisation(siren) {
+            fetch('/pageperso/user-info')
+            .then(response => response.json())
+            .then(user => {
+                // Préparer les données pour l'adhésion
+                const data = {
+                    siren: siren,
+                    userId: user.id,
+                };
+
+                // Envoyer la demande d'adhésion au serveur
+                fetch('/DemandeAdherRecruteur/addAdherence', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Demande d\'adhésion envoyée avec succès.');
+                    } else {
+                        alert('Erreur lors de la demande d\'adhésion. Vous avez peut être déjà candidaté pour cette organisation');
+                        if (data.userId == null) {
+                            window.location.href = 'http://localhost:3000/connexion';
+                            return;
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+
+             document.getElementById('typeForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            window.location.href = "http://localhost:3000/organisations/detailsCreationOrganisation"
+
+            const type = document.getElementById('type').value;
+
+                fetch('/organisations/addtype', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nomType: type })
+                })
+
+                .then(response => response.json())
+                .then(data => {
+                console.log('Success:', data);
+                alert('Type enregistré avec succès!');
+                window.location.href = 'http://localhost:3000/organisations/organisationsList';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Erreur lors de l\'enregistrement du type.');
+            });
 
         });
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const organisations = <%- JSON.stringify(organisations) %>; // Passer les organisations à partir de EJS
-            const pagination = document.getElementById("pagination");
-            const rowsPerPage = 7;
-            const organisationsTableBody = document.getElementById("organisationsTableBody");
+            document.getElementById('organisationForm').addEventListener('submit', async function(event) {
+                event.preventDefault();
 
-            setupPagination(organisations, pagination, rowsPerPage, organisationsTableBody, renderOrganisationRow);
-        });
+                const formData = {
+                    siren: document.getElementById('siren').value,
+                    nom: document.getElementById('nom').value,
+                    adrSiegeSocial: document.getElementById('adrSiegeSocial').value,
+                    typeId: document.getElementById('typeId').value
+                };
 
-            
-        
+                try {
+                    const orgaResponse = await fetch('/organisations/addorganisation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const orgaResult = await orgaResponse.json();
+                    console.log("Organisation response received:", orgaResult);
+
+                    if (orgaResult.message) {
+                        alert('Organisation enregistrée avec succès!');
+                        window.location.href = 'http://localhost:3000/organisations/organisationsList';
+                    } else {
+                        throw new Error("Failed to insert organisation");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Erreur lors de l\'enregistrement de l\'organisation');
+                }
+            });
         </script>
-        
+
     </body>

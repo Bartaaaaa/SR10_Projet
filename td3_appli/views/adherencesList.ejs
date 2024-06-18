@@ -4,39 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+    <link rel="stylesheet" href="/stylesheets/offresEmploi.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <title><%= title %></title>
 </head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
-    <h1><%= title %></h1>
-    <div class="overflow-x-auto">
-        <table class="table" id="adherencesTable">
-            <thead>
-                <tr>
-                    <th>Organisation ID</th>
-                    <th>Recruteur ID</th>
-                    <th>Etat</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="adherencesTableBody">
-                <% adherences.forEach((adherence) => { %>
-                    <tr class="hover">
-                        <td><%= adherence.organisation %></td>
-                        <td><%= adherence.recruteur %></td>
-                        <td><%= adherence.etat %></td>
-                        <td>
-                            <button class="accept-btn" data-organisation="<%= adherence.organisation %>" data-recruteur="<%= adherence.recruteur %>">Accepter</button>
-                            <button class="reject-btn" data-organisation="<%= adherence.organisation %>" data-recruteur="<%= adherence.recruteur %>">Refuser</button>
-                        </td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
+    <h1 class="heading"><%= title %></h1>
+
+    <div class="main-content">
+        <div class="left-column">
+            <% adherences.forEach((adherence) => { %>
+                <div class="offer-card">
+                    <div class="card-content">
+                        <div class="container-column">
+                            <div class="container-row">
+                                <div>
+                                    Organisation Siren : <%= adherence.organisation %>
+                                </div>
+                                <div>
+                                    ID recruteur : <%= adherence.recruteur %>
+                                </div>
+                                <div>
+                                    Etat : <%= adherence.etat %>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="container-column">
+                        <div class="buttons">
+                            <button class="btn-secondary" data-organisation="<%= adherence.organisation %>" data-recruteur="<%= adherence.recruteur %>">Accepter</button>
+                            <button class="btn-danger" data-organisation="<%= adherence.organisation %>" data-recruteur="<%= adherence.recruteur %>">Refuser</button>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
     </div>
-    <div id="pagination" class="pagination-container"></div>
-    <script src="/javascripts/utilitaires.js"></script>
+
 
     <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -126,40 +132,3 @@ function updateAdherenceState(organisation, recruteur, etat) {
     </script>
 </body>
 </html>
-<style>/* Styles pour les boutons Accepter et Refuser */
-    button.accept-btn {
-        background-color: #4CAF50; /* Vert pour accepter */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-    
-    button.reject-btn {
-        background-color: #f44336; /* Rouge pour refuser */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-    
-    button.accept-btn:hover {
-        background-color: #45a049; /* Vert plus foncé pour le survol */
-    }
-    
-    button.reject-btn:hover {
-        background-color: #d32f2f; /* Rouge plus foncé pour le survol */
-    }
-    </style>

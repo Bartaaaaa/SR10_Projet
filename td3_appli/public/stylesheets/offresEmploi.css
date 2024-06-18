@@ -99,7 +99,6 @@ body {
     justify-content: center;
     width: auto;
     font-size: small;
-
 }
 
 .buttons button {
@@ -153,9 +152,43 @@ body {
     margin-bottom: 10px;
 }
 
+.top-margin {
+    margin-top: 10px;
+}
+
+.center {
+    align-items: center;
+    align-content: center;
+}
+
+.seventy {
+    width: 70%;
+}
+
+.hundred {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.fifty {
+    width: 50%;
+}
+
 .heading {
     font-size: 2rem;
     font-weight: 600;
     text-align: center;
     padding-top: 25px;
+}
+
+.offer-card .longer-input {
+    width: 100px;
+    min-width: 90px;
+}
+
+.textarea {
+    width: 150px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    resize: none;
 }

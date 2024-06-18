@@ -52,9 +52,22 @@ router.post('/verifuser', function(req, res, next) {
   //      console.log("Failed to connect user.");
   //      res.status(500).json({ error: "Failed to connectuser" });
   //};
-  router.get('/userslist', function (req, res, next) {
+
+  function traitementUser(user) {
+    if (user) {
+        const dateCrea = new Date(user.dateCreation);
+        const jour = String(dateCrea.getDate()).padStart(2, '0'); // padStart permet d'avoir 2 chiffres pour le jour
+        const mois = String(dateCrea.getMonth() + 1).padStart(2, '0'); // janvier = 0 ici, donc +1
+        const an = dateCrea.getFullYear();
+        user.dateCreation = `${jour}/${mois}/${an}`;
+        return user;
+    }
+}
+
+  router.get('/userslist', function (req, res) {
     userModel.readall(function(result){
-        res.render('usersList', { title: 'Liste des utilisateurs', users: result });
+        const allUserInfo = result.map(user => traitementUser(user));
+        res.render('usersList', { title: 'Liste des utilisateurs', users: allUserInfo });
     });
 });
 

@@ -5,47 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/stylesheets/user.css">
+    <link rel="stylesheet" href="/stylesheets/offresEmploi.css">
 </head>
 <body>
     <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
 
-    <div class="content">
-        <div class="main-content">
-            <div class="form-column">
-                <form id="OffreEmploiForm" action="/fichesPoste/addFichePoste" method="post" style="width: 80%;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                        <div style="flex: 1; margin-right: 10px;">
-                            <label for="etat">Etat</label>
-                            <select id="etat" name="etat" required  class="full-width-select">
-                                <option value="">Sélectionnez un Etat</option>
-                                <option value="nonPubliee">Non publiée</option>
-                                <option value="publiee">Publiée</option>
-                                <option value="expiree">Expirée</option>                            </select>
+    <div class="main-content fifty">
+        <div class="offer-card">
+            <div class="hundred">
+
+                <form id="OffreEmploiForm" action="/fichesPoste/addFichePoste" method="post" >
+                    <div class="container-column">
+                        <div class="container-row">
+                            <div class="container-row">
+                                <label for="etat">Etat</label>
+                                <select id="etat" name="etat" required  class="seventy">
+                                    <option value="">Sélectionnez un Etat</option>
+                                    <option value="nonPubliee">Non publiée</option>
+                                    <option value="publiee">Publiée</option>
+                                    <option value="expiree">Expirée</option>                            
+                                </select>
+                            </div>
+                            <div class="container-row">
+                                <label for="DateValidite">Date validité</label>
+                                <input type="date" id="Datevalidite" name="Datevalidite" required>
+                            </div>
                         </div>
-                      
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                        <div style="flex: 1; margin-right: 10px;">
-                            <label for="DateValidite">Date validite</label>
-                            <input type="date" id="Datevalidite" name="Datevalidite" required>
+
+                        <div class="container-row">
+                            <div>
+                                <label for="nbPieces">Nombre de pièces</label>
+                                <input type="text" id="nbPieces" name="nbPieces" required >
+                            </div>
+                            <div>
+                                <label for="Indication">Indication</label>
+                                <textarea id="Indication" name="Indication" required class="textarea" ></textarea>
+                            </div>       
                         </div>
-                     
+            
+                        <div class="container-row">
+                            <label for="fichePoste">Fiche de poste</label>
+                            <input readonly type="text" id="fichePoste" name="fichePoste" required >
+                        </div>
                     </div>
-                    <div style="margin-bottom: 20px;">
-                        <label for="nbPieces">Nombre de pièces</label>
-                        <input type="text" id="nbPieces" name="nbPieces" required style="width: 100%;">
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <label for="Indication">Indication</label>
-                        <textarea id="Indication" name="Indication" required rows="4" style="width: 100%;"></textarea>
-                    </div>
-                   
-                    <div style="margin-bottom: 20px;">
-                        <label for="fichePoste">Fiche de poste</label>
-                        <input readonly type="text" id="fichePoste" name="fichePoste" required style="width: 100%;">
-                    </div>
-                    
+                         
                     <script>
                         // Function to get the value of a query parameter by name
                         function getQueryParam(name) {
@@ -61,17 +64,20 @@
                             document.getElementById('fichePoste').value = orgaId;
                         }
                     </script>
-                    <div>
-                        <button class="btn btn-primary" type="submit">Créer votre Fiche</button>
+                    <div class="buttons">
+                        <button class="btn-secondary" type="submit">Créer votre Fiche</button>
                     </div>
                 </form>
                 <script src="/javascripts/utilitaires.js"></script>
             </div>
         </div>
     </div>
-    <div class="return-button">
-        <button type="button" onclick="window.history.go(-1);">Revenir à la page précédente</button>
+    <div class="buttons">
+        <button class="btn-secondary" type="button" onclick="window.history.go(-1);">Revenir à la page précédente</button>
     </div>
+
+
+
     <script>
 document.getElementById('OffreEmploiForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -109,15 +115,6 @@ document.getElementById('OffreEmploiForm').addEventListener('submit', async func
         });
 
     </script>
-    <style> textarea {
-        border: 1px solid #ccc; /* Contour pour le champ de description */
-        resize: vertical; /* Permet à l'utilisateur de redimensionner verticalement */
-    }
-    
-    .full-width-select {
-        width: 100%;
-    }
-    
-    </style>
+
 </body>
 </html>
