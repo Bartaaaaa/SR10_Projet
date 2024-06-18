@@ -143,7 +143,7 @@ module.exports = {
     },
     
     update: function(id, mail, nom, prenom, tel, callback) {
-        const sql = "UPDATE Utilisateur SET mail = ?, nom = ?, prenom = ?, tel = ?, WHERE id = ?";
+        const sql = "UPDATE Utilisateur SET mail = ?, nom = ?, prenom = ?, tel = ? WHERE id = ?";
         db.query(sql, [mail, nom, prenom, tel, id], function(err, results) {
             if (err) {
                 console.error('Error while updating user:', err);
@@ -153,5 +153,6 @@ module.exports = {
             }
         });
     }
+    
 
 }

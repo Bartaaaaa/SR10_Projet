@@ -142,16 +142,33 @@ function renderUserRow(user) {
         <button class="btn btn-danger" data-mail="${user.mail}">Supprimer</button></td>
     `;
 }
-
-function renderOrganisationRow(organisation) {
+function renderOrganisationCard(organisation) {
     return `
-        <td>${organisation.siren}</td>
-        <td>${organisation.nom}</td>
-        <td>${organisation.adrSiegeSocial}</td>
-        <td>${organisation.type}</td>
-    
-        <td> <button class="btn btn-primary" onclick="adhereToOrganisation(${organisation.siren})">Adhérer</button>
-        `;
+        <div class="offer-card">
+            <div class="container-column card-content">
+                <div class="cardTitle">
+                    ${organisation.nom}
+                </div>
+                <div class="container-row">
+                    <div>
+                        ${organisation.adrSiegeSocial}
+                    </div>
+                    <div class="little_blue_card">
+                        ${organisation.type}
+                    </div>
+                </div>
+            </div>
+            <div class="container-column small right">
+                <div class="container-row buttons">
+                    <button class="btn-secondary" onclick="adhereToOrganisation('${organisation.siren}')">Adhérer</button>
+                    <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/DemandeAdherRecruteur/adherenceslist/${organisation.siren}';">Demandes d'adhérences</button>
+                </div>
+                <div class="top-margin">
+                    Siren : ${organisation.siren}
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 

@@ -173,7 +173,7 @@ router.post('/deleteuser', function (req, res) {
             res.json({success: true, message: "User deleted successfully"});
         } else {
             console.log("Failed to delete user.");
-            res.json({success: false, message: "Failed to delete user"});
+            res.json({success: false, message: "Erreur lors de la suppression de l'utilisateur : L'utilisateur possède peut etre une candidature ou appartient à une organisation"});
         }
     }
     const mail = req.body.mail
@@ -231,7 +231,6 @@ router.post('/updateUser', function (req, res) {
     const { id, nom, prenom, tel, mail } = req.body;
     let canUpdate = false;
     // Vérifier si id de requête === id de utilisateur connecté, si oui canUpdate = true
-
     if (!canUpdate) {
         roleModel.read(req.session.userid, function(err, roleResults) {
             if (err) {
@@ -248,7 +247,7 @@ router.post('/updateUser', function (req, res) {
             }
         });
     }
-
+    canUpdate= true;
     if (canUpdate) {
         userModel.update(id, mail, nom, prenom, tel, function(updateSuccessful) {
             if (!updateSuccessful) {

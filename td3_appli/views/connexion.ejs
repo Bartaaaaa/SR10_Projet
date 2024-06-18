@@ -50,7 +50,6 @@
         .then(data => {
             console.log('Success:', data);
             if (data.success) {
-                alert('Utilisateur authentifié avec succès!');
                 window.location.href = 'http://localhost:3000';
             } else {
                 alert('Échec de l\'authentification.');

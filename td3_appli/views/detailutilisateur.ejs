@@ -79,6 +79,9 @@
 
                     <% if (!isPagePerso && user.role !== 'administrateur') { %>
                         <button type="button" class="btn-primary" onclick="changeRole('administrateur')">Rendre Administrateur</button>
+                        <button type="button" class="btn-primary" onclick="changeRole('recruteur')">Rendre Recruteur</button>
+                        <button type="button" class="btn-primary" onclick="changeRole('candidat')">Rendre Candidat</button>
+
                         <button type="button" class="btn-danger" onclick="deleteUser()">Supprimer</button>
                     <% } %>
                 </div>
@@ -151,13 +154,14 @@
         // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
         function deleteUser() {
             if (confirm('ATTENTION : vous vous apprétez à supprimer cet utilisateur. Confirmer ?')) {
-                
                 const id = "<%= user.id %>";
-                const formData = {
-                    id: id
-                }
+                const mail = document.getElementById("mail");
 
-                sendDataToServer('/users/deleteuser', formData, "Erreur lors de la suppression de l'utilisateur : ", () => { window.location.href = 'http://localhost:3000'; });
+                const formData = {  
+                    id: id,
+                    mail : mail
+                }
+                sendDataToServer('/users/deleteuser', formData, "Erreur lors de la suppression de l'utilisateur : L'utilisateur possède peut etre une candidature ou appartient à une organisation", () => { });
             }
         }
 
