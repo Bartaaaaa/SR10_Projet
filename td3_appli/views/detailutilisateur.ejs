@@ -36,7 +36,7 @@
                         <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone" value="<%= user.tel %>">
                     </div>
 
-                    <% if (isPagePerso ) { %>
+                    <% if (isPagePerso || connectedUserRole === 'administrateur' ) { %>
                         <div class="buttons">
                             <button class="btn-secondary" type="submit">Sauvegarder les modifications</button>
                         </div>
