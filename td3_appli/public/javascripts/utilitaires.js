@@ -305,7 +305,7 @@ function renderFichePosteCard(fiche) {
 
         card += `
                 <button class="btn-secondary">Modifier</button>
-                <button class="btn-danger">Supprimer</button>
+                <button class="btn-danger">Désactiver</button>
             </div>
 
             <div >

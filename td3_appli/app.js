@@ -72,7 +72,7 @@ app.all("*", function (req, res, next) {
     `);
   };
 
-  if (req.path.startsWith("/users") && req.path !== '/users/updateUser') { // user n'a accès a aucun des paths sauf pour update
+  /*if (req.path.startsWith("/users") && req.path !== '/users/updateUser') { // user n'a accès a aucun des paths sauf pour update
     console.log("Path requires administrateur role");
     if (sessionJS.isConnected(req.session, { role: "administrateur" })) {
       console.log("User has required role");
@@ -82,7 +82,7 @@ app.all("*", function (req, res, next) {
       // return res.status(403).json({error: "User does not have required role"});
       return redirectWithAlert("Cette page n'est pas accessible pour vous");
     }
-  }
+  }*/
 
   if (req.path.startsWith("/DemandeAdherRecruteur") ) {
     console.log("Path requires administrateur role");

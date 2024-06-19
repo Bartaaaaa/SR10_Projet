@@ -34,6 +34,7 @@ module.exports = {
             callback(null, results); // Return results to callback
         });
     },
+    
     majRole: function (userId, newRole, callback) {
         console.log("Updating role for user", userId, "to", newRole); // Log the inputs
         // Execute a SQL query to update the role for a user.
