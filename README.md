@@ -8,8 +8,7 @@ Pour cloner le dépôt, utilisez la commande suivante :
 ```bash
 git clone https://github.com/Bartaaaaa/SR10_Projet.git
 ```
-Notez que le dépôt est privé. Pour obtenir l'accès, veuillez envoyer une demande de clonage, que j'approuverai en tant que responsable de du dépot.
-
+Notez que le dépôt est privé. Pour obtenir l'accès, veuillez m'envoyer votre adresse git ou votre nom d'utilisateur pour que je puisse vous partager l'accès.
 ## Détails
 
 Le projet se trouve dans le dossier td3_appli. Il est composé de plusieurs fichiers importants, dont les principaux sont :
