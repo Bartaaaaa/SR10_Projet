@@ -192,3 +192,9 @@ body {
     border-radius: 10px;
     resize: none;
 }
+
+.page-indicator {
+    margin: 0 10px;
+    font-weight: bold;
+    display: flex;
+}

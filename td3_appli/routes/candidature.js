@@ -19,6 +19,12 @@ router.get('/mescandidatures', function(req, res, next) {
 
         // Process the candidatures to create an array of file objects
         result.forEach(candidature => {
+
+          const dateCrea = new Date(candidature.date);
+          const jour = String(dateCrea.getDate()).padStart(2, '0'); // padStart permet d'avoir 2 chiffres pour le jour
+          const mois = String(dateCrea.getMonth() + 1).padStart(2, '0'); // janvier = 0 ici, donc +1
+          const an = dateCrea.getFullYear();
+          candidature.date = `${jour}/${mois}/${an}`;
           console.log('Traitement de la candidature:', candidature);
 
           candidature.piecesChemAcces = candidature.piecesChemAcces.split(',').map(file => {

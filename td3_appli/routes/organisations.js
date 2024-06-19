@@ -1,52 +1,46 @@
 const express = require('express');
-const organisationModel = require('../model/Organisation')
-const typeOrgamodel= require('../model/TypeOrga')
+const organisationModel = require('../model/Organisation');
+const typeOrgamodel= require('../model/TypeOrga');
+const AdherenceModel = require('../model/DemandeAdherRecruteur');
 
 const router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
-function transformtype(result,callback){
+function transformtype(result, callback){
   typeOrgamodel.readall(function(resultOrga){
     // Créer une carte des types pour faciliter la correspondance
     const typeMap = new Map();
     for (const orga of resultOrga) {
       typeMap.set(orga.id, orga.nom);
     }
-console.log(typeMap);
-const updatedOrganisations = result.map(org => ({...org,type: typeMap.get(org.type) || org.type }))// Utilisation de la carte pour récupérer le nom du type
-callback(updatedOrganisations);
-
-  })};
+    const updatedOrganisations = result.map(org => ({...org, type: typeMap.get(org.type) || org.type, typeList: Object.fromEntries(typeMap.entries()) }))// Utilisation de la carte pour récupérer le nom du type
+    callback(updatedOrganisations);
+  });
+};
 
 
 router.get('/organisationslist', function (req, res, next) {
-  // Lecture de tous les types d'organisation
- 
-    // Lecture de toutes les organisations
-    organisationModel.readall(function(result){
-      // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
-      transformtype(result, function(result) {
-        // Rendu de la vue avec les organisations mises à jour
-        res.render('organisationsList', { title: 'Liste des organisations', organisations: result});
-      });
+  // Lecture de toutes les organisations
+  organisationModel.readall(function(result){
+    // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
+    transformtype(result, function(result) {
+      // Rendu de la vue avec les organisations mises à jour
+      res.render('organisationsList', { title: 'Liste des organisations', organisations: result});
     });
   });
-  router.get('/readTypes', (req, res) => {
-    typeOrgamodel.readallTypes(function(err, results) {
-        if (err) {
-            return res.status(500).json({ error: "Erreur lors de la récupération des types d'organisation" });
-        }
-        // Formater les résultats pour avoir une liste d'objets { id, nom }
-        const types = results.map(row => ({
-            id: row.id,
-            nom: row.nom
-        }));
-        res.json(types);
-    });
+});
+  
+router.get('/readTypes', (req, res) => {
+  typeOrgamodel.readallTypes(function(err, results) {
+    if (err) {
+      return res.status(500).json({ error: "Erreur lors de la récupération des types d'organisation" });
+    }
+    // Formater les résultats pour avoir une liste d'objets { id, nom }
+    const types = results.map(row => ({
+      id: row.id,
+      nom: row.nom
+    }));
+    res.json(types);
+  });
 });
 
   router.post('/addtype', function (req, res, next) {
@@ -115,5 +109,37 @@ router.get('/organisationslist', function (req, res, next) {
 // faut que lorsqu'un utilsateur ajoute une organisation de type "test", le code doit vérifier si ce type existe déjà , si oui il creat l'organisation avec la valeur 
 //integer type associé, sinon il créer d'abord le type d'organisation correspondant, puis ajoute l'organisation
 
+router.get('/:siren', (req, res) => {
+  const siren = req.params.siren;
+  const connectedUserId = req.session.userid;
+  const role = req.session.role;
+
+  organisationModel.read(siren, (err, result) => {
+    if (err) throw err;
+    if (result && connectedUserId) {
+      transformtype([result], (organisationTable) => {
+        const organisation = organisationTable[0];
+        AdherenceModel.getOrgaDuRecruteur(connectedUserId, (resultOrga) => {
+          const orga = resultOrga[0];
+          let isAdminOrWorkingThere = false;
+          if (orga?.id === siren || role === "administrateur") {
+            isAdminOrWorkingThere = true;
+          }
+          res.render('detailOrganisation', {
+            title: "Détail organisation",
+            organisation: organisation,
+            isAdminOrWorkingThere: isAdminOrWorkingThere
+          });
+        });
+      });
+    } else {
+      res.status(404).json({ error: "Organisation not found or user not logged in" });
+    }
+  });
+});
+
+router.post('/updateOrga', (req, res) => {
+
+});
   
 module.exports = router;

@@ -1,12 +1,19 @@
-function displayItems(items, page, rowsPerPage, tableBody, renderRow) {
+function displayItems(items, page, rowsPerPage, tableBody, renderRow, isInTable = true) {
     tableBody.innerHTML = "";
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedItems = items.slice(start, end);
 
     paginatedItems.forEach(item => {
-        const row = document.createElement("tr");
-        row.classList.add("hover");
+        let row;
+        if (isInTable) {
+            row = document.createElement("tr");
+            row.classList.add("hover");
+        } else {
+            row = document.createElement("div");
+            row.classList.add("offer-card");
+        }
+
         row.innerHTML = renderRow(item);
         tableBody.appendChild(row);
     });
@@ -29,7 +36,7 @@ function displayItems(items, page, rowsPerPage, tableBody, renderRow) {
     });
 }
 
-function setupPagination(items, wrapper, rowsPerPage, tableBody, renderRow) {
+function setupPagination(items, wrapper, rowsPerPage, tableBody, renderRow, isInTable = true) {
     wrapper.innerHTML = "";
     const pageCount = Math.ceil(items.length / rowsPerPage);
     let currentPage = 1;
@@ -63,7 +70,7 @@ function setupPagination(items, wrapper, rowsPerPage, tableBody, renderRow) {
     wrapper.appendChild(nextButton);
 
     function updatePagination() {
-        displayItems(items, currentPage, rowsPerPage, tableBody, renderRow);
+        displayItems(items, currentPage, rowsPerPage, tableBody, renderRow, isInTable);
         pageIndicator.innerText = `Page ${currentPage}`;
     }
 
@@ -144,28 +151,166 @@ function renderUserRow(user) {
 }
 function renderOrganisationCard(organisation) {
     return `
-        <div class="offer-card">
-            <div class="container-column card-content">
-                <div class="cardTitle">
-                    ${organisation.nom}
+        <div class="container-column card-content">
+            <div class="cardTitle">
+                ${organisation.nom}
+            </div>
+            <div class="container-row">
+                <div>
+                    ${organisation.adrSiegeSocial}
                 </div>
+                <div class="little_blue_card">
+                    ${organisation.type}
+                </div>
+            </div>
+        </div>
+        <div class="container-column small right">
+            <div class="container-row buttons">
+                <button class="btn-secondary" onclick="adhereToOrganisation('${organisation.siren}')">Adhérer</button>
+                <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/DemandeAdherRecruteur/adherenceslist/${organisation.siren}';">Demandes d'adhérences</button>
+                <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/organisations/${organisation.siren}'">Voir fiche</button>
+            </div>
+            <div class="top-margin">
+                Siren : ${organisation.siren}
+            </div>
+        </div>
+    `;
+}
+
+function renderAdherenceCard(adherence) {
+    return `
+        <div class="card-content">
+            <div class="container-column">
                 <div class="container-row">
                     <div>
-                        ${organisation.adrSiegeSocial}
+                        Organisation Siren : ${adherence.organisation}
                     </div>
-                    <div class="little_blue_card">
-                        ${organisation.type}
+                    <div>
+                        ID recruteur : ${adherence.recruteur}
+                    </div>
+                    <div>
+                        Etat : ${adherence.etat}
                     </div>
                 </div>
             </div>
-            <div class="container-column small right">
-                <div class="container-row buttons">
-                    <button class="btn-secondary" onclick="adhereToOrganisation('${organisation.siren}')">Adhérer</button>
-                    <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/DemandeAdherRecruteur/adherenceslist/${organisation.siren}';">Demandes d'adhérences</button>
+
+        </div>
+        <div class="container-column">
+            <div class="buttons">
+                <button class="btn-secondary" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Accepter</button>
+                <button class="btn-danger" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Refuser</button>
+            </div>
+        </div>
+    `;
+}
+
+function renderOffreEmploiCard(offre) {
+    return `
+        <div class="card-content">
+            <div class="cardTitle">
+                ${offre.intitule}
+            </div>
+            <div class="container-row">
+                <div>
+                    ${offre.organisation_nom}
                 </div>
-                <div class="top-margin">
-                    Siren : ${organisation.siren}
+                <div>
+                    ${offre.lieuMission}
                 </div>
+                <div>
+                    Valide jusqu'au ${offre.dateValidite}
+                </div>
+            </div>
+
+            <div class="container-row">
+                <div class="little_blue_card">
+                    ${offre.remuneration}
+                </div>
+                <div class="little_blue_card">
+                    ${offre.rythme}
+                </div>
+                <div>
+                    Statut : ${offre.etatOffre}
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/detailsoffre/${offre.offre_id}'">Voir détails / Candidater</button>
+        </div>
+    `;
+}
+
+function renderFichePosteCard(fiche) {
+    let card = `
+        <div class="container-column card-content">
+            <div id="orga" class="cardTitle">
+                ${fiche.organisation_nom} (${fiche.organisation_siren}) - ${fiche.statutPoste_nom}, ${fiche.metier_nom}
+            </div>
+            <div class="container-row">
+                <div class="little_blue_card">
+                    ${fiche.lieuMission}
+                </div>
+                <div class="little_blue_card">
+                    ${fiche.salaireMin}€ - ${fiche.salaireMax}€ brut/an
+                </div>
+                <div class="little_blue_card">
+                    ${fiche.rythme}
+                </div>
+            </div>
+            <div class="container-row">
+                Responsable hiérarchique : ${fiche.responsableHierarchique}
+            </div>
+            <div class="container-row">
+                Description : ${fiche.description}
+            </div>
+
+        </div>
+        <div class="container-column right small">
+            <div class="buttons bottom-margin">`;
+
+        if (fiche.isRecruteur) {
+            card += `
+                <button id="createOfferButton" type="button" class="btn-secondary" onclick="createNewOffer('${fiche.fichePoste_id}')">Nouvelle offre</button>
+            `;
+        }
+
+        card += `
+                <button class="btn-secondary">Modifier</button>
+                <button class="btn-danger">Supprimer</button>
+            </div>
+
+            <div >
+                ID Fiche : ${fiche.fichePoste_id}
+            </div>
+            <div>
+                Etat : ${fiche.fichePoste_etat}
+            </div>
+        </div>
+    `;
+    return card;
+}
+
+function renderUserCard(user) {
+    return `
+        <div class="card-content">
+            <div class="cardTitle">
+                ${user.prenom} ${user.nom}
+            </div>
+            <div class="container-row">
+                <div class="little_blue_card">
+                    ${user.mail}
+                </div>
+                <div class="little_blue_card">
+                    ${user.tel}
+                </div>
+                <div>
+                    Créé le ${user.dateCreation}
+                </div>
+            </div>
+        </div>
+        <div class="container-column right small">
+            <div class="buttons">
+                <button class="btn btn-secondary" onclick="window.location.href = 'http://localhost:3000/users/${user.id}';">Détails utilisateur</button>
             </div>
         </div>
     `;

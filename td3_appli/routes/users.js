@@ -4,21 +4,6 @@ const router = express.Router();
 const roleModel = require('../model/RoleUtilisateur')
 const AdherenceModel = require('../model/DemandeAdherRecruteur')
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
-
-
-
-
-
-
-
-
-
-
 ////////// ???? //////////
 router.post('/verifuser', function(req, res, next) {
   userModel.readall(function(result) {
@@ -53,18 +38,20 @@ router.post('/verifuser', function(req, res, next) {
   //      res.status(500).json({ error: "Failed to connectuser" });
   //};
 
-  function traitementUser(user) {
+function traitementUser(user) {
     if (user) {
+        const newUser = {...user};
         const dateCrea = new Date(user.dateCreation);
         const jour = String(dateCrea.getDate()).padStart(2, '0'); // padStart permet d'avoir 2 chiffres pour le jour
         const mois = String(dateCrea.getMonth() + 1).padStart(2, '0'); // janvier = 0 ici, donc +1
         const an = dateCrea.getFullYear();
-        user.dateCreation = `${jour}/${mois}/${an}`;
-        return user;
+        newUser.dateCreation = `${jour}/${mois}/${an}`;
+        delete newUser.mdp;
+        return newUser;
     }
 }
 
-  router.get('/userslist', function (req, res) {
+router.get('/userslist', function (req, res) {
     userModel.readall(function(result){
         const allUserInfo = result.map(user => traitementUser(user));
         res.render('usersList', { title: 'Liste des utilisateurs', users: allUserInfo });
@@ -78,6 +65,7 @@ router.post('/verifuser', function(req, res, next) {
 ////////// RECUPERATION DES INFO DE L'UTILISATEUR POUR AFFICHAGE DE LA PAGE DETAILS UTILISATEUR ////////// --> a laisser en dernier getter, sinon erreur 404
 router.get('/:id', function (req, res) {
     const id = req.params.id; //récupérer l'id dans l'URL
+    const connectedUserRole = req.session.role;
 
     // récupérer les infos de l'utilisateur à partir de l'id dans l'URL
     userModel.readId(id, function (results) {
@@ -85,39 +73,44 @@ router.get('/:id', function (req, res) {
 
         if (user === undefined) { // si l'id dans l'URL n'existe pas dans la table des utilisateurs
             return res.status(404).json({ error: "Utilisateur non trouvé" });
-        } 
-        
-        else {
+        } else {
             // Récupérer le role de l'utilisateur
             roleModel.read(id, function(err, roleResults) {
                 if (err) {
                     console.log("Failed to get role:", err);
-                } 
-                // Explications : 
+                }
+                // Explications :
                 // - '?.' = 'si l'attribut suivant existe, on le renvoie, sinon on renvoie undefined'
                 // - '??' = 'si l'élément avant le ?? existe, on le renvoie, sinon on renvoie celui d'après'
                 const role = roleResults[0]?.role ?? 'Rôle non défini';
                 user.role = role;
 
                 // Si l'utilisateur est recruteur, récupérer son organisation
-                if (role === "recruteur" || role === "administrateur"){ // (Manon) j'ai mis les 2 au cas où on garde le fait qu'un utilisateur n'a qu'un seul role 
+                if (role === "recruteur" || role === "administrateur"){ // (Manon) j'ai mis les 2 au cas où on garde le fait qu'un utilisateur n'a qu'un seul role
                     AdherenceModel.getOrgaDuRecruteur(id, function(result){
                         organisation = result[0];
-                        
-                        if (organisation === undefined || organisation === null) { 
+
+                        if (organisation === undefined || organisation === null) {
                             user.orga = "Aucune organisation";
                         } else {
                             user.orga = organisation.nom + " (SIREN : " + organisation.siren + ")";
                         }
-                        res.render('detailutilisateur', { user: user, title: "Détail utilisateur", isPagePerso: false }); // mis 2 fois parce-que user.orga est une var locale ici
+                        res.render('detailutilisateur', {
+                            user: user,
+                            title: "Détail utilisateur",
+                            isPagePerso: false,
+                            connectedUserRole: connectedUserRole
+                        }); // mis 2 fois parce-que user.orga est une var locale ici
                     })
                 } else {
-                    res.render('detailutilisateur', { user: user, title: "Détail utilisateur", isPagePerso: false });
+                    res.render('detailutilisateur', {
+                        user: user,
+                        title: "Détail utilisateur",
+                        isPagePerso: false,
+                        connectedUserRole: connectedUserRole
+                    });
                 }
             })
-            
-            
-
         }
     })
 });
@@ -177,7 +170,7 @@ router.post('/deleteuser', function (req, res) {
         }
     }
     const mail = req.body.mail
-    
+
     const id = req.body.id;
     if (id) {
         userModel.deleteById(id, deleteUserCallback);
@@ -220,9 +213,18 @@ router.post('/updateRole', function (req, res) {
 
 
 
+function updateUser(id, mail, nom, prenom, tel) {
+    userModel.update(id, mail, nom, prenom, tel, function(updateSuccessful) {
+        if (!updateSuccessful) {
+            console.log("Failed to update user");
+            throw new Error('Failed to update user');
+        } else {
+            console.log("User updated successfully!");
+        }
+    });
+}
 
-
-////////// MODIFIER UN UTILISATEUR //////////  
+////////// MODIFIER UN UTILISATEUR //////////
 router.post('/updateUser', function (req, res) {
     // (Manon) marche sûrement pas, jsp pq
     if (!req.session.userid) {
@@ -230,6 +232,9 @@ router.post('/updateUser', function (req, res) {
     }
     const { id, nom, prenom, tel, mail } = req.body;
     let canUpdate = false;
+    if (req.session.userid === id) {
+        canUpdate = true;
+    }
     // Vérifier si id de requête === id de utilisateur connecté, si oui canUpdate = true
     if (!canUpdate) {
         roleModel.read(req.session.userid, function(err, roleResults) {
@@ -240,26 +245,23 @@ router.post('/updateUser', function (req, res) {
                 const role = roleResults[0].role;
                 if (role === "administrateur") {
                     console.log('User is admin');
-                    canUpdate = true;
+                    try {
+                        updateUser(id, mail, nom, prenom, tel);
+                        res.status(200).json({ message: "User updated successfully" });
+                    } catch (e) {
+                        res.status(500).json({ error: "Impossible de modifier un autre utilisateur sans être administrateur" });
+                    }
                 } else {
                     console.log('Not admin, cannot update');
                 }
             }
         });
-    }
-    canUpdate= true;
-    if (canUpdate) {
-        userModel.update(id, mail, nom, prenom, tel, function(updateSuccessful) {
-            if (!updateSuccessful) {
-                console.log("Failed to update user");
-                res.status(500).json({ error: "Failed to update user" });
-            } else {
-                console.log("User updated successfully!");
-                res.json({ message: "User updated successfully" });
-            }
-        });
     } else {
-        res.status(500).json({ error: "Impossible de modifier un autre utilisateur sans être administrateur" });
+        try {
+            updateUser(id, mail, nom, prenom, tel);
+        } catch (e) {
+            res.status(500).json({ error: "Impossible de modifier un autre utilisateur sans être administrateur" });
+        }
     }
 });
 

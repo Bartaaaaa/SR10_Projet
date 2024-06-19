@@ -9,8 +9,9 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.get('/fichesposteliste', function (req, res, next) {
-  fichesPosteModel.readAllInfo(function(result){
+router.get('/fichesPosteListe', function (req, res, next) {
+    console.log('fichesPosteListe');
+    fichesPosteModel.readAllInfo(function(result){
     const {userid, role} = req.session;
     console.log(`userid: ${userid}, role: ${role}`);
     // filtre en fonction de l'orga
@@ -21,6 +22,8 @@ router.get('/fichesposteliste', function (req, res, next) {
           result = result.filter(offre => offre.organisation_siren === orga.siren);
           console.log('filtré');
           return res.render('fichesPosteListe', { title: 'Liste des fiches de poste', fichesPoste: result, isRecruteur: true });
+        } else {
+            res.render('fichesPosteListe', { title: 'Liste des fiches de poste', fichesPoste: result, isRecruteur: false });
         }
       });
     } else {
@@ -33,7 +36,7 @@ router.get('/fichesposteliste', function (req, res, next) {
 
 router.get('/detailsCreationFiche', function (req, res, next) {
   // Lecture de tous les types d'organisation
- 
+
     // Lecture de toutes les organisations
       // Mise à jour des organisations avec le nom du type au lieu de l'ID du type
         // Rendu de la vue avec les organisations mises à jour
@@ -78,7 +81,7 @@ router.get('/readStatutPoste', (req, res) => {
 router.post('/addFichePoste', async function (req, res, next) {
   try {
     const { etat, lieuMission, rythme, salaireMin, salaireMax, description, metier, statutPoste, organisation } = req.body;
- 
+
     // Création de l'organisation avec le typeId fourni
     const insertResult = await new Promise((resolve, reject) => {
       fichesPosteModel.create(etat, lieuMission, rythme, salaireMin, salaireMax, description, metier, statutPoste, organisation, function(success) {

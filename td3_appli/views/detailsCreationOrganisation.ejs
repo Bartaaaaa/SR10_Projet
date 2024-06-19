@@ -41,7 +41,7 @@
                             <option value="">Sélectionnez un type</option>
                         </select>
                     </div>
-                    
+
                     <div>
                         <button class="btn btn-primary" type="submit" id="addOrganisation">Créer votre Organisation</button>
                     </div>
@@ -63,7 +63,7 @@ async function fetchTypes() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const types = await response.json();
-        
+
         const select = document.getElementById('typeId');
         if (select) {
             types.forEach(type => {
@@ -82,20 +82,6 @@ async function fetchTypes() {
 }
 document.addEventListener('DOMContentLoaded', fetchTypes);
 
-
-
-
-
-
-
-       document.addEventListener("DOMContentLoaded", function() {
-            const organisations = <%- JSON.stringify(organisations) %>; // Passer les organisations à partir de EJS
-            const pagination = document.getElementById("pagination");
-            const rowsPerPage = 7;
-            const organisationsTableBody = document.getElementById("organisationsTableBody");
-
-            setupPagination(organisations, pagination, rowsPerPage, organisationsTableBody, renderOrganisationRow);
-        });
 
              document.getElementById('typeForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -120,7 +106,7 @@ document.addEventListener('DOMContentLoaded', fetchTypes);
                 console.error('Error:', error);
                 alert('Erreur lors de l\'enregistrement du type.');
             });
-         
+
         });
 
         document.getElementById('organisationForm').addEventListener('submit', async function(event) {

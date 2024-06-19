@@ -103,6 +103,8 @@ app.all("*", function (req, res, next) {
   }
   // Pour toutes les autres routes, vérifier si l'utilisateur est connecté
     return next();
+
+
 });
 
 
@@ -110,7 +112,7 @@ app.all("*", function (req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/organisations', organisationsRouter);
-app.use('/fichesposte', fichesPosteRouter);
+app.use('/fichesPoste', fichesPosteRouter);
 
 app.use('/pageperso', pagepersoRouter);
 app.use('/offresemploi', offresEmploiRouter);

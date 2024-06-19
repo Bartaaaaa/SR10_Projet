@@ -21,7 +21,7 @@
                 <form id="updateUserForm">
                     <div class="form-group">
                         <label for="nom">Nom</label>
-                        <input type="text" id="nom" name="nom" required placeholder="Entrez votre Nom" value="<%= user.nom %>">    
+                        <input type="text" id="nom" name="nom" required placeholder="Entrez votre Nom" value="<%= user.nom %>">
                     </div>
                     <div class="form-group">
                         <label for="prenom">Prénom</label>
@@ -34,13 +34,13 @@
                     <div class="form-group">
                         <label for="tel">Téléphone</label>
                         <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone" value="<%= user.tel %>">
-                    </div> 
-
-                    <input type="text" id="role" name="role" hidden value="<%= user.role %>">
-
-                    <div class="buttons">
-                        <button class="btn-secondary" type="submit">Sauvegarder les modifications</button>
                     </div>
+
+                    <% if (isPagePerso || connectedUserRole === 'administrateur' ) { %>
+                        <div class="buttons">
+                            <button class="btn-secondary" type="submit">Sauvegarder les modifications</button>
+                        </div>
+                    <% } %>
                 </form>
             </div>
 
@@ -50,8 +50,8 @@
                 <div class="info-part">
 
                     <% if (user.role === 'recruteur' || user.role === 'administrateur' ) { %>
-                    <div class="info"> 
-                        <b> Recruteur chez : </b> 
+                    <div class="info">
+                        <b> Recruteur chez : </b>
                     </div>
                     <div class="little_blue_card" id="orgaId">
                         <%= user.orga %>
@@ -61,23 +61,23 @@
                 </div>
                 <div class="buttons-part">
 
-                    <% if (isPagePerso && user.role === 'recruteur' || user.role === 'administrateur') { %>
+                    <% if (isPagePerso && (user.role === 'recruteur' || user.role === 'administrateur')) { %>
                         <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/candidature/mescandidatures'">Visualiser mes candidatures</button>
                     <% } %>
 
 
-                    <% if (isPagePerso && organisation) { %>
+                    <% if (isPagePerso && (user.role === 'recruteur' || user.role === 'administrateur') && organisation) { %>
                         <button type="button" class="btn-primary" onclick="window.location.href = `http://localhost:3000/DemandeAdherRecruteur/adherenceslist/<%= organisation.siren %>`;">Visualiser mes demandes d'adhérences</button>
                         <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/fichesPoste/detailsCreationFiche?orgaId=<%= organisation.siren %>';">Créer une nouvelle fiche de Poste</button>
                     <% } %>
-                    
+
                     <!-- Vérifier le rôle ici par rapport à l'utilisateur connecté et non pas le profil affiché -->
 
                     <% if (isPagePerso && user.role === 'candidat') { %>
                         <button type="button" class="btn-primary" onclick="changeRole('recruteur')">Devenir recruteur</button>
                     <% } %>
 
-                    <% if (!isPagePerso && user.role !== 'administrateur') { %>
+                    <% if (!isPagePerso && connectedUserRole !== 'administrateur') { %>
                         <button type="button" class="btn-primary" onclick="changeRole('administrateur')">Rendre Administrateur</button>
                         <button type="button" class="btn-primary" onclick="changeRole('recruteur')">Rendre Recruteur</button>
                         <button type="button" class="btn-primary" onclick="changeRole('candidat')">Rendre Candidat</button>
@@ -126,7 +126,7 @@
 
         document.getElementById('updateUserForm').addEventListener('submit', function(event) {
             // Évite que le formulaire soit envoyé automatiquement au chargement de la page
-            event.preventDefault(); 
+            event.preventDefault();
             const id = "<%= user.id %>";
 
             const formData = {
@@ -143,7 +143,7 @@
         function changeRole (newRole) {
             const id = "<%= user.id %>";
             const formData = {
-                userId: id, 
+                userId: id,
                 newRole: newRole
             }
 
@@ -154,6 +154,7 @@
         // (Manon) A modifier : je pense qu'il est mieux de passer l'utilisateur d'actif à inactif
         function deleteUser() {
             if (confirm('ATTENTION : vous vous apprétez à supprimer cet utilisateur. Confirmer ?')) {
+
                 const id = "<%= user.id %>";
                 const mail = document.getElementById("mail");
 
@@ -166,7 +167,7 @@
         }
 
     </script>
-    
+
 </body>
 </html>
 

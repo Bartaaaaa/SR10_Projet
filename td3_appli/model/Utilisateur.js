@@ -14,7 +14,7 @@ module.exports = {
         });
     },
 
-   
+
 
 
 
@@ -43,7 +43,7 @@ module.exports = {
     },
 
 
-    
+
 
 
 
@@ -59,7 +59,7 @@ module.exports = {
                 callback(true); // Indiquer une erreur à la fonction de rappel
                 return; // Arrêter l'exécution de la fonction
             }
-            // Vérification si un utilisateur correspondant a été trouvé 
+            // Vérification si un utilisateur correspondant a été trouvé
             if (results.length === 1) {
                 // L'utilisateur existe, on renvoie false
                 callback(false);
@@ -69,7 +69,7 @@ module.exports = {
             }
         });
     },
-    
+
 
 
 
@@ -84,7 +84,7 @@ module.exports = {
                 callback(true); // Indiquer une erreur à la fonction de rappel
                 return; // Arrêter l'exécution de la fonction
             }
-            // Vérification si un utilisateur correspondant a été trouvé 
+            // Vérification si un utilisateur correspondant a été trouvé
             if (results.length === 1 && results ===mdp) {
                 // L'utilisateur existe, on renvoie false
                 callback(false);
@@ -94,7 +94,7 @@ module.exports = {
             }
         });
     },
-    
+
 
 
 
@@ -141,7 +141,7 @@ module.exports = {
             }
         });
     },
-    
+
     update: function(id, mail, nom, prenom, tel, callback) {
         const sql = "UPDATE Utilisateur SET mail = ?, nom = ?, prenom = ?, tel = ? WHERE id = ?";
         db.query(sql, [mail, nom, prenom, tel, id], function(err, results) {

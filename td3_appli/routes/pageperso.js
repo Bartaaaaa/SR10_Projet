@@ -50,14 +50,23 @@ router.get('/user-info', function(req, res, next) {
             prenom: req.session.firstname,
             tel: req.session.tel,
             mail: req.session.mail,
-            mdp: req.session.mdp,
             creationDate: req.session.creationDate,
             role: req.session.role,
             statut: req.session.statut
         };
-
-        // Send the user object as the response
-        res.json(user);
+        if (req.session.role === 'recruteur' || req.session.role === 'administrateur') {
+            console.log('rec ou adm');
+            Adhermodel.getOrgaDuRecruteur(req.session.userid, (results) => {
+                const orga = results[0];
+                user.organisation = orga;
+                console.log(user);
+                return res.json(user);
+            });
+        } else {
+            console.log('pas');
+            // Send the user object as the response
+            res.json(user);
+        }
     } else {
         // If the user is not authenticated, send an appropriate response
         res.status(401).json({ message: 'Unauthorized' });
