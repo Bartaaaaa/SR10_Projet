@@ -144,7 +144,7 @@ router.get('/:siren', (req, res) => {
 
 router.post('/updateOrga', (req, res) => {
   const {siren, adrSiegeSocial, nom, type} = req.body;
-  organisationModel.update(siren, adrSiegeSocial, nom, type, (result) => {
+  organisationModel.update(siren, nom, adrSiegeSocial, type, (result) => {
     if (!result) {
       return res.status(500).json({error: "Erreur lors de la mise à jour des données"});
     }
