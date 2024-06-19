@@ -299,7 +299,7 @@ function renderFichePosteCard(fiche) {
 
         if (fiche.isRecruteur) {
             card += `
-                <button id="createOfferButton" type="button" class="btn-secondary" onclick="createNewOffer('${fiche.fichePoste_id}')">Nouvelle offre</button>
+                <button id="createOfferButton" type="button" class="btn-secondary" onclick="createNewOffer('${fiche.fichePoste_id}')">Créer une offre</button>
             `;
         }
 
