@@ -232,7 +232,7 @@ router.post('/updateUser', function (req, res) {
     }
     const { id, nom, prenom, tel, mail } = req.body;
     let canUpdate = false;
-    if (req.session.userid === id) {
+    if (String(req.session.userid) === id) {
         canUpdate = true;
     }
     // Vérifier si id de requête === id de utilisateur connecté, si oui canUpdate = true
@@ -244,7 +244,6 @@ router.post('/updateUser', function (req, res) {
             } else {
                 const role = roleResults[0].role;
                 if (role === "administrateur") {
-                    console.log('User is admin');
                     try {
                         updateUser(id, mail, nom, prenom, tel);
                         res.status(200).json({ message: "User updated successfully" });
@@ -259,6 +258,7 @@ router.post('/updateUser', function (req, res) {
     } else {
         try {
             updateUser(id, mail, nom, prenom, tel);
+            res.status(200).json({ message: "User updated successfully" });
         } catch (e) {
             res.status(500).json({ error: "Impossible de modifier un autre utilisateur sans être administrateur" });
         }
