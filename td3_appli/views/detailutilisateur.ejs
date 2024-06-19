@@ -36,7 +36,7 @@
                         <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone" value="<%= user.tel %>">
                     </div>
 
-                    <% if (isPagePerso || connectedUserRole === 'administrateur' ) { %>
+                    <% if (isPagePerso ) { %>
                         <div class="buttons">
                             <button class="btn-secondary" type="submit">Sauvegarder les modifications</button>
                         </div>
@@ -126,20 +126,21 @@
         }
 
         document.getElementById('updateUserForm').addEventListener('submit', function(event) {
-            // Évite que le formulaire soit envoyé automatiquement au chargement de la page
-            event.preventDefault();
-            const id = "<%= user.id %>";
+    // Évite que le formulaire soit envoyé automatiquement au chargement de la page
+    event.preventDefault();
+    const id = "<%= user.id %>";
 
-            const formData = {
-                id: id,
-                prenom: document.getElementById('prenom').value,
-                nom: document.getElementById('nom').value,
-                tel: document.getElementById('tel').value,
-                mail: document.getElementById('mail').value
-            };
-            // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
-            sendDataToServer('/users/updateUser', formData, "Erreur lors de la mise à jour de l'utilisateur : ", () => { window.location.reload(); });
-        });
+    const formData = {
+        id: id,
+        prenom: document.getElementById('prenom').value,
+        nom: document.getElementById('nom').value,
+        tel: document.getElementById('tel').value,
+        mail: document.getElementById('mail').value
+    };
+    // Besoin de reload la page pour avoir un affichage à jour par rapport aux données côté serveur
+    sendDataToServer('/users/updateUser2', formData, "Erreur lors de la mise à jour de l'utilisateur : ", () => { window.location.reload(); });
+});
+
 
         function changeRole (newRole) {
             const id = "<%= user.id %>";

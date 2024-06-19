@@ -264,5 +264,41 @@ router.post('/updateUser', function (req, res) {
         }
     }
 });
+router.post('/updateUser2', function (req, res) {
+    // (Manon) marche sûrement pas, jsp pq
+    if (!req.session.userid) {
+        return res.redirect('/connexion');
+    }
+
+    const { id, nom, prenom, tel, mail } = req.body;
+    let canUpdate = req.session.userid === id;
+
+    if (!canUpdate) {
+        roleModel.read(req.session.userid, function(err, roleResults) {
+            if (err) {
+                console.log("Failed to get role:", err);
+                return res.status(500).json({ error: "Failed to get role" });
+            }
+            
+            const role = roleResults[0].role;
+                console.log('User is admin');
+                try {
+                    updateUser(id, mail, nom, prenom, tel);
+                    return res.status(200).json({ message: "User updated successfully" });
+                } catch (e) {
+                    console.log('Update failed:', e);
+                    return res.status(500).json({ error: "Failed to update user" });
+                }
+        });
+    } else {
+        try {
+            updateUser(id, mail, nom, prenom, tel);
+            return res.status(200).json({ message: "User updated successfully" });
+        } catch (e) {
+            console.log('Update failed:', e);
+            return res.status(500).json({ error: "Failed to update user" });
+        }
+    }
+});
 
 module.exports = router;
