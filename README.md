@@ -8,7 +8,7 @@ Pour cloner le dépôt, utilisez la commande suivante :
 ```bash
 git clone https://github.com/Bartaaaaa/SR10_Projet.git
 ```
-Notez que le dépôt est privé. Pour obtenir l'accès, veuillez envoyer une demande de clonage, que j'approuverai en tant que responsable de l'UV.
+Notez que le dépôt est privé. Pour obtenir l'accès, veuillez envoyer une demande de clonage, que j'approuverai en tant que responsable de du dépot.
 
 ## Détails
 
