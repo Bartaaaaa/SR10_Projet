@@ -14,7 +14,7 @@
         <%= title %>
     </h1>
 
- 
+
     <div class="main-content">
         <div class="left-column">
         <input type="search" name="searchbar" id="searchbar" class="searchbar" placeholder="Rechercher une organisation...">
@@ -57,8 +57,10 @@
                             <input type="text" id="adrSiegeSocial" name="adrSiegeSocial" required>
                         </div>
                         <div class="container-row">
-                            <label for="typeId">ID Type :</label>
-                            <input type="text" id="typeId" name="typeId" required>
+                            <label for="typeSelect">Type :</label>
+                            <select id="typeSelect" name="typeSelect" required>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
                         </div>
 
                     </div>
@@ -76,28 +78,43 @@
     <script src="/javascripts/utilitaires.js"></script>
 
     <script>
+        const initialOrganisations = <%- JSON.stringify(organisations) %>;
+        let currentOrganisations = orderById(initialOrganisations);
 
-        
+
         document.addEventListener("DOMContentLoaded", function() {
-            const organisations = <%- JSON.stringify(organisations) %>; // Passer les organisations à partir de EJS
+            populateTypeSelect();
+
             const pagination = document.getElementById("pagination");
             const rowsPerPage = 4;
             const organisationsContainer = document.getElementById("organisationList");
-            setupPagination(organisations, pagination, rowsPerPage, organisationsContainer, renderOrganisationCard, false);
+
+            renderList(currentOrganisations, 'organisationList', createOrganisationCard);
+            setupPagination(currentOrganisations, pagination, rowsPerPage, organisationsContainer, renderOrganisationCard, false);
         });
 
-        const organisationList = <%- JSON.stringify(organisations) %>;
         const searchbar = document.getElementById('searchbar');
         searchbar.addEventListener('input', (event) => {
-            search(
-                organisationList,
+            const filteredList = search(
+                initialOrganisations,
                 ['nom', 'adrSiegeSocial', 'type', 'siren'],
-                event.target.value,
-                createOrganisationCard,
-                'organisationList'
+                event.target.value
             );
-        })
-        search(organisationList, ['nom', 'adrSiegeSocial', 'type', 'siren'], '', createOrganisationCard, 'organisationList');
+            currentOrganisations = orderById(filteredList);
+            renderList(currentOrganisations, 'organisationList', createOrganisationCard);
+        });
+
+        function populateTypeSelect() {
+        const typeSelect = document.getElementById('typeSelect');
+        const typeList = initialOrganisations[0].typeList;
+
+        for (const [key, value] of Object.entries(typeList)) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.text = value;
+            typeSelect.appendChild(option);
+        }
+    }
 
         function createOrganisationCard(organisation) {
             const cardDiv = document.createElement('div');

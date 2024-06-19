@@ -23,52 +23,38 @@
     <script src="/javascripts/utilitaires.js"></script>
     
     <script>
+        const initialAdherences = <%- JSON.stringify(adherences) %>;
+        let currentAdherences = orderById(initialAdherences);
+
+        // Pagination
         document.addEventListener("DOMContentLoaded", function() {
             console.log("DOM fully loaded and parsed");
             const adherences = <%- JSON.stringify(adherences) %>;
             const pagination = document.getElementById("pagination");
             const rowsPerPage = 4;
             const adherencesContainer = document.getElementById("adherencesList");
-            setupPagination(adherences, pagination, rowsPerPage, adherencesContainer, renderAdherenceCard, false);
+
+            renderList(currentAdherences, 'adherencesList', createAdherenceCard);
+            setupPagination(currentAdherences, pagination, rowsPerPage, adherencesContainer, renderAdherenceCard, false);
         });
-    
-        const adherencesList = <%- JSON.stringify(adherences) %>;
+
+
+        // Barre de recherche
         const searchbar = document.getElementById('searchbar');
         searchbar.addEventListener('input', (event) => {
             console.log("Search input event triggered");
-            search(adherencesList, ['organisation', 'recruteur', 'etat'], event.target.value, createAdherenceCard, 'adherencesList');
+            const filteredList = search(initialAdherences, ['organisation', 'recruteur', 'etat'], event.target.value);
+            currentAdherences = orderById(filteredList);
+            renderList(currentAdherences, 'adherencesList', createAdherenceCard);
         });
-        search(adherencesList, ['organisation', 'recruteur', 'etat'], '', createAdherenceCard, 'adherencesList');
     
+        // Création des cards 
         function createAdherenceCard(adherence) {
-    console.log("Creating adherence card for", adherence);
-    const cardDiv = document.createElement('div');
-    cardDiv.classList.add('offer-card');
-    cardDiv.innerHTML = `
-        <div class="card-content">
-            <div class="container-column">
-                <div class="container-row">
-                    <div>
-                        Organisation Siren : ${adherence.organisation}
-                    </div>
-                    <div>
-                        ID recruteur : ${adherence.recruteur}
-                    </div>
-                    <div>
-                        Etat : ${adherence.etat}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-column">
-            <div class="buttons">
-                <button class="btn-secondary accept-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}" data-etat="validee">Accepter</button>
-                <button class="btn-danger reject-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}" data-etat="refusee">Refuser</button>
-            </div>
-        </div>
-    `;
-    return cardDiv;
-}
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('offer-card');
+            cardDiv.innerHTML = renderAdherenceCard(adherence);
+            return cardDiv;
+        }
 
 document.addEventListener("DOMContentLoaded", function() {
     attachButtonListeners();

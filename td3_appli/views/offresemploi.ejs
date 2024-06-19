@@ -26,8 +26,6 @@
                     <input type="radio" name="datePubli" id="datePubli">
                     <label for="datePubli">date de publication</label>
 
-                    <br><input type="radio" name="distance" id="distance">
-                    <label for="distance">distance</label>
                 </fieldset>
             </div>
             <div class="container-column offer-card">
@@ -36,7 +34,7 @@
                 </div>
                 <div>
                     <label for="salaireMin">Salaire</label>
-                    <input type="text" name="salaireMin" id="salaireMin" placeholder="Min"> - <input type="text" name="salaireMax" id="salaireMax" placeholder="Max">
+                    <input type="text" name="salaireMin" id="salaireMin" placeholder="Min" oninput="salaryFilter()"> - <input type="text" name="salaireMax" id="salaireMax" placeholder="Max" oninput="salaryFilter()">
                 </div>
                 <div>
 
@@ -46,7 +44,7 @@
     </div>
 
 
-<script src="/javascripts/filter.js"></script>    
+<script src="/javascripts/filter.js"></script>
 <script src="/javascripts/utilitaires.js"></script>
 
 <script>
@@ -67,67 +65,45 @@ async function handleOfferDetailsClick(offreId) {
         alert("Une erreur s'est produite. Veuillez réessayer plus tard.");
     }
 }
+    const initialOffers = <%- JSON.stringify(allOffers) %>;
+    let currentOffers = orderByDate(initialOffers);
 
-    
+
     document.addEventListener("DOMContentLoaded", function() {
-        const offres = <%- JSON.stringify(allOffers) %>; // Passer les organisations à partir de EJS
         const pagination = document.getElementById("pagination");
         const rowsPerPage = 4;
         const offresContainer = document.getElementById("offresList");
-        setupPagination(offres, pagination, rowsPerPage, offresContainer, renderOffreEmploiCard, false);
+
+        renderList(currentOffers, 'offresList', createOfferCard);
+        setupPagination(currentOffers, pagination, rowsPerPage, offresContainer, renderOffreEmploiCard, false);
     });
 
 
-    const offresList = <%- JSON.stringify(allOffers) %>;
     const searchbar = document.getElementById('searchbar');
     searchbar.addEventListener('input', (event) => {
-        search(
-            offresList,
+        const filteredList = search(
+            initialOffers,
             ['organisation_nom', 'lieuMission', 'etatOffre', 'rythme', 'statutPoste_nom', 'metier_nom'],
             event.target.value,
-            createOfferCard,
-            'offresList'
         );
+        currentOffers = orderByDate(filteredList);
+        renderList(currentOffers, 'offresList', createOfferCard);
     })
-    search(offresList, ['organisation_nom', 'lieuMission', 'etatOffre', 'rythme', 'statutPoste_nom', 'metier_nom'], '', createOfferCard, 'offresList');
-    function createOfferCard(offre) {
-    const cardDiv = document.createElement('div');
-    cardDiv.classList.add('offer-card');
-    cardDiv.innerHTML = `
-        <div class="card-content">
-            <div class="cardTitle">
-                ${offre.intitule}
-            </div>
-            <div class="container-row">
-                <div>
-                    ${offre.organisation_nom}
-                </div>
-                <div>
-                    ${offre.lieuMission}
-                </div>
-                <div>
-                    Valide jusqu'au ${offre.dateValidite}
-                </div>
-            </div>
 
-            <div class="container-row">
-                <div class="little_blue_card">
-                    ${offre.remuneration}
-                </div>
-                <div class="little_blue_card">
-                    ${offre.rythme}
-                </div>
-                <div>
-                    Statut : ${offre.etatOffre}
-                </div>
-            </div>
-        </div>
-        <div class="buttons">
-            <button class="btn-secondary" onclick="handleOfferDetailsClick('${offre.offre_id}')">Voir détails / Candidater</button>
-        </div>
-    `;
-    return cardDiv;
-}
+    function salaryFilter() {
+        const minSalary = document.getElementById('salaireMin');
+        const maxSalary = document.getElementById('salaireMax');
+        const filteredList = filterBySalary(initialOffers, minSalary, maxSalary);
+        currentOffers = orderByDate(filteredList);
+        renderList(currentOffers, 'offresList', createOfferCard);
+    }
+
+    function createOfferCard(offre) {
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('offer-card');
+        cardDiv.innerHTML = renderOffreEmploiCard(offre);
+        return cardDiv;
+    }
 
 
 </script>

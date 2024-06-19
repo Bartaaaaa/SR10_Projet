@@ -23,7 +23,7 @@ router.post('/addAdherence', function(req, res, next) {
 });
 router.post('/readOrga', function(req, res, next) {
     const { userId } = req.body;
-    
+
 
     // Lire les informations de l'utilisateur
     Adhermodel.readUser(userId, function(err, user) {
@@ -42,7 +42,7 @@ router.post('/readOrga', function(req, res, next) {
                 console.log("Erreur lors de la lecture de l'organisation:", err);
                 return res.status(500).json({ success: false, error: "Failed to read organisation" });
             }
-            
+
             console.log("Organisation lue:", organisation);
             res.json({ success: true, result: organisation });
         });
@@ -77,7 +77,7 @@ router.get('/adherenceslist/:organisationId', function (req, res, next) {
     const organisationId = req.params.organisationId;
 
     Adhermodel.read(organisationId, function(result) {
-        res.render('adherencesList', { title: 'Liste des adhérences', adherences: result });
+        res.render('adherencesList', { title: 'Liste des demandes d\'adhérences', adherences: result });
     });
 });
 

@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     <label for="salaireMin">Salaire</label>
-                    <input type="text" name="salaireMin" id="salaireMin" placeholder="Min"> - <input type="text" name="salaireMax" id="salaireMax" placeholder="Max">
+                    <input type="text" name="salaireMin" id="salaireMin" placeholder="Min" oninput="salaryFilter()"> - <input type="text" name="salaireMax" id="salaireMax" placeholder="Max" oninput="salaryFilter()">
                 </div>
                 <div>
 
@@ -48,75 +48,45 @@
     <script src="/javascripts/utilitaires.js"></script>
 
     <script>
-    
-        
+        const initialFiches = <%- JSON.stringify(fichesPoste) %>;
+        let currentFiches = orderById(initialFiches, 'fichePoste_id');
+
+
         document.addEventListener("DOMContentLoaded", function() {
-            const fichesPoste = <%- JSON.stringify(fichesPoste) %>; // Passer les organisations à partir de EJS
-            fichesPoste.forEach(fiche => {
+            currentFiches.forEach(fiche => {
                 fiche.isRecruteur = <%= isRecruteur %>;
             });
             const pagination = document.getElementById("pagination");
             const rowsPerPage = 4;
             const fichesPosteContainer = document.getElementById("fichePosteListe");
-            setupPagination(fichesPoste, pagination, rowsPerPage, fichesPosteContainer, renderFichePosteCard, false);
+
+            renderList(currentFiches, 'fichePosteListe', createFichePosteCard);
+            setupPagination(currentFiches, pagination, rowsPerPage, fichesPosteContainer, renderFichePosteCard, false);
         });
 
-
-        const fichePosteListe = <%- JSON.stringify(fichesPoste) %>;
         const searchbar = document.getElementById('searchbar');
         searchbar.addEventListener('input', (event) => {
-            search(
-                fichePosteListe,
+            const filteredList = search(
+                initialFiches,
                 ['organisation_nom', 'organisation_siren', 'statutPoste_nom', 'metier_nom', 'lieuMission', 'rythme', 'fichePoste_id', 'fichePoste_etat'],
                 event.target.value,
-                createFichePosteCard,
-                'fichePosteListe'
             );
-        })
-        search(fichePosteListe, ['organisation_nom', 'organisation_siren', 'statutPoste_nom', 'metier_nom', 'lieuMission', 'rythme', 'fichePoste_id', 'fichePoste_etat'], '', createFichePosteCard, 'fichePosteListe');
+            currentFiches = orderById(filteredList, 'fichePoste_id');
+            renderList(currentFiches, 'fichePosteListe', createFichePosteCard);
+        });
+
+        function salaryFilter() {
+            const minSalary = document.getElementById('salaireMin');
+            const maxSalary = document.getElementById('salaireMax');
+            const filteredList = filterBySalary(initialFiches, minSalary, maxSalary);
+            currentFiches = orderById(filteredList, 'fichePoste_id');
+            renderList(currentFiches, 'fichePosteListe', createFichePosteCard);
+        }
 
         function createFichePosteCard(fiche) {
             const cardDiv = document.createElement('div');
             cardDiv.classList.add('offer-card');
-            cardDiv.innerHTML = `
-        <div class="container-column card-content">
-            <div id="orga" class="cardTitle">
-                ${fiche.organisation_nom} (${fiche.organisation_siren}) - ${fiche.statutPoste_nom}, ${fiche.metier_nom}
-            </div>
-            <div class="container-row">
-                <div class="little_blue_card">
-                    ${fiche.lieuMission}
-                </div>
-                <div class="little_blue_card">
-                    ${fiche.salaireMin}€ - ${fiche.salaireMax}€ brut/an
-                </div>
-                <div class="little_blue_card">
-                    ${fiche.rythme}
-                </div>
-            </div>
-            <div class="container-row">
-                Responsable hiérarchique : ${fiche.responsableHierarchique}
-            </div>
-            <div class="container-row">
-                Description : ${fiche.description}
-            </div>
-        </div>
-        <div class="container-column right small">
-            <div class="buttons bottom-margin">
-                <% if (isRecruteur) { %>
-                    <button id="createOfferButton" type="button" class="btn-secondary" onclick="createNewOffer('${fiche.fichePoste_id}')">Nouvelle offre</button>
-                <% } %>
-                <button class="btn-secondary">Modifier</button>
-                <button class="btn-danger">Supprimer</button>
-            </div>
-            <div>
-                ID Fiche : ${fiche.fichePoste_id}
-            </div>
-            <div>
-                Etat : ${fiche.fichePoste_etat}
-            </div>
-        </div>
-    `;
+            cardDiv.innerHTML = renderFichePosteCard(fiche);
             return cardDiv;
         }
 

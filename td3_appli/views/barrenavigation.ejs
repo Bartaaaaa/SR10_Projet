@@ -30,7 +30,6 @@
             fetch('/pageperso/user-info')
                 .then(response => response.json())
                 .then(user => {
-                    console.log(user);
                     const userRole = user.role;
                     const orga = user.organisation;
                     if (userRole === "administrateur") {

@@ -8,7 +8,7 @@ const Orgamodel = require('../model/Organisation')
 module.exports = router;
 
 router.get('/', function(req, res, next) {
-    const pageData = { 
+    const pageData = {
         title: 'Page personnelle',
         user: {
             id: req.session.userid,
@@ -55,7 +55,6 @@ router.get('/user-info', function(req, res, next) {
             statut: req.session.statut
         };
         if (req.session.role === 'recruteur' || req.session.role === 'administrateur') {
-            console.log('rec ou adm');
             Adhermodel.getOrgaDuRecruteur(req.session.userid, (results) => {
                 const orga = results[0];
                 user.organisation = orga;
@@ -63,7 +62,6 @@ router.get('/user-info', function(req, res, next) {
                 return res.json(user);
             });
         } else {
-            console.log('pas');
             // Send the user object as the response
             res.json(user);
         }

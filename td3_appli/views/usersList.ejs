@@ -60,50 +60,30 @@
 <script src="/javascripts/utilitaires.js"></script>
 
 <script>
+    const initialUsers = <%- JSON.stringify(users) %>;
+    let currentUsers = orderById(initialUsers);
 
-    
     document.addEventListener("DOMContentLoaded", function() {
-        const users = <%- JSON.stringify(users) %>; // Passer les organisations à partir de EJS
         const pagination = document.getElementById("pagination");
         const rowsPerPage = 4;
         const userContainer = document.getElementById("userList");
-        setupPagination(users, pagination, rowsPerPage, userContainer, renderUserCard, false);
+
+        renderList(currentUsers, 'userList', createUserCard);
+        setupPagination(currentUsers, pagination, rowsPerPage, userContainer, renderUserCard, false);
     });
 
-
-    const userList = <%- JSON.stringify(users) %>;
     const searchbar = document.getElementById('searchbar');
     searchbar.addEventListener('input', (event) => {
-        search(userList, ['prenom', 'nom', 'mail', 'tel'], event.target.value, createUserCard, 'userList');
+        const filteredList = search(initialUsers, ['prenom', 'nom', 'mail', 'tel'], event.target.value);
+        currentUsers = orderById(filteredList);
+        renderList(currentUsers, 'userList', createUserCard);
     });
-    search(userList, ['prenom', 'nom', 'mail', 'tel'], '', createUserCard, 'userList');
+
+
     function createUserCard(user) {
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('offer-card');
-        cardDiv.innerHTML = `
-            <div class="card-content">
-                <div class="cardTitle">
-                    ${user.prenom} ${user.nom}
-                </div>
-                <div class="container-row">
-                    <div class="little_blue_card">
-                        ${user.mail}
-                    </div>
-                    <div class="little_blue_card">
-                        ${user.tel}
-                    </div>
-                    <div>
-                        Créé le ${user.dateCreation}
-                    </div>
-                </div>
-            </div>
-            <div class="container-column right small">
-                <div class="buttons">
-                    <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/users/${user.id}'">Détails utilisateur</button>
-                    <button class="btn-danger" data-mail="${user.mail}">Supprimer</button>
-                </div>
-            </div>
-        `;
+        cardDiv.innerHTML = renderUserCard(user);
         return cardDiv;
     }
 
