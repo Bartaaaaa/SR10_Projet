@@ -1,5 +1,8 @@
 # Projet SR10 - Réalisation d'un site de candidatures à des offres
-
+## Correction depuis la soutenance :
+Voici les éléments qui ne fonctionnaient pas que nous avons réussi à corriger : 
+- Adhérer à une organisation
+- Mot de passe qui doit respecter les recommendations de la CNIL
 ## Cloner le dépôt
 Pour cloner le dépôt, utilisez la commande suivante :
 ```bash
