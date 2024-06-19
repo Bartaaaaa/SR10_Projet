@@ -34,22 +34,24 @@
     </form>
   </div>
   <script>
-    function isPasswordValid(password) {
-        const minLength = 12;
-        const specialChars = /[ù*$^@#%&!&é"'(-è_çà$£`~)']/;
+function isPasswordValid(password) {
+    const minLength = 12;
+    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/; // RegEx pour les caractères spéciaux
 
-        if (password.length < minLength) {
-            alert('Le mot de passe doit contenir au moins 12 caractères.');
-            return false;
-        }
-
-        if (!specialChars.test(password)) {
-            alert('Le mot de passe doit contenir au moins un caractère spécial (ù, *, $, ^, @, #, %, &, !, etc.).');
-            return false;
-        }
-
-        return true;
+    if (password.length < minLength) {
+        alert('Le mot de passe doit contenir au moins 12 caractères.');
+        return false;
     }
+
+    if (!specialCharPattern.test(password)) {
+        alert('Le mot de passe doit contenir au moins un caractère spécial.');
+        return false;
+    }
+
+    return true;
+}
+
+
 
     document.getElementById('userForm').addEventListener('submit', function(event) {
         event.preventDefault();  // Empêcher la soumission normale du formulaire
