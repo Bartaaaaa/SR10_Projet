@@ -117,6 +117,7 @@ router.get('/:id', function (req, res) {
 
 
 
+
 ////////// AJOUTER UN UTILISATEUR //////////
 router.post('/adduser', function (req, res) {
     const { nom, prenom, mail: email, tel: telephone, mdp: motDePasse } = req.body;
@@ -223,6 +224,8 @@ function updateUser(id, mail, nom, prenom, tel) {
         }
     });
 }
+
+
 
 ////////// MODIFIER UN UTILISATEUR //////////
 router.post('/updateUser', function (req, res) {

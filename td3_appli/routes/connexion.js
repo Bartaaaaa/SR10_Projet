@@ -3,6 +3,7 @@ const router = express.Router();
 const userModel = require('../model/Utilisateur')
 const roleModel = require('../model/RoleUtilisateur')
 const sessionManager = require('../session');
+const bcrypt = require('bcrypt');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -20,7 +21,12 @@ router.post('/connexion', (req, res) => {
       for (let i = 0; i < result.length; i++) {
           const user = result[i];
 
-          if (req.body.mail === user.mail && req.body.mdp === user.mdp) {
+          // Comparer le mail
+          if (req.body.mail === user.mail ) {
+
+            // Comparer les mots de passe en utilisant bcrypt
+              const isMatch = await bcrypt.compare(req.body.mdp, user.mdp);
+              if (isMatch) {
               try {
                   userRole = await new Promise((resolve, reject) => {
                       roleModel.read(user.id, function(err, roleResult) {
@@ -64,8 +70,10 @@ router.post('/connexion', (req, res) => {
 
               sessionManager.creatSession(req.session, data);
               break; // Exit loop once a user is found
-          }
+            } 
+         }
       }
+
 
       if (userFound) {
           res.json({ success: true, message: "User connected successfully" });
