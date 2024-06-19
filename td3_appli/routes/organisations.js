@@ -126,7 +126,7 @@ router.get('/:siren', (req, res) => {
         AdherenceModel.getOrgaDuRecruteur(connectedUserId, (resultOrga) => {
           const orga = resultOrga[0];
           let isAdminOrWorkingThere = false;
-          if (orga?.id === siren || role === "administrateur") {
+          if (String(orga?.siren) === String(siren) || role === "administrateur") {
             isAdminOrWorkingThere = true;
           }
           res.render('detailOrganisation', {

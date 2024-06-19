@@ -34,7 +34,7 @@
     <script src="/javascripts/utilitaires.js"></script>
     <script>
         const initialCandidatures = <%- JSON.stringify(candidatures) %>; // récupération de l'array
-        let currentCandidatures = orderById(initialCandidatures); // met dans l'ordre
+        let currentCandidatures = orderById(initialCandidatures, 'offreEmploi'); // met dans l'ordre
 
 
         // affichage pagination (et liste de cards)
@@ -53,10 +53,10 @@
         searchbar.addEventListener('input', (event) => {
             const filteredList = search(
                 initialCandidatures,
-                ['offreEmploi', 'candidat', 'etat'],
+                ['offreEmploi', 'etat'],
                 event.target.value,
             );
-            currentCandidatures = orderByDate(filteredList);
+            currentCandidatures = orderById(filteredList, 'offreEmploi');
             renderList(currentCandidatures, 'candidatureList', createCandidatureCard);
         });
 

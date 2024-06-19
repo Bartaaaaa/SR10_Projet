@@ -168,7 +168,7 @@ function renderOrganisationCard(organisation) {
             <div class="container-row buttons">
                 <button class="btn-secondary" onclick="adhereToOrganisation('${organisation.siren}')">Adhérer</button>
                 <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/DemandeAdherRecruteur/adherenceslist/${organisation.siren}';">Demandes d'adhérences</button>
-                <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/organisations/${organisation.siren}'">Voir fiche</button>
+                <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/organisations/${organisation.siren}'">Détails</button>
             </div>
             <div class="top-margin">
                 Siren : ${organisation.siren}
