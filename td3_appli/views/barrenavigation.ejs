@@ -14,6 +14,8 @@
             <li><a href="/">Accueil</a></li>
             <li><a id="ListeUsers" href="/users/usersList">Utilisateurs</a></li>
             <li><a id="Organisation" href="/organisations/organisationsList">Organisations</a></li>
+            <li><a id="MonOrganisation" href="/organisations/organisationsList">Mon organisation</a></li>
+
             <li><a id="ListeFiches" href="/fichesPoste/fichesPosteListe">Fiches de poste</a></li>
             <li><a href="/offresemploi/offresemploilist">Offres d'emploi</a></li>
             <li class="right"><a href="/pageperso">Page Personnelle</a></li>
@@ -25,6 +27,7 @@
             const usersLink = document.getElementById("ListeUsers");
             const fichesLink = document.getElementById("ListeFiches");
             const organisationLink = document.getElementById('Organisation');
+            const MyorganisationLink = document.getElementById('MonOrganisation');
 
             usersLink.style.display = "none";
             fetch('/pageperso/user-info')
@@ -45,9 +48,12 @@
                     }
 
                     if (userRole === "recruteur") {
-                        organisationLink.textContent = "Mon organisation";
-                        organisationLink.href = `/organisations/${orga.siren}`;
+                        MyorganisationLink.textContent = "Mon organisation";
+                        MyorganisationLink.href = `/organisations/${orga.siren}`;
                         console.log(organisationLink);
+                    }
+                    else{
+                        MyorganisationLink.style.display = "None"
                     }
                     if( userRole=== null || userRole=== undefined ){
                         organisationLink.style.display ="none";
