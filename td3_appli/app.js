@@ -85,7 +85,7 @@ app.all("*", function (req, res, next) {
   }*/
 
   
-  if (req.path.startsWith("/DemandeAdherRecruteur") ) {
+  /*if (req.path.startsWith("/DemandeAdherRecruteur") ) {
     console.log("Path requires administrateur role");
     if ((sessionJS.isConnected(req.session, { role: "administrateur" })) || (sessionJS.isConnected(req.session, { role: "recruteur" }))) {
       console.log("User has required role");
@@ -95,7 +95,7 @@ app.all("*", function (req, res, next) {
       return redirectWithAlert("Cette page n'est pas accessible pour vous");
     }
   }
-
+*/
   /*if (req.path.startsWith("/detailsoffre/addCandidature") ) {
     console.log("Path requires administrateur role");
     if (sessionJS.isConnected(req.session, { role: "undefined" })) {
