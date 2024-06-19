@@ -117,46 +117,6 @@ router.get('/:id', function (req, res) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-creerUtilisateur: function (nom, prenom, telephone, email, mot_de_passe, callback) {
-    // Hacher le mot de passe avant de le stocker
-    bcrypt.hash(mot_de_passe, saltRounds, function (err, hash) {
-        if (err) {
-            console.error('Erreur lors du hachage du mot de passe:', err);
-            callback(false);
-            return;
-        }
-        let sql = "INSERT INTO Utilisateur (nom, prenom, telephone, email, mot_de_passe) VALUES (?,?,?,?,?)";
-        db.query(sql, [nom, prenom, telephone, email, hash], function (err, results) {
-            if (err) {
-                console.error('Erreur ajout d utilisateur', err);
-                callback(false);
-                return;
-            } else {
-                callback(true);
-            }
-        });
-    });
-},
-
-
-
 ////////// AJOUTER UN UTILISATEUR //////////
 router.post('/adduser', function (req, res) {
     const { nom, prenom, mail: email, tel: telephone, mdp: motDePasse } = req.body;
@@ -263,9 +223,6 @@ function updateUser(id, mail, nom, prenom, tel) {
         }
     });
 }
-
-
-
 
 ////////// MODIFIER UN UTILISATEUR //////////
 router.post('/updateUser', function (req, res) {
