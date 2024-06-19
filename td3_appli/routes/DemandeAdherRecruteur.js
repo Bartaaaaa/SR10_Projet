@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Adhermodel = require('../model/DemandeAdherRecruteur')
-const Orgamodel = require('../model/Organisation')
-
+const Adhermodel = require('../model/DemandeAdherRecruteur');
+const Orgamodel = require('../model/Organisation');
+const UserRolemodel = require('../model/RoleUtilisateur');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -90,12 +90,27 @@ router.post('/updateAdherence', function (req, res, next) {
 
     Adhermodel.update(organisation, recruteur, etat, function (success) {
         if (success) {
-            res.json({ success: true, message: 'Adherence updated successfully.' });
+            var nouveauRole;
+            if (etat === "validee") {
+                nouveauRole = "recruteur";
+            } else {
+                nouveauRole = "candidat";
+            }
+
+            UserRolemodel.majRole(recruteur, nouveauRole, function(roleSuccess) {
+                if (roleSuccess) {
+                    res.json({ success: true, message: 'Adherence and role updated successfully.' });
+                } else {
+                    res.status(500).json({ success: false, message: 'Adherence updated but error updating role.' });
+                }
+            });
         } else {
             res.status(500).json({ success: false, message: 'Error updating adherence.' });
         }
     });
 });
+
+
 
 
 

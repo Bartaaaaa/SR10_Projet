@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheets/listes.css"> <!-- Correct CSS inclusion -->
+    <link rel="stylesheet" href="/stylesheets/listes.css">
     <link rel="stylesheet" href="/stylesheets/offresEmploi.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <title><%= title %></title>
 </head>
 <body>
-    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+    <%- include('barrenavigation') %>
     <h1 class="heading"><%= title %></h1>
 
     <div class="main-content">
@@ -19,32 +19,32 @@
             <div id="pagination" class="container-row hundred"></div>
         </div>
     </div>
-
     <script src="/javascripts/filter.js"></script>
     <script src="/javascripts/utilitaires.js"></script>
-
+    
     <script>
-
         document.addEventListener("DOMContentLoaded", function() {
-            const adherences = <%- JSON.stringify(adherences) %>; // Passer les organisations à partir de EJS
+            console.log("DOM fully loaded and parsed");
+            const adherences = <%- JSON.stringify(adherences) %>;
             const pagination = document.getElementById("pagination");
             const rowsPerPage = 4;
             const adherencesContainer = document.getElementById("adherencesList");
             setupPagination(adherences, pagination, rowsPerPage, adherencesContainer, renderAdherenceCard, false);
         });
-
-
+    
         const adherencesList = <%- JSON.stringify(adherences) %>;
         const searchbar = document.getElementById('searchbar');
         searchbar.addEventListener('input', (event) => {
+            console.log("Search input event triggered");
             search(adherencesList, ['organisation', 'recruteur', 'etat'], event.target.value, createAdherenceCard, 'adherencesList');
         });
         search(adherencesList, ['organisation', 'recruteur', 'etat'], '', createAdherenceCard, 'adherencesList');
-
+    
         function createAdherenceCard(adherence) {
-            const cardDiv = document.createElement('div');
-            cardDiv.classList.add('offer-card');
-            cardDiv.innerHTML = `
+    console.log("Creating adherence card for", adherence);
+    const cardDiv = document.createElement('div');
+    cardDiv.classList.add('offer-card');
+    cardDiv.innerHTML = `
         <div class="card-content">
             <div class="container-column">
                 <div class="container-row">
@@ -62,101 +62,135 @@
         </div>
         <div class="container-column">
             <div class="buttons">
-                <button class="btn-secondary" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Accepter</button>
-                <button class="btn-danger" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Refuser</button>
+                <button class="btn-secondary accept-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}" data-etat="validee">Accepter</button>
+                <button class="btn-danger reject-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}" data-etat="refusee">Refuser</button>
             </div>
         </div>
     `;
-            return cardDiv;
-        }
+    return cardDiv;
+}
 
-
-
-
-        document.addEventListener("DOMContentLoaded", function() {
-    // Cacher initialement le lien ListeUsers
-    var usersLink = document.getElementById("ListeUsers");
-    usersLink.style.display = "none";
-
-    // Récupérer les informations de l'utilisateur
-    fetch('/pageperso/user-info')
-        .then(response => response.json())
-        .then(user => {
-            var userRole = user.role;
-            // Afficher le lien ListeUsers si l'utilisateur est un administrateur
-            if (userRole === "administrateur") {
-                usersLink.style.display = "block";
-            } else {
-                usersLink.style.display = "none";
-            }
-
-            // Si l'utilisateur a le rôle de recruteur ou administrateur, permettre la validation ou le refus des demandes
-            if (userRole === 'recruteur' || userRole === 'administrateur') {
-                // Handle accept and reject button clicks
-                document.querySelectorAll('.accept-btn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const organisation = this.dataset.organisation;
-                        const recruteur = this.dataset.recruteur;
-                        updateAdherenceState(organisation, recruteur, 'validee');
-                    });
-                });
-
-                document.querySelectorAll('.reject-btn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const organisation = this.dataset.organisation;
-                        const recruteur = this.dataset.recruteur;
-                        updateAdherenceState(organisation, recruteur, 'refusee');
-                    });
-                });
-            } else {
-                console.log('Access denied: You do not have the required role to perform this action.');
-            }
-        })
-        .catch(error => console.error('Error:', error));
+document.addEventListener("DOMContentLoaded", function() {
+    attachButtonListeners();
 });
 
-function updateAdherenceState(organisation, recruteur, etat) {
-    fetch('/DemandeAdherRecruteur/updateAdherence', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ organisation, recruteur, etat })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            location.reload(); // Reload the page to see the updates
-        } else {
-            console.error('Error updating adherence state:', data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
+function attachButtonListeners() {
+    document.querySelectorAll('.accept-btn, .reject-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const organisation = this.getAttribute('data-organisation');
+            const recruteur = this.getAttribute('data-recruteur');
+            const etat = this.getAttribute('data-etat');
+            await updateAdherenceState(organisation, recruteur, etat);
+        });
     });
 }
 
+async function updateAdherenceState(organisation, recruteur, etat) {
+    try {
+        const response = await fetch('/pageperso/user-info');
+        const user = await response.json();
+        console.log("User info fetched:", user);
 
-    function updateAdherenceState(organisation, recruteur, etat) {
-        fetch('/DemandeAdherRecruteur/updateAdherence', {
+        var userRole = user.role;
+        if (userRole === 'recruteur' || userRole === 'administrateur') {
+            console.log(`Updating adherence state for organisation: ${organisation}, recruteur: ${recruteur}, etat: ${etat}`);
+            const updateResponse = await fetch('/DemandeAdherRecruteur/updateAdherence', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ organisation, recruteur, etat })
+            });
+
+            const data = await updateResponse.json();
+            console.log('Response from server:', data);
+
+            if (data.success) {
+                location.reload();
+            } else {
+                console.error('Error updating adherence state:', data.message);
+                alert('Erreur lors de la mise à jour de l\'état d\'adhérence: ' + data.message);
+            }
+        } else {
+            console.log('Access denied: You do not have the required role to perform this action.');
+            alert("Vous n'avez pas les droits pour accepter ou refuser des adhérences");
+        }
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+        alert('Erreur lors de la récupération des informations utilisateur.');
+    }
+}
+
+
+
+
+    /*    document.addEventListener("DOMContentLoaded", async function() {
+    console.log("DOM fully loaded and parsed for user roles");
+    var usersLink = document.getElementById("ListeUsers");
+    usersLink.style.display = "none";
+
+    try {
+        const response = await fetch('/pageperso/user-info');
+        const user = await response.json();
+        console.log("User info fetched:", user);
+
+        var userRole = user.role;
+        if (userRole === "administrateur") {
+            usersLink.style.display = "block";
+        } else {
+            usersLink.style.display = "none";
+        }
+
+        if (userRole === 'recruteur' || userRole === 'administrateur') {
+            document.body.addEventListener('click', function(event) {
+                if (event.target.classList.contains('accept-btn')) {
+                    const organisation = event.target.dataset.organisation;
+                    const recruteur = event.target.dataset.recruteur;
+                    console.log(`Accept button clicked for organisation: ${organisation}, recruteur: ${recruteur}`);
+                    updateAdherenceState(organisation, recruteur, 'validee');
+                }
+
+                if (event.target.classList.contains('reject-btn')) {
+                    const organisation = event.target.dataset.organisation;
+                    const recruteur = event.target.dataset.recruteur;
+                    console.log(`Reject button clicked for organisation: ${organisation}, recruteur: ${recruteur}`);
+                    updateAdherenceState(organisation, recruteur, 'refusee');
+                }
+            });
+        } else {
+            console.log('Access denied: You do not have the required role to perform this action.');
+            alert("Vous n'avez pas les droits pour accepter ou refuser des adhérences");
+        }
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+    }
+});
+
+async function updateAdherenceState(organisation, recruteur, etat) {
+    console.log(`Updating adherence state for organisation: ${organisation}, recruteur: ${recruteur}, etat: ${etat}`);
+    try {
+        const response = await fetch('/DemandeAdherRecruteur/updateAdherence', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ organisation, recruteur, etat })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload(); // Reload the page to see the updates
-            } else {
-                console.error('Error updating adherence state:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
         });
+        const data = await response.json();
+        console.log('Response from server:', data);
+        if (data.success) {
+            location.reload();
+        } else {
+            console.error('Error updating adherence state:', data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
+}*/
     </script>
+    
+    
 </body>
 </html>
+
+

@@ -197,8 +197,8 @@ function renderAdherenceCard(adherence) {
         </div>
         <div class="container-column">
             <div class="buttons">
-                <button class="btn-secondary" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Accepter</button>
-                <button class="btn-danger" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}">Refuser</button>
+            <button class="btn-secondary accept-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}" data-etat="validee">Accepter</button>
+            <button class="btn-danger reject-btn" data-organisation="${adherence.organisation}" data-recruteur="${adherence.recruteur}" data-etat="refusee">Refuser</button>
             </div>
         </div>
     `;
@@ -206,38 +206,38 @@ function renderAdherenceCard(adherence) {
 
 function renderOffreEmploiCard(offre) {
     return `
-        <div class="card-content">
-            <div class="cardTitle">
-                ${offre.intitule}
+    <div class="card-content">
+        <div class="cardTitle">
+            ${offre.intitule}
+        </div>
+        <div class="container-row">
+            <div>
+                ${offre.organisation_nom}
             </div>
-            <div class="container-row">
-                <div>
-                    ${offre.organisation_nom}
-                </div>
-                <div>
-                    ${offre.lieuMission}
-                </div>
-                <div>
-                    Valide jusqu'au ${offre.dateValidite}
-                </div>
+            <div>
+                ${offre.lieuMission}
             </div>
+            <div>
+                Valide jusqu'au ${offre.dateValidite}
+            </div>
+        </div>
 
-            <div class="container-row">
-                <div class="little_blue_card">
-                    ${offre.remuneration}
-                </div>
-                <div class="little_blue_card">
-                    ${offre.rythme}
-                </div>
-                <div>
-                    Statut : ${offre.etatOffre}
-                </div>
+        <div class="container-row">
+            <div class="little_blue_card">
+                ${offre.remuneration}
+            </div>
+            <div class="little_blue_card">
+                ${offre.rythme}
+            </div>
+            <div>
+                Statut : ${offre.etatOffre}
             </div>
         </div>
-        <div class="buttons">
-            <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/detailsoffre/${offre.offre_id}'">Voir détails / Candidater</button>
-        </div>
-    `;
+    </div>
+    <div class="buttons">
+        <button class="btn-secondary" onclick="handleOfferDetailsClick('${offre.offre_id}')">Voir détails / Candidater</button>
+    </div>
+`;
 }
 
 function renderFichePosteCard(fiche) {

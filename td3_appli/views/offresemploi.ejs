@@ -50,6 +50,23 @@
 <script src="/javascripts/utilitaires.js"></script>
 
 <script>
+async function handleOfferDetailsClick(offreId) {
+    try {
+        const response = await fetch('/pageperso/user-info');
+        const user = await response.json();
+        console.log(user);
+
+        if (user && user.role) {
+            window.location.href = `http://localhost:3000/detailsoffre/${offreId}`;
+        } else {
+            alert("Vous devez être connecté pour voir les détails de l'offre.");
+            window.location.href = 'http://localhost:3000/connexion';
+        }
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+        alert("Une erreur s'est produite. Veuillez réessayer plus tard.");
+    }
+}
 
     
     document.addEventListener("DOMContentLoaded", function() {
@@ -73,11 +90,10 @@
         );
     })
     search(offresList, ['organisation_nom', 'lieuMission', 'etatOffre', 'rythme', 'statutPoste_nom', 'metier_nom'], '', createOfferCard, 'offresList');
-
     function createOfferCard(offre) {
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('offer-card');
-        cardDiv.innerHTML = `
+    const cardDiv = document.createElement('div');
+    cardDiv.classList.add('offer-card');
+    cardDiv.innerHTML = `
         <div class="card-content">
             <div class="cardTitle">
                 ${offre.intitule}
@@ -107,11 +123,12 @@
             </div>
         </div>
         <div class="buttons">
-            <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/detailsoffre/${offre.offre_id}'">Voir détails / Candidater</button>
+            <button class="btn-secondary" onclick="handleOfferDetailsClick('${offre.offre_id}')">Voir détails / Candidater</button>
         </div>
     `;
-        return cardDiv;
-    }
+    return cardDiv;
+}
+
 
 </script>
 

@@ -74,10 +74,11 @@
                     <!-- Vérifier le rôle ici par rapport à l'utilisateur connecté et non pas le profil affiché -->
 
                     <% if (isPagePerso && user.role === 'candidat') { %>
-                        <button type="button" class="btn-primary" onclick="changeRole('recruteur')">Devenir recruteur</button>
+                        <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/organisations/organisationsList'">Devenir recruteur</button>
+
                     <% } %>
 
-                    <% if (!isPagePerso && connectedUserRole !== 'administrateur') { %>
+                    <% if (!isPagePerso && connectedUserRole === 'administrateur') { %>
                         <button type="button" class="btn-primary" onclick="changeRole('administrateur')">Rendre Administrateur</button>
                         <button type="button" class="btn-primary" onclick="changeRole('recruteur')">Rendre Recruteur</button>
                         <button type="button" class="btn-primary" onclick="changeRole('candidat')">Rendre Candidat</button>

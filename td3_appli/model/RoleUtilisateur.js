@@ -44,7 +44,7 @@ module.exports = {
                 return;
             }
             console.log("Role updated successfully", results); // Log the results
-            callback(null, results); // Return results to callback
+            callback(true, results); // Return results to callback
         });
     }
 
