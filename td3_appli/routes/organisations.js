@@ -12,7 +12,11 @@ function transformtype(result, callback){
     for (const orga of resultOrga) {
       typeMap.set(orga.id, orga.nom);
     }
-    const updatedOrganisations = result.map(org => ({...org, type: typeMap.get(org.type) || org.type, typeList: Object.fromEntries(typeMap.entries()) }))// Utilisation de la carte pour récupérer le nom du type
+    const updatedOrganisations = result.map(org => (
+      {...org, 
+      type: typeMap.get(org.type) || org.type,
+      typeList: Object.fromEntries(typeMap.entries()) // Ajout de l'ensemble des types à l'organisation pour affichage dans des select
+    }))// Utilisation de la carte pour récupérer le nom du type
     callback(updatedOrganisations);
   });
 };

@@ -106,7 +106,7 @@
 
         function populateTypeSelect() {
         const typeSelect = document.getElementById('typeSelect');
-        const typeList = initialOrganisations[0].typeList;
+        const typeList = initialOrganisations[0].typeList; // récupère la liste depuis n'importe quelle orga
 
         for (const [key, value] of Object.entries(typeList)) {
             const option = document.createElement('option');

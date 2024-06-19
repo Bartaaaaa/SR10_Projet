@@ -1,4 +1,4 @@
-function displayItems(items, page, rowsPerPage, tableBody, renderRow, isInTable = true, isInTable = true) {
+function displayItems(items, page, rowsPerPage, tableBody, renderRow, isInTable = true) {
     tableBody.innerHTML = "";
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
