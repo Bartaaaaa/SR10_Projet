@@ -6,7 +6,6 @@
     <title>Page de Garde</title>
     <link rel="stylesheet" href="/stylesheets/general.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
 </head>
 <body>
   <div id="navbar">
@@ -16,11 +15,11 @@
     <header>
         <h1>BIENVENUE</h1>
     </header>
-    <form class="login-form"  id="userForm" >
+    <form class="login-form" id="userForm">
         <label for="prenom">Prenom</label>
-        <input type="prenom" id="prenom" name="prenom" required placeholder="Entrez votre Prenom">
+        <input type="text" id="prenom" name="prenom" required placeholder="Entrez votre Prenom">
         <label for="nom">Nom</label>
-        <input type="nom" id="nom" name="nom" required placeholder="Entrez votre Nom">
+        <input type="text" id="nom" name="nom" required placeholder="Entrez votre Nom">
        
         <label for="tel">Téléphone</label>
         <input type="tel" id="tel" name="tel" required placeholder="Entrez votre Telephone">
@@ -33,9 +32,25 @@
 
         <button type="submit">S'inscrire</button>
     </form>
+  </div>
+  <script>
+    function isPasswordValid(password) {
+        const minLength = 12;
+        const specialChars = /[ù*$^@#%&!&é"'(-è_çà$£`~)']/;
 
-</div>
-<script>
+        if (password.length < minLength) {
+            alert('Le mot de passe doit contenir au moins 12 caractères.');
+            return false;
+        }
+
+        if (!specialChars.test(password)) {
+            alert('Le mot de passe doit contenir au moins un caractère spécial (ù, *, $, ^, @, #, %, &, !, etc.).');
+            return false;
+        }
+
+        return true;
+    }
+
     document.getElementById('userForm').addEventListener('submit', function(event) {
         event.preventDefault();  // Empêcher la soumission normale du formulaire
     
@@ -47,7 +62,12 @@
             mail: document.getElementById('mail').value,
             mdp: document.getElementById('mdp').value
         };
-    
+
+        // Vérifier le mot de passe
+        if (!isPasswordValid(formData.mdp)) {
+            return; // Arrêter la soumission si le mot de passe est invalide
+        }
+
         // Envoi des données du formulaire en utilisant fetch API
         fetch('/users/adduser', {
             method: 'POST',
@@ -61,14 +81,17 @@
             console.log('Success:', data);
             alert('Utilisateur enregistré avec succès!');
             window.location.href = 'http://localhost:3000';
-
         })
         .catch((error) => {
             console.error('Error:', error);
             alert('Erreur lors de l\'enregistrement de l\'utilisateur.');
         });
     });
-    </script>
+  </script>
+</body>
+</html>
+
+
  <style>
 
 

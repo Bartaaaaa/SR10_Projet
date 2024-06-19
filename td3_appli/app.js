@@ -84,6 +84,7 @@ app.all("*", function (req, res, next) {
     }
   }*/
 
+  
   if (req.path.startsWith("/DemandeAdherRecruteur") ) {
     console.log("Path requires administrateur role");
     if ((sessionJS.isConnected(req.session, { role: "administrateur" })) || (sessionJS.isConnected(req.session, { role: "recruteur" }))) {
@@ -95,8 +96,14 @@ app.all("*", function (req, res, next) {
     }
   }
 
-
-
+  /*if (req.path.startsWith("/detailsoffre/addCandidature") ) {
+    console.log("Path requires administrateur role");
+    if (sessionJS.isConnected(req.session, { role: "undefined" })) {
+      return redirectWithAlert("Cette page n'est pas accessible pour vous");
+    } else{
+      return next();
+    }
+  }*/
 
   if (recruteurPaths.includes(req.path)) {
     if (sessionJS.isConnected(req.session, { role: "recruteur" })) {

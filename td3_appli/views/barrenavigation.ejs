@@ -17,7 +17,7 @@
             <li><a id="MonOrganisation" href="/organisations/organisationsList">Mon organisation</a></li>
 
             <li><a id="ListeFiches" href="/fichesPoste/fichesPosteListe">Fiches de poste</a></li>
-            <li><a href="/offresemploi/offresemploilist">Offres d'emploi</a></li>
+            <li><a id="offresEmploi" href="/offresemploi/offresemploilist">Offres d'emploi</a></li>
             <li class="right"><a href="/pageperso">Page Personnelle</a></li>
         </ul>
     </nav>
@@ -28,6 +28,7 @@
             const fichesLink = document.getElementById("ListeFiches");
             const organisationLink = document.getElementById('Organisation');
             const MyorganisationLink = document.getElementById('MonOrganisation');
+            const offres= document.getElementById('offresEmploi');
 
             usersLink.style.display = "none";
             fetch('/pageperso/user-info')
@@ -57,6 +58,7 @@
                     }
                     if( userRole=== null || userRole=== undefined ){
                         organisationLink.style.display ="none";
+                        offres.style.display="none"
                     }
                 })
                 .catch(error => console.error('Error:', error));
