@@ -20,7 +20,7 @@
         <div id="userList"></div>
         <div id="pagination" class="container-row hundred"></div>
     </div>
-    <div class="right-column">
+    <!-- <div class="right-column">
         <div class="offer-card">
             <div class="card-content">
                 <form action="/users/adduser" method="post" id="userForm">
@@ -53,7 +53,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <script src="/javascripts/filter.js"></script>
@@ -87,38 +87,38 @@
         return cardDiv;
     }
 
+    // POSSIBILITE d'AJOUTER UN USER RETIREE SUR CETTE PAGE
+    // document.getElementById('userForm').addEventListener('submit', function(event) {
+    //     event.preventDefault();  // Empêcher la soumission normale du formulaire
 
-    document.getElementById('userForm').addEventListener('submit', function(event) {
-        event.preventDefault();  // Empêcher la soumission normale du formulaire
+    //     // Récupérer les valeurs du formulaire
+    //     const formData = {
+    //         prenom: document.getElementById('prenom').value,
+    //         nom: document.getElementById('nom').value,
+    //         tel: document.getElementById('tel').value,
+    //         mail: document.getElementById('mail').value,
+    //         mdp: document.getElementById('mdp').value
+    //     };
 
-        // Récupérer les valeurs du formulaire
-        const formData = {
-            prenom: document.getElementById('prenom').value,
-            nom: document.getElementById('nom').value,
-            tel: document.getElementById('tel').value,
-            mail: document.getElementById('mail').value,
-            mdp: document.getElementById('mdp').value
-        };
-
-        // Envoi des données du formulaire en utilisant fetch API
-        fetch('/users/adduser', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                alert('Utilisateur enregistré avec succès!');
-                window.location.href = 'http://localhost:3000/users/usersList';
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('Erreur lors de l\'enregistrement de l\'utilisateur.');
-            });
-    });
+    //     // Envoi des données du formulaire en utilisant fetch API
+    //     fetch('/users/adduser', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify(formData)
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log('Success:', data);
+    //             alert('Utilisateur enregistré avec succès!');
+    //             window.location.href = 'http://localhost:3000/users/usersList';
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error:', error);
+    //             alert('Erreur lors de l\'enregistrement de l\'utilisateur.');
+    //         });
+    // });
 </script>
 </body>
 </html>
