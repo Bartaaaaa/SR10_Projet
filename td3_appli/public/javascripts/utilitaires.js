@@ -204,92 +204,6 @@ function renderAdherenceCard(adherence) {
     `;
 }
 
-function renderOffreEmploiCard(offre) {
-    return `
-    <div class="card-content">
-        <div class="cardTitle">
-            ${offre.intitule}
-        </div>
-        <div class="container-row">
-            <div>
-                ${offre.organisation_nom}
-            </div>
-            <div>
-                ${offre.lieuMission}
-            </div>
-            <div>
-                Valide jusqu'au ${offre.dateValidite}
-            </div>
-        </div>
-
-        <div class="container-row">
-            <div class="little_blue_card">
-                ${offre.remuneration}
-            </div>
-            <div class="little_blue_card">
-                ${offre.rythme}
-            </div>
-            <div>
-                Statut : ${offre.etatOffre}
-            </div>
-        </div>
-    </div>
-    <div class="buttons">
-        <button class="btn-secondary" onclick="handleOfferDetailsClick('${offre.offre_id}')">Voir détails / Candidater</button>
-    </div>
-`;
-}
-
-function renderFichePosteCard(fiche) {
-    let card = `
-        <div class="container-column card-content">
-            <div id="orga" class="cardTitle">
-                ${fiche.organisation_nom} (${fiche.organisation_siren}) - ${fiche.statutPoste_nom}, ${fiche.metier_nom}
-            </div>
-            <div class="container-row">
-                <div class="little_blue_card">
-                    ${fiche.lieuMission}
-                </div>
-                <div class="little_blue_card">
-                    ${fiche.salaireMin}€ - ${fiche.salaireMax}€ brut/an
-                </div>
-                <div class="little_blue_card">
-                    ${fiche.rythme}
-                </div>
-            </div>
-            <div class="container-row">
-                Responsable hiérarchique : ${fiche.responsableHierarchique}
-            </div>
-            <div class="container-row">
-                Description : ${fiche.description}
-            </div>
-
-        </div>
-        <div class="container-column right small">
-            <div class="buttons bottom-margin">`;
-
-        if (fiche.isRecruteur) {
-            card += `
-                <button id="createOfferButton" type="button" class="btn-secondary" onclick="createNewOffer('${fiche.fichePoste_id}')">Nouvelle offre</button>
-            `;
-        }
-
-        card += `
-                <button class="btn-secondary">Modifier</button>
-                <button class="btn-danger">Supprimer</button>
-            </div>
-
-            <div >
-                ID Fiche : ${fiche.fichePoste_id}
-            </div>
-            <div>
-                Etat : ${fiche.fichePoste_etat}
-            </div>
-        </div>
-    `;
-    return card;
-}
-
 function renderUserCard(user) {
     return `
         <div class="card-content">
@@ -311,6 +225,9 @@ function renderUserCard(user) {
         <div class="container-column right small">
             <div class="buttons">
                 <button class="btn btn-secondary" onclick="window.location.href = 'http://localhost:3000/users/${user.id}';">Détails utilisateur</button>
+            </div>
+            <div>
+                 ID : ${user.id}
             </div>
         </div>
     `;
@@ -402,47 +319,18 @@ function renderFichePosteCard(fiche) {
     return card;
 }
 
-function renderUserCard(user) {
-    return `
-        <div class="card-content">
-            <div class="cardTitle">
-                ${user.prenom} ${user.nom}
-            </div>
-            <div class="container-row">
-                <div class="little_blue_card">
-                    ${user.mail}
-                </div>
-                <div class="little_blue_card">
-                    ${user.tel}
-                </div>
-                <div>
-                    Créé le ${user.dateCreation}
-                </div>
-            </div>
-        </div>
-        <div class="container-column right small">
-            <div class="buttons">
-                <button class="btn btn-secondary" onclick="window.location.href = 'http://localhost:3000/users/${user.id}';">Détails utilisateur</button>
-            </div>
-        </div>
-    `;
-}
-
 function renderCandidatureCard(candidature) {
     let card = `
         <div class="card-content">
             <div class="container-row">
                 <div>
-                    ${candidature.offreEmploi}
+                    Offre : ${candidature.offreEmploi}
                 </div>
                 <div>
-                    ${candidature.candidat}
+                    Date de candidature : ${candidature.date}
                 </div>
                 <div>
-                    ${candidature.date}
-                </div>
-                <div>
-                    ${candidature.etat}
+                    Etat de la candidature : ${candidature.etat}
                 </div>
             </div>
             <div class="container-row">`

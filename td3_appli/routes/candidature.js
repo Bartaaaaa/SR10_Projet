@@ -9,11 +9,13 @@ router.get('/', function(req, res, next) {
 });
 
 const Candidaturemodel = require('../model/Candidature');
+const userModel = require('../model/Utilisateur');
 
 // Route to display candidatures
-router.get('/mescandidatures', function(req, res, next) {
+router.get('/mescandidatures/:id', function(req, res, next) {
+  const id = req.params.id;
   if (req.session.userid) {
-    Candidaturemodel.getAllCandidaturesFromCandidat(req.session.userid, function(result) {
+    Candidaturemodel.getAllCandidaturesFromCandidat(id, function(result) {
       if (result) {
         console.log('Candidatures récupérées:', result);
 
@@ -39,10 +41,14 @@ router.get('/mescandidatures', function(req, res, next) {
           console.log('Pièces jointes traitées:', candidature.piecesChemAcces);
         });
       }
-      res.render('candidatures', {
-        title: 'Liste de mes candidatures',
-        candidatures: result, // Ensure this matches the EJS template variable
-        path: path // Pass the path module to the view
+
+      userModel.readId(id, (userResult) => {
+        const user = userResult[0];
+        res.render('candidatures', {
+          title: `Liste des candidatures de ${user.nom} ${user.prenom}`,
+          candidatures: result, // Ensure this matches the EJS template variable
+          path: path // Pass the path module to the view
+        });
       });
     });
   } else {

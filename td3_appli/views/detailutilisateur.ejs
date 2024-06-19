@@ -61,8 +61,8 @@
                 </div>
                 <div class="buttons-part">
 
-                    <% if (isPagePerso && (user.role === 'recruteur' || user.role === 'administrateur')) { %>
-                        <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/candidature/mescandidatures'">Visualiser mes candidatures</button>
+                    <% if (isPagePerso || connectedUserRole === 'administrateur') { %>
+                        <button type="button" class="btn-primary" onclick="window.location.href = 'http://localhost:3000/candidature/mescandidatures/<%= user.id %>'">Visualiser les candidatures</button>
                     <% } %>
 
 
