@@ -37,6 +37,7 @@
 function isPasswordValid(password) {
     const minLength = 12;
     const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/; // RegEx pour les caractères spéciaux
+    const digitPattern = /\d/; // RegEx pour les chiffres
 
     if (password.length < minLength) {
         alert('Le mot de passe doit contenir au moins 12 caractères.');
@@ -45,6 +46,11 @@ function isPasswordValid(password) {
 
     if (!specialCharPattern.test(password)) {
         alert('Le mot de passe doit contenir au moins un caractère spécial.');
+        return false;
+    }
+
+    if (!digitPattern.test(password)) {
+        alert('Le mot de passe doit contenir au moins un chiffre.');
         return false;
     }
 
