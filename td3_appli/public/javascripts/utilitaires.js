@@ -265,6 +265,7 @@ function renderOffreEmploiCard(offre) {
         </div>
         <div class="buttons">
             <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/detailsoffre/${offre.offre_id}'">Voir détails / Candidater</button>
+            <button class="btn-secondary" onclick="window.location.href = 'http://localhost:3000/offresemploi/candidatures/${offre.offre_id}'">Voir candidats</button>
         </div>
     `;
 }
@@ -361,6 +362,47 @@ function renderCandidatureCard(candidature) {
     return card;
 }
 
+function renderFullCandidatureCard(candidature) {
+    let card = `
+        <div class="card-content">
+            <div class="container-row">
+                <div>
+                    Candidat : ${candidature.nom} ${candidature.prenom}
+                </div>
+                <div>
+                    Date de candidature : ${candidature.date}
+                </div>
+                <div>
+                    Etat de la candidature : ${candidature.etat}
+                </div>
+            </div>
+            <div class="container-row">`
+        candidature.piecesChemAcces.forEach((file, index) => {
+            card += `
+                <div class="buttons">
+                    <button class="btn-secondary">
+                        <a href="/files/download/${file.fileName}">
+                            Télécharger Pièce ${index + 1}
+                        </a>
+                    </button>
+                </div>`;
+        });
+
+        card += `
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="buttons">
+                <button class="btn-danger"
+                        data-offre-emploi="${candidature.offreEmploi}"
+                        data-candidat="${candidature.candidat}">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    `;
+    return card;
+}
 
 function renderCandidatureRow(candidature) {
     const downloadLinks = candidature.piecesChemAcces.map((file, index) => {

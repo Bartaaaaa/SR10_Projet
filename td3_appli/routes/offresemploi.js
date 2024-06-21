@@ -1,16 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const OffreEmploimodel = require('../model/OffreEmploi')
+const OffreEmploimodel = require('../model/OffreEmploi');
+const Candidaturemodel = require('../model/Candidature');
+const path = require('path'); // Import path module
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
-
-
-
-
-
-
 
 
 //////////// POUR AFFICHER LA PAGE LISTE DES OFFRES //////////// 
@@ -76,7 +73,37 @@ router.get('/detailsCreationOffre', function (req, res, next) {
     }
 });
 
+router.get('/candidatures/:id', function (req, res) {
+    const id = req.params.id;
+    if (id) {
+      Candidaturemodel.readAllFromOffer(id, function(result) {
+        if (!result) {
+          return res.status(404).json({error: "Offer not found"});
+        }
+        result.forEach((candidature) => {
+          const dateCrea = new Date(candidature.date);
+          const jour = String(dateCrea.getDate()).padStart(2, '0'); // padStart permet d'avoir 2 chiffres pour le jour
+          const mois = String(dateCrea.getMonth() + 1).padStart(2, '0'); // janvier = 0 ici, donc +1
+          const an = dateCrea.getFullYear();
+          candidature.date = `${jour}/${mois}/${an}`;
 
+          candidature.piecesChemAcces = candidature.piecesChemAcces.split(',').map(file => {
+            const filePath = `/uploads/${path.basename(file)}`;
+            return {
+              filePath: filePath,
+              fileName: path.basename(file)
+            };
+          });
+        });
+        OffreEmploimodel.readAllInfo(id, (offreDetails) => {
+          return res.render('candidaturesOffre', {
+            candidatures: result,
+            title: `Candidatures pour l'offre n°${id} - ${offreDetails[0].statutPoste_nom} ${offreDetails[0].metier_nom}`
+          })
+        })
+      });
+    }
+});
 
 module.exports = router;
 

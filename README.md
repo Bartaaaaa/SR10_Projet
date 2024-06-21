@@ -19,6 +19,9 @@ Le projet se trouve dans le dossier td3_appli. Il est composé de plusieurs fich
 - app.js : Ce fichier JavaScript définit les éléments principaux du site, y compris les sessions et la gestion des fichiers déposés.
 - public : Ce dossier contient les fichiers CSS et JavaScript utilisés par différentes vues.
 
+### Ajouts post soutenance
+Lors de la soutenance, il nous a été fait remarquer qu'une page de visualisation de l'ensemble des candidatures liées à une offre d'emploi spécifique (et non liée à un utilisateur) était manquante. Nous l'avons donc ajoutée. Elle est disponible à partir de la liste des offres d'emploi, lors de l'appui sur le bouton 'Voir candidatures'.
+
 ## Fonctionnalités du site
 
 Notre site permet aux utilisateurs de :

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/listes.css">
+    <link rel="stylesheet" href="/stylesheets/offresEmploi.css"> <!-- Correct CSS inclusion -->
+</head>
+
+
+
+<body>
+    <%- include('barrenavigation') %> <!-- Inclure la barre de navigation -->
+    <h1 class="heading"><%= title %></h1>
+
+    <div class="main-content">
+        <div class="left-column">
+            <input type="search" name="searchbar" id="searchbar" class="searchbar" placeholder="Rechercher une candidature...">
+            <div id="candidatureList"></div> <!-- Container qui sera rempli par la fonction renderList-->
+            <div id="pagination" class="container-row hundred"></div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <script src="/javascripts/filter.js"></script> <!-- va chercher le contenu de balise script de filter.js-->
+    <script src="/javascripts/utilitaires.js"></script>
+    <script>
+        const initialCandidatures = <%- JSON.stringify(candidatures) %>; // récupération de l'array
+        let currentCandidatures = orderById(initialCandidatures, 'offreEmploi'); // met dans l'ordre
+
+        console.log(initialCandidatures);
+
+        // affichage pagination (et liste de cards)
+        document.addEventListener("DOMContentLoaded", function() { 
+            const pagination = document.getElementById("pagination");
+            const rowsPerPage = 4;
+            const offresContainer = document.getElementById("candidatureList");
+
+            renderList(currentCandidatures, 'candidatureList', createCandidatureCard);
+            setupPagination(currentCandidatures, pagination, rowsPerPage, offresContainer, renderFullCandidatureCard, false);
+        });
+
+
+        // filtre par searchbar
+        const searchbar = document.getElementById('searchbar');
+        searchbar.addEventListener('input', (event) => {
+            const filteredList = search(
+                initialCandidatures,
+                ['offreEmploi', 'etat'],
+                event.target.value,
+            );
+            currentCandidatures = orderById(filteredList, 'offreEmploi');
+            renderList(currentCandidatures, 'candidatureList', createCandidatureCard);
+        });
+
+        // création de la card
+        function createCandidatureCard(candidature) {
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('offer-card');
+            cardDiv.innerHTML = renderFullCandidatureCard(candidature);
+            return cardDiv;
+        }
+    </script>
+</body>
+</html>
+
